@@ -1,0 +1,215 @@
+<resources>
+    <string name="app_name">Happy Baby Care</string>
+    <string name="banner_ad_unit_id">ca-app-pub-1979618719371623/6491972002</string>
+    <string name="ad_device_id">1D3D2254E4F4E858E1A2552829E2063B</string>
+
+    <!-- SyncAdapter related -->
+    <string name="sync_account_type">happybabycare.simplesolutions2003.com</string>
+    <string name="content_authority">com.simplesolutions2003.happybabycare</string>
+
+    <!-- navigation -->
+    <string name="nav_baby_care_category">Baby Care</string>
+    <string name="nav_baby_care_activities">Activities</string>
+    <string name="nav_baby_care_feeding">Feeding</string>
+    <string name="nav_baby_care_diaper">Diaper</string>
+    <string name="nav_baby_care_sleeping">Sleeping</string>
+    <string name="nav_baby_care_health">Health</string>
+
+    <string name="nav_essentials_category">Essentials</string>
+    <string name="nav_essentials_stories">Stories</string>
+    <string name="nav_essentials_rhymes">Rhymes</string>
+    <string name="nav_essentials_sounds">Sounds</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="action_baby_profiles">Baby Profiles</string>
+    <string name="action_manage_group">Manage Group</string>
+    <string name="action_save">Save</string>
+    <string name="action_add">Add</string>
+    <string name="action_delete">Delete</string>
+    
+    
+    <string name="text_welcome">Welcome to Happy Baby Care App!</string>
+    <string name="text_sign_in">Sign in with your google account to continue</string>
+    <string name="text_sign_out_success">Sign Out successful</string>
+    <string name="text_sign_in_failed">Sign In not successful</string>
+
+    <string name="text_date">Date</string>
+    <string name="text_time">Time</string>
+    
+    <string name="text_group_name">Group Name</string>
+    <string name="text_group_member">Member Email</string>
+    <string name="text_group_msg">Create or Join a group</string>
+    <string name="text_group_id">Group Id</string>
+    <string name="btn_group_create">Create</string>
+    <string name="btn_group_join">Join</string>
+    <string name="btn_group_skip">Skip</string>
+    <string name="btn_group_member_add">Add</string>
+    <string name="btn_group_member_remove">Remove</string>
+
+    <string name="btn_baby_add">Add Baby</string>
+    <string name="btn_baby_save">Save</string>
+    <string name="text_baby_name">Short Name</string>
+    <string name="text_baby_birthdate">Birth Date</string>
+    <string name="text_baby_due_date">Due Date</string>
+    <string name="text_baby_gender">Baby Gender</string>
+    <string name="text_baby_gender_male">Male</string>
+    <string name="text_baby_gender_female">Female</string>
+
+    <string name="text_baby_cannot_save">Could not save baby profile</string>
+    <string name="text_baby_added">Baby profile added</string>
+    <string name="text_baby_saved">Baby profile saved</string>
+    <string name="text_baby_deleted">Baby profile deleted</string>
+
+    <string name="text_activity_no_active_baby">Please select a baby</string>
+
+    <string name="text_activity_list_empty">No activities found for selected day</string>
+    <string name="text_baby_list_empty">No baby profiles found</string>
+    <string name="text_group_list_empty">No group members found</string>
+    <string name="text_articles_sync_progress">Sync in progress. Check back soon.</string>
+    <string name="text_articles_no_data">Need internet connection to get latest stories and rhymes from server. Once fetched, you can access them offline. </string>
+    <string name="text_list_loading">refreshing...</string>
+    <string name="text_touch_to_refresh">Touch to refresh</string>
+    <string name="text_touch_to_refresh_wait">Please wait</string>
+
+    <string name="text_feeding_date">Date</string>
+    <string name="text_feeding_time">Time</string>
+    <string name="text_feeding_type">What food?</string>
+    <string name="text_feeding_qty">Quantity</string>
+    <string name="text_feeding_duration">Duration</string>
+    <string name="text_feeding_unit">Units</string>
+    <string name="text_notes">Notes</string>
+
+    <string name="text_entry_cannot_save">Could not save\u0020</string>
+    <string name="text_entry_added">\u0020entry added</string>
+    <string name="text_entry_saved">\u0020entry saved</string>
+    <string name="text_entry_deleted">\u0020entry deleted</string>
+
+    <string-array name="spinner_feeding_type">
+        <item>Nursing</item>
+        <item>Pumped Breastmilk</item>
+        <item>Formula</item>
+        <item>Solid</item>
+        <item>Water</item>
+        <item>Others</item>
+    </string-array>
+
+    <string-array name="spinner_feeding_unit_nursing">
+        <item>mins</item>
+    </string-array>
+
+    <string-array name="spinner_feeding_unit_others">
+        <item>ml</item>
+        <item>oz</item>
+        <item>g</item>
+        <item>n\/a</item>
+    </string-array>
+
+    <string name="text_diaper_date">Date</string>
+    <string name="text_diaper_time">Time</string>
+    <string name="text_diaper_wet">Wet</string>
+    <string name="text_diaper_dirty">Dirty</string>
+    <string name="text_diaper_mixed">Mixed</string>
+    <string name="text_diaper_dry">Dry</string>
+    <string name="text_diaper_cream">Diaper Cream</string>
+
+    <string name="text_sleeping_date">Date</string>
+    <string name="text_sleeping_time">Time</string>
+    <string name="text_sleeping_duration">Duration (in mins)</string>
+    <string name="text_sleeping_where">Where?</string>
+
+    <string-array name="spinner_sleep_where">
+        <item>Crib</item>
+        <item>Bed</item>
+        <item>Car Seat</item>
+        <item>Rocker</item>
+        <item>Swing</item>
+    </string-array>
+
+    <string name="text_health_date">Date</string>
+    <string name="text_health_time">Time</string>
+    <string name="text_health_summary">Summary</string>
+    <string name="text_health_title">Title</string>
+
+    <string-array name="spinner_health_title">
+        <item>Vaccination</item>
+        <item>Temperature</item>
+        <item>Height</item>
+        <item>Weight</item>
+        <item>Sickness</item>
+        <item>Others</item>
+    </string-array>
+    
+    <string name="btn_sounds_play">Play</string>
+    <string name="btn_sounds_pause">Pause</string>
+    <string name="btn_sounds_stop">Stop</string>
+    <string name="btn_sounds_repeat">Repeat</string>
+
+    <string name="text_rattle_01">Rattle 1</string>
+    <string name="text_rattle_02">Rattle 2</string>
+    <string name="text_white_noise_01">White Noise</string>
+
+
+    <string name="cd_navigation">Select a menu item here</string>
+    <string name="cd_sign_in">Click to sign in with google account</string>
+    
+    <string name="cd_baby">Add, edit or select baby profile</string>
+    <string name="cd_baby_icon_edit">Update your baby\'s profile</string>
+    <string name="cd_selected">Selected</string>
+    <string name="cd_not_selected">Not selected</string>
+    <string name="cd_baby_edit">Create or update your baby\'s profile</string>
+    <string name="cd_baby_edit_pic">Select your baby\'s profile picture</string>
+    <string name="cd_baby_edit_name">Name</string>
+    <string name="cd_baby_edit_gender">Gender</string>
+    <string name="cd_baby_edit_birthdate">Birth Date</string>
+    <string name="cd_baby_edit_duedate">Due date</string>
+    
+    <string name="cd_date">Enter date</string>
+    <string name="cd_time">Enter time</string>
+    <string name="cd_notes">Enter additional notes</string>
+    
+    <string name="cd_activities">All activities for the selected baby</string>
+    <string name="cd_activity_date">Enter a date to view baby\'s activities</string>
+    <string name="cd_activity_list_empty">No activities found for today</string>
+    <string name="cd_activity_list_loading">refreshing...</string>
+
+    <string name="cd_feeding">Enter the feeding details</string>
+    <string name="cd_feeding_type">Choose what type of food</string>
+    <string name="cd_feeding_qty">Enter quantity or duration of feeding</string>
+    <string name="cd_feeding_unit">Choose unit of measurement</string>
+
+    <string name="cd_diaper">Enter the diaper changes</string>
+    <string name="cd_diaper_wet">Wet diaper</string>
+    <string name="cd_diaper_dirty">Dirty diaper</string>
+    <string name="cd_diaper_mixed">Mixed diaper</string>
+    <string name="cd_diaper_dry">Dry diaper</string>
+    
+    <string name="cd_sleeping">Enter when the baby slept</string>
+    <string name="cd_sleeping_duration">How long the baby slept</string>
+    <string name="cd_sleeping_where">Where did the baby sleep</string>
+    
+    <string name="cd_health">Enter growth, vaccinations and other health info</string>
+    <string name="cd_health_title">Choose what type of health entry</string>
+    <string name="cd_health_summary">Enter a short summary</string>
+    
+    <string name="cd_group">Create a new group or join an existing</string>
+    <string name="cd_group_id">Enter group id to join</string>
+    <string name="cd_group_join">Click to join</string>
+    <string name="cd_group_create">Create your own group</string>
+    <string name="cd_group_skip">Skip for now</string>
+    
+    <string name="cd_group_manage">Add or remove members from your group</string>
+    <string name="cd_group_manage_member_id">Enter member id to add</string>
+    <string name="cd_group_manage_add">Click to add member</string>
+    
+    <string name="cd_articles">Select a story or rhyme to read for your baby</string>
+    
+    <string name="cd_sounds">Select a sound to play for your baby</string>
+    <string name="cd_sounds_rattle_1">Rattle sound</string>
+    <string name="cd_sounds_rattle_2">Another rattle sound</string>
+    <string name="cd_sounds_white_noise">White Noise</string>
+
+</resources>
+
+

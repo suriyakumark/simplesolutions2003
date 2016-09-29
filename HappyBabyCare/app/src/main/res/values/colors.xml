@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimaryLight">#D1C4E9</color>
+    <color name="colorPrimary">#B388FF</color>
+    <color name="colorPrimaryDark">#6200EA</color>
+    <color name="colorAccentLight">#FFFFFF</color>
+    <color name="colorAccent">#FF9100</color>
+    <color name="colorAccentDark">#FF6D00</color>
+    <color name="color_text_bg">#ffffff</color>
+    <color name="color_text_title_small">#000000</color>
+    <color name="color_text_title_big">#fff</color>
+    <color name="color_text_subtitle">#8fff</color>
+    <color name="color_text_card_subtitle">#6000</color>
+    <color name="color_text_body">#000000</color>
+
+    <color name="color_activity_feeding">#8CC739</color>
+    <color name="color_activity_diaper">#FFD034</color>
+    <color name="color_activity_sleeping">#0072BB</color>
+    <color name="color_activity_health">#FF4C3B</color>
+</resources>
+

@@ -1,0 +1,63 @@
+{
+  "project_info": {
+    "project_number": "357090175276",
+    "firebase_url": "https://happy-baby-care-141012.firebaseio.com",
+    "project_id": "happy-baby-care-141012",
+    "storage_bucket": "happy-baby-care-141012.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:357090175276:android:dd21b1c785885e19",
+        "android_client_info": {
+          "package_name": "com.simplesolutions2003.happybabycare"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "357090175276-krbdcllpee2l7restrkns7vit9ojc681.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.simplesolutions2003.happybabycare",
+            "certificate_hash": "64006B9EB10D59881EA3B71E35307E4E6A9E055A"
+          }
+        },
+        {
+          "client_id": "357090175276-1mb2vt2f9b04dk7b222nrh4popi72o0q.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.simplesolutions2003.happybabycare",
+            "certificate_hash": "6FEB103E95AE610D76DA0101FB0CD5CA30FBD640"
+          }
+        },
+        {
+          "client_id": "357090175276-4vavfocpjhpasqb6k4sh1fm9hrt4ir0f.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA_HziMtfPDK46VklfZFSM-bmkC9XoHLHE"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "357090175276-4vavfocpjhpasqb6k4sh1fm9hrt4ir0f.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

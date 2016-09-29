@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item>
+        <layer-list>
+            <item>
+                <shape android:shape="rectangle">
+                    <!-- Draw a 2dp width border around shape -->
+                    <solid android:color="@color/colorAccent" />
+                    <stroke
+                        android:color="@color/colorAccentDark"
+                        android:width="2dp"
+                        />
+
+                    <corners
+                        android:radius="15dp" />
+                </shape>
+            </item>
+            <item  android:right="12dp">
+                <bitmap
+                    android:gravity="center_vertical|right"
+                    android:src="@drawable/open_time"/>
+            </item>
+        </layer-list>
+    </item>
+</selector>

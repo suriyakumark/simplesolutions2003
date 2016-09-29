@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/activities_layout"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:contentDescription="@string/cd_activities"
+    android:descendantFocusability="beforeDescendants"
+    android:focusableInTouchMode="true"
+    android:focusable="true"
+    android:background="@color/colorAccentLight">
+
+    <EditText
+        android:id="@+id/activities_filter_date"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:contentDescription="@string/cd_activity_date"
+        android:layout_gravity="center"
+        android:gravity="start|center_vertical"
+        android:background="@drawable/date_bg"
+        android:textColor="@color/colorAccentLight"
+        android:layout_margin="@dimen/margin_small"
+        android:paddingTop="@dimen/padding_text"
+        android:paddingBottom="@dimen/padding_text"
+        android:paddingStart="@dimen/padding_text_wide"
+        android:paddingEnd="@dimen/padding_text_wider"
+        android:hint="@string/text_date" />
+
+    <include layout="@layout/empty_loading" />
+
+    <ListView
+        android:id="@+id/activities_listview"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"  />
+</LinearLayout>

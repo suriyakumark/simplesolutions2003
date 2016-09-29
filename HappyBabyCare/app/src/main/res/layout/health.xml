@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/health_layout"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:contentDescription="@string/cd_health"
+        android:background="@color/colorAccentLight">
+
+        <include layout="@layout/date_time" />
+
+        <Spinner
+            android:id="@+id/health_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_medium"
+            android:layout_marginBottom="@dimen/margin_medium"
+            android:layout_gravity="center"
+            android:gravity="start|center_vertical"
+            android:background="@drawable/spinner_bg"
+            android:popupBackground="@color/colorAccent"
+            android:paddingTop="@dimen/padding_spinner"
+            android:paddingBottom="@dimen/padding_spinner"
+            android:paddingStart="@dimen/padding_spinner"
+            android:paddingEnd="@dimen/padding_spinner_wide"
+            android:contentDescription="@string/cd_health_title"
+            android:entries="@array/spinner_health_title"
+            android:prompt="@string/text_health_title" />
+
+        <EditText
+            android:id="@+id/health_summary"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/activity_summary_height"
+            android:layout_marginTop="@dimen/margin_medium"
+            android:layout_marginBottom="@dimen/margin_medium"
+            android:paddingStart="@dimen/padding_text"
+            android:paddingEnd="@dimen/padding_text"
+            android:maxLines="2"
+            android:contentDescription="@string/cd_health_summary"
+            android:hint="@string/text_health_summary" />
+
+        <include layout="@layout/notes" />
+
+    </LinearLayout>
+</ScrollView>

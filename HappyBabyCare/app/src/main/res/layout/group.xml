@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/group_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="@dimen/padding_layout_more"
+    android:contentDescription="@string/cd_group"
+    android:background="@color/colorAccent">
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <TextView
+            android:id="@+id/group_message"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/padding_text"
+            android:text="@string/text_group_msg" />
+
+        <EditText
+            android:id="@+id/group_id"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/padding_text"
+            android:maxLength="50"
+            android:maxLines="1"
+            android:contentDescription="@string/cd_group_id"
+            android:hint="@string/text_group_id" />
+        <Button
+            android:id="@+id/group_join"
+            android:layout_gravity="center_horizontal"
+            android:gravity="center"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:contentDescription="@string/cd_group_join"
+            android:background="@color/colorPrimaryDark"
+            android:layout_margin="@dimen/margin_medium"
+            android:text="@string/btn_group_join" />
+
+    </LinearLayout>
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_gravity="bottom|end"
+        android:gravity="bottom|end"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <Button
+            android:id="@+id/group_create"
+            android:layout_gravity="bottom|end"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@color/colorPrimaryDark"
+            android:contentDescription="@string/cd_group_create"
+            android:layout_margin="@dimen/margin_medium"
+            android:text="@string/btn_group_create" />
+
+        <Button
+            android:id="@+id/group_skip"
+            android:layout_gravity="bottom|end"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@color/colorPrimaryDark"
+            android:layout_margin="@dimen/margin_medium"
+            android:contentDescription="@string/cd_group_skip"
+            android:text="@string/btn_group_skip" />
+
+    </LinearLayout>
+</FrameLayout>

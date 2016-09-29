@@ -1,0 +1,49 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/widget_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/colorPrimaryDark">
+
+    <LinearLayout
+        android:id="@+id/widget_content"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <AdapterViewFlipper
+            android:id="@+id/widgetAdapterViewFlipper"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/widget_flipper_height"
+            android:autoStart="true"
+            android:flipInterval="5000"
+            android:loopViews="true">
+
+        </AdapterViewFlipper>
+    </LinearLayout>
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/widget_refresh"
+        android:orientation="vertical"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/widget_touch_to_refresh"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:text="@string/text_touch_to_refresh_wait"
+            android:paddingTop="@dimen/padding_text" />
+        <TextView
+            android:id="@+id/widget_last_refresh"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:text="@string/text_list_loading" />
+
+    </LinearLayout>
+
+</LinearLayout>

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/baby_layout"
+    android:orientation="vertical" 
+    android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:contentDescription="@string/cd_baby"
+        android:background="@color/colorAccentLight">
+
+    <include layout="@layout/empty_loading" />
+
+    <ListView
+        android:id="@+id/baby_listview"
+        android:focusable="false"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"  />
+</LinearLayout>

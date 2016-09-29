@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="@dimen/margin_small"
+    android:descendantFocusability="beforeDescendants"
+    android:focusableInTouchMode="true"
+    android:focusable="true"
+    android:weightSum="1">
+    <EditText
+        android:id="@+id/activity_date"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/margin_small"
+        android:background="@drawable/date_bg"
+        android:layout_gravity="start"
+        android:gravity="start|center_vertical"
+        android:textColor="@color/colorAccentLight"
+        android:paddingTop="@dimen/padding_text"
+        android:paddingBottom="@dimen/padding_text"
+        android:paddingStart="@dimen/padding_text_wide"
+        android:paddingEnd="@dimen/padding_text_wider"
+        android:contentDescription="@string/cd_date"
+        android:hint="@string/text_date" />
+    <View android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_weight="1" />
+    <EditText
+        android:id="@+id/activity_time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/margin_small"
+        android:background="@drawable/time_bg"
+        android:layout_gravity="end"
+        android:gravity="start|center_vertical"
+        android:textColor="@color/colorAccentLight"
+        android:paddingTop="@dimen/padding_text"
+        android:paddingBottom="@dimen/padding_text"
+        android:paddingStart="@dimen/padding_text_wide"
+        android:paddingEnd="@dimen/padding_text_wider"
+        android:contentDescription="@string/cd_time"
+        android:hint="@string/text_time" />
+</LinearLayout>

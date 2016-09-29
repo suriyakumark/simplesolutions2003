@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item android:title="@string/nav_baby_care_category">
+        <menu>
+            <item
+                android:id="@+id/nav_activities"
+                android:icon="@drawable/ic_menu_activities"
+                android:title="Activities"
+                android:checkable="true" />
+            <item
+                android:id="@+id/nav_feeding"
+                android:icon="@drawable/ic_menu_feeding"
+                android:title="Feeding"
+                android:checkable="true" />
+            <item
+                android:id="@+id/nav_diaper"
+                android:icon="@drawable/ic_menu_diaper"
+                android:title="Diaper"
+                android:checkable="true" />
+            <item
+                android:id="@+id/nav_sleeping"
+                android:icon="@drawable/ic_menu_sleeping"
+                android:title="Sleeping"
+                android:checkable="true" />
+            <item
+                android:id="@+id/nav_health"
+                android:icon="@drawable/ic_menu_health"
+                android:title="Health"
+                android:checkable="true" />
+        </menu>
+    </item>
+    <item android:title="@string/nav_essentials_category">
+        <menu>
+            <item
+                android:id="@+id/nav_stories"
+                android:icon="@drawable/ic_menu_stories"
+                android:title="Stories"
+                android:checkable="true" />
+            <item
+                android:id="@+id/nav_rhymes"
+                android:icon="@drawable/ic_menu_rhymes"
+                android:title="Rhymes"
+                android:checkable="true" />
+            <item
+                android:id="@+id/nav_sounds"
+                android:icon="@drawable/ic_menu_sounds"
+                android:title="Sounds"
+                android:checkable="true" />
+        </menu>
+    </item>
+    <item
+            android:id="@+id/nav_signout"
+            android:title="Sign Out" />
+</menu>

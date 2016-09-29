@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/diaper_layout"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:contentDescription="@string/cd_diaper"
+        android:background="@color/colorAccentLight">
+
+        <include layout="@layout/date_time" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_marginStart="@dimen/margin_more"
+            android:layout_marginEnd="@dimen/margin_more"
+            android:layout_height="wrap_content">
+            <ImageButton
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:padding="@dimen/padding_image"
+                android:background="@android:color/transparent"
+                android:scaleType="fitCenter"
+                android:contentDescription="@string/cd_diaper_wet"
+                android:src="@drawable/diaper_wet"
+                android:id="@+id/diaper_wet" />
+            <ImageButton
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:padding="@dimen/padding_image"
+                android:background="@android:color/transparent"
+                android:scaleType="fitCenter"
+                android:contentDescription="@string/cd_diaper_dirty"
+                android:src="@drawable/diaper_dirty"
+                android:id="@+id/diaper_dirty" />
+            <ImageButton
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:padding="@dimen/padding_image"
+                android:background="@android:color/transparent"
+                android:scaleType="fitCenter"
+                android:contentDescription="@string/cd_diaper_mixed"
+                android:src="@drawable/diaper_mixed"
+                android:id="@+id/diaper_mixed" />
+            <ImageButton
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:padding="@dimen/padding_image"
+                android:background="@android:color/transparent"
+                android:scaleType="fitCenter"
+                android:contentDescription="@string/cd_diaper_dry"
+                android:src="@drawable/diaper_dry"
+                android:id="@+id/diaper_dry" />
+        </LinearLayout>
+
+        <CheckBox
+            android:id="@+id/diaper_cream"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:text="@string/text_diaper_cream" />
+
+
+        <include layout="@layout/notes" />
+
+    </LinearLayout>
+</ScrollView>

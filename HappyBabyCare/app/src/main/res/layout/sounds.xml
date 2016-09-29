@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal" android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:contentDescription="@string/cd_sounds"
+        android:background="@color/colorAccentLight">
+    <View android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_weight="1" />
+    <ImageButton
+        android:id="@+id/sound_rattle_01"
+        android:layout_width="@dimen/sound_icon_width"
+        android:layout_height="@dimen/sound_icon_height"
+        android:layout_marginTop="@dimen/margin_more"
+        android:src="@drawable/rattle_01"
+        android:contentDescription="@string/cd_sounds_rattle_1"
+        android:background="@android:color/transparent"
+        android:scaleType="fitCenter"
+        android:adjustViewBounds="true" />
+    <View android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_weight="1" />
+    <ImageButton
+        android:id="@+id/sound_rattle_02"
+        android:layout_width="@dimen/sound_icon_width"
+        android:layout_height="@dimen/sound_icon_height"
+        android:layout_marginTop="@dimen/margin_more"
+        android:src="@drawable/rattle_02"
+        android:contentDescription="@string/cd_sounds_rattle_2"
+        android:background="@android:color/transparent"
+        android:scaleType="fitCenter"
+        android:adjustViewBounds="true" />
+    <View android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_weight="1" />
+    <ImageButton
+        android:id="@+id/sound_white_noise_01"
+        android:layout_width="@dimen/sound_icon_width"
+        android:layout_height="@dimen/sound_icon_height"
+        android:layout_marginTop="@dimen/margin_more"
+        android:src="@drawable/white_noise_01"
+        android:background="@android:color/transparent"
+        android:scaleType="fitCenter"
+        android:contentDescription="@string/cd_sounds_white_noise"
+        android:adjustViewBounds="true" />
+    <View android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_weight="1" />
+</LinearLayout>
