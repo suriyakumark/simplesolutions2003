@@ -15,13 +15,13 @@
         android:adjustViewBounds="true"
         android:gravity="start"
         android:id="@+id/baby_prof_image" />
-    <View android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_weight="1" />
+
     <LinearLayout
+        android:id="@+id/baby_summary"
         android:orientation="vertical"
-        android:gravity="center_vertical"
+        android:gravity="start|center_vertical"
         android:layout_gravity="start|center_vertical"
+        android:paddingStart="@dimen/padding_layout_more"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content">
         <TextView
@@ -29,17 +29,8 @@
             android:layout_height="wrap_content"            
             android:gravity="start"
             android:textSize="@dimen/size_title"
+            android:textColor="@color/colorAccentLight"
             android:id="@+id/baby_name" />
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:gravity="start"
-            android:id="@+id/baby_birthdate" />
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:gravity="start"
-            android:id="@+id/baby_gender" />
     </LinearLayout>
     <View android:layout_width="0dp"
         android:layout_height="0dp"

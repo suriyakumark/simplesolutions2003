@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-
     android:layout_width="match_parent"
     android:layout_height="match_parent">
+
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/feeding_layout"
         android:orientation="vertical"
@@ -15,9 +15,9 @@
 
         <Spinner
             android:id="@+id/feeding_type"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:dropDownWidth="wrap_content"
+            android:layout_width="@dimen/spinner_width_feeding"
+            android:layout_height="@dimen/spinner_height"
+            android:dropDownWidth="@dimen/dropdown_width_feeding"
             android:ellipsize="marquee"
             android:layout_marginTop="@dimen/margin_medium"
             android:layout_marginBottom="@dimen/margin_medium"
@@ -27,7 +27,7 @@
             android:popupBackground="@color/colorAccent"
             android:paddingTop="@dimen/padding_spinner"
             android:paddingBottom="@dimen/padding_spinner"
-            android:paddingStart="@dimen/padding_spinner"
+            android:paddingStart="@dimen/padding_spinner_start"
             android:paddingEnd="@dimen/padding_spinner_wide"
             android:contentDescription="@string/cd_feeding_type"
             android:entries="@array/spinner_feeding_type"
@@ -45,29 +45,32 @@
 
             <EditText
                 android:id="@+id/feeding_quantity"
-                android:layout_height="wrap_content"
+                android:layout_height="@dimen/edittext_height"
                 android:layout_width="wrap_content"
                 android:layout_gravity="start"
                 android:gravity="center"
                 android:paddingStart="@dimen/padding_text"
                 android:paddingEnd="@dimen/padding_text"
                 android:inputType="number"
+                android:background="@drawable/edittext_bg_accent"
                 android:maxLines="1"
                 android:contentDescription="@string/cd_feeding_qty"
                 android:hint="@string/text_feeding_qty" />
 
             <Spinner
                 android:id="@+id/feeding_unit"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="@dimen/spinner_width_feeding_unit"
+                android:layout_height="@dimen/spinner_height"
                 android:layout_gravity="end"
-                android:dropDownWidth="128dp"
+                android:dropDownWidth="@dimen/dropdown_width_feeding_unit"
+                android:ellipsize="marquee"
                 android:gravity="center"
                 android:background="@drawable/spinner_bg"
                 android:popupBackground="@color/colorAccent"
+                android:layout_marginStart="@dimen/margin_small"
                 android:paddingTop="@dimen/padding_spinner"
                 android:paddingBottom="@dimen/padding_spinner"
-                android:paddingStart="@dimen/padding_spinner"
+                android:paddingStart="@dimen/padding_spinner_start"
                 android:paddingEnd="@dimen/padding_spinner_wide"
                 android:contentDescription="@string/cd_feeding_unit"
                 android:entries="@array/spinner_feeding_unit_nursing"

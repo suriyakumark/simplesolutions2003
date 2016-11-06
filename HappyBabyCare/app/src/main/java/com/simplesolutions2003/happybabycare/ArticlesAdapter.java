@@ -70,10 +70,12 @@ public class ArticlesAdapter extends RecyclerView.Adapter<ArticlesAdapter.ViewHo
         holder.titleView.setText(mCursor.getString(ArticlesFragment.COL_ARTICLE_TITLE));
         holder.subtitleView.setText(mCursor.getString(ArticlesFragment.COL_ARTICLE_CATEGORY));
 
-        Picasso.with(context)
+        /*Picasso.with(context)
                 .load(mCursor.getString(ArticlesFragment.COL_ARTICLE_COVER_PIC))
                 .noFade()
-                .into(holder.thumbnailView);
+                .into(holder.thumbnailView);*/
+        new Utilities(context).loadImageView(holder.thumbnailView,
+                mCursor.getString(ArticlesFragment.COL_ARTICLE_COVER_PIC));
 
         //add logic for accessibility
         holder.titleView.setContentDescription(holder.titleView.getText());

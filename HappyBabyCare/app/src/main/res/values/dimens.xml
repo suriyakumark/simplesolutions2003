@@ -8,6 +8,7 @@
 
     <dimen name="size_action_icon">48dp</dimen>
     <dimen name="size_widget_icon">24dp</dimen>
+    <dimen name="size_summary_icon">24dp</dimen>
 
     <dimen name="margin_small">4dp</dimen>
     <dimen name="margin_medium">16dp</dimen>
@@ -22,12 +23,24 @@
     <dimen name="padding_text">8dp</dimen>
     <dimen name="padding_text_wide">24dp</dimen>
     <dimen name="padding_text_wider">48dp</dimen>
-    <dimen name="padding_spinner">16dp</dimen>
+    <dimen name="padding_spinner">8dp</dimen>
+    <dimen name="padding_spinner_start">16dp</dimen>
     <dimen name="padding_spinner_wide">64dp</dimen>
     <dimen name="padding_layout">8dp</dimen>
     <dimen name="padding_layout_more">16dp</dimen>
 
     <dimen name="padding_article">4dp</dimen>
+
+    <dimen name="spinner_width_feeding">256dp</dimen>
+    <dimen name="dropdown_width_feeding">192dp</dimen>
+    <dimen name="spinner_width_feeding_unit">120dp</dimen>
+    <dimen name="dropdown_width_feeding_unit">96dp</dimen>
+    <dimen name="spinner_width_sleeping">160dp</dimen>
+    <dimen name="dropdown_width_sleeping">96dp</dimen>
+    <dimen name="spinner_width_health">196dp</dimen>
+    <dimen name="dropdown_width_health">132dp</dimen>
+    <dimen name="edittext_height">48dp</dimen>
+    <dimen name="spinner_height">48dp</dimen>
 
     <color name="photo_placeholder">#ccc</color>
     <dimen name="card_margin">4dp</dimen>

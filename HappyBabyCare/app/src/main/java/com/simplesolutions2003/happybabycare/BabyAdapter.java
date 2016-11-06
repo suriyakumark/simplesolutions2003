@@ -14,8 +14,10 @@ import android.view.ViewGroup;
 import android.widget.CursorAdapter;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.simplesolutions2003.happybabycare.data.AppContract;
 import com.squareup.picasso.Picasso;
 
 import java.io.FileDescriptor;
@@ -30,20 +32,28 @@ public class BabyAdapter extends CursorAdapter implements View.OnClickListener {
     private final String TAG = BabyAdapter.class.getSimpleName();
     private Context context;
 
+    private static final String[] SUMMARY_COLUMNS = {
+            AppContract.ActivitiesEntry.COLUMN_ACTIVITY_ID,
+            AppContract.ActivitiesEntry.COLUMN_SUMMARY,
+            AppContract.ActivitiesEntry.COLUMN_DETAIL
+    };
+
+    static final int COL_SUMMARY_ID = 0;
+    static final int COL_SUMMARY_TYPE = 1;
+    static final int COL_SUMMARY_DETAIL = 2;
+
     public static class ViewHolder {
 
         public final ImageView babyProfilePhoto;
         public final TextView babyName;
-        public final TextView babyBirthDate;
-        public final TextView babyGender;
+        public final LinearLayout babySummary;
         public final ImageButton babySelect;
         public final ImageButton babyEdit;
 
         public ViewHolder(View view) {
             babyProfilePhoto = (ImageView) view.findViewById(R.id.baby_prof_image);
             babyName = (TextView) view.findViewById(R.id.baby_name);
-            babyBirthDate = (TextView) view.findViewById(R.id.baby_birthdate);
-            babyGender = (TextView) view.findViewById(R.id.baby_gender);
+            babySummary = (LinearLayout) view.findViewById(R.id.baby_summary);
             babySelect = (ImageButton) view.findViewById(R.id.baby_select);
             babyEdit = (ImageButton) view.findViewById(R.id.baby_edit);
         }
@@ -62,6 +72,24 @@ public class BabyAdapter extends CursorAdapter implements View.OnClickListener {
 
         ViewHolder viewHolder = new ViewHolder(view);
         view.setTag(viewHolder);
+
+        Uri query_summary_uri = AppContract.ActivitiesEntry.buildActivitiesSummaryByUserIdBabyIdUri(MainActivity.LOGGED_IN_USER_ID,cursor.getLong(BabyFragment.COL_BABY_ID),new Utilities().getCurrentDateDB());
+        Cursor summaryCursor = context.getContentResolver().query(query_summary_uri,SUMMARY_COLUMNS,null,null,null);
+        if(summaryCursor != null){
+            if(summaryCursor.getCount() > 0){
+                Log.v(TAG, "summaryCursor " + summaryCursor.getCount());
+                while(summaryCursor.moveToNext()) {
+                    if(summaryCursor.getString(COL_SUMMARY_TYPE) != null & summaryCursor.getString(COL_SUMMARY_DETAIL) != null) {
+                        Log.v(TAG, "summaryCursor " + summaryCursor.getString(COL_SUMMARY_TYPE) + " " + summaryCursor.getString(COL_SUMMARY_DETAIL));
+                        TextView feedingInfo = new TextView(context);
+                        feedingInfo.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+                        feedingInfo.setText(summaryCursor.getString(COL_SUMMARY_TYPE) + " " + summaryCursor.getString(COL_SUMMARY_DETAIL));
+                        viewHolder.babySummary.addView(feedingInfo);
+                    }
+                }
+            }
+            summaryCursor.close();
+        }
 
         return view;
     }
@@ -103,8 +131,6 @@ public class BabyAdapter extends CursorAdapter implements View.OnClickListener {
                 viewHolder.babyProfilePhoto.setImageDrawable(context.getDrawable(R.drawable.logo));
             }
             viewHolder.babyName.setText(cursor.getString(BabyFragment.COL_BABY_NAME));
-            viewHolder.babyBirthDate.setText(cursor.getString(BabyFragment.COL_BABY_BIRTH_DATE));
-            viewHolder.babyGender.setText(cursor.getString(BabyFragment.COL_BABY_GENDER));
 
             viewHolder.babySelect.setTag(new String[]{Long.toString(cursor.getLong(BabyFragment.COL_BABY_ID)),
                     cursor.getString(BabyFragment.COL_BABY_NAME)});
@@ -128,8 +154,6 @@ public class BabyAdapter extends CursorAdapter implements View.OnClickListener {
             viewHolder.babyEdit.setOnClickListener(this);
 
             viewHolder.babyName.setContentDescription(viewHolder.babyName.getText().toString());
-            viewHolder.babyBirthDate.setContentDescription(viewHolder.babyBirthDate.getText().toString());
-            viewHolder.babyGender.setContentDescription(viewHolder.babyGender.getText().toString());
             viewHolder.babyEdit.setContentDescription(context.getString(R.string.cd_baby_icon_edit));
         }
 

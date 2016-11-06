@@ -24,6 +24,7 @@ public class AppContract {
     public static final String PATH_SLEEPING = "sleeping";
     public static final String PATH_HEALTH = "health";
     public static final String PATH_ACTIVITIES = "activities";
+    public static final String PATH_ACTIVITIES_SUMMARY = "activities_summary";
     public static final String PATH_ARTICLE = "article";
     public static final String PATH_ARTICLE_DETAIL = "article_detail";
     public static final String PATH_MEDIA = "media";
@@ -499,6 +500,10 @@ public class AppContract {
 
         public static Uri buildActivitiesByUserIdBabyIdUri(String user_id, long baby_id,String activity_date) {
             return CONTENT_URI.buildUpon().appendPath("USER").appendPath(user_id).appendPath("BABY").appendPath(Long.toString(baby_id)).appendPath("DATE").appendPath(activity_date).build();
+        }
+
+        public static Uri buildActivitiesSummaryByUserIdBabyIdUri(String user_id, long baby_id,String activity_date) {
+            return BASE_CONTENT_URI.buildUpon().appendPath(PATH_ACTIVITIES_SUMMARY).appendPath("USER").appendPath(user_id).appendPath("BABY").appendPath(Long.toString(baby_id)).appendPath("DATE").appendPath(activity_date).build();
         }
 
         public static String getUserIdFromUri(Uri uri) {

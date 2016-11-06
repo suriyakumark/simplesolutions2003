@@ -19,6 +19,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Switch;
 import android.widget.TextView;
@@ -39,6 +40,7 @@ public class ActivitiesFragment extends Fragment implements LoaderManager.Loader
     ListView activitiesListView;
     EditText activityFilterDate;
     TextView tvEmptyLoading;
+    LinearLayout activitiesSummary;
 
     public static final String ACTIVITY_TYPE_FEEDING = "Feeding";
     public static final String ACTIVITY_TYPE_DIAPER = "Diaper";
@@ -68,6 +70,15 @@ public class ActivitiesFragment extends Fragment implements LoaderManager.Loader
     static final int COL_ACTIVITY_SUMMARY = 7;
     static final int COL_ACTIVITY_DETAIL = 8;
 
+    private static final String[] SUMMARY_COLUMNS = {
+            AppContract.ActivitiesEntry.COLUMN_ACTIVITY_ID,
+            AppContract.ActivitiesEntry.COLUMN_SUMMARY,
+            AppContract.ActivitiesEntry.COLUMN_DETAIL
+    };
+
+    static final int COL_SUMMARY_ID = 0;
+    static final int COL_SUMMARY_TYPE = 1;
+    static final int COL_SUMMARY_DETAIL = 2;
 
     private static final String ACTIVITY_SORT =
             AppContract.ActivitiesEntry.COLUMN_TIME + " ASC, " +
@@ -94,6 +105,7 @@ public class ActivitiesFragment extends Fragment implements LoaderManager.Loader
         activitiesListView = (ListView) rootView.findViewById(R.id.activities_listview);
         activityFilterDate = (EditText) rootView.findViewById(R.id.activities_filter_date);
         tvEmptyLoading = (TextView) rootView.findViewById(R.id.text_empty_loading);
+        activitiesSummary = (LinearLayout) rootView.findViewById(R.id.activities_summary);
 
         activitiesListAdapter = new ActivitiesAdapter(getActivity(),null,0);
         activitiesListView.setAdapter(activitiesListAdapter);
@@ -190,7 +202,7 @@ public class ActivitiesFragment extends Fragment implements LoaderManager.Loader
         new Utilities(getActivity()).updateEmptyLoadingGone(Utilities.LIST_LOADING,tvEmptyLoading,"");
 
         Uri buildActivitiesUri = AppContract.ActivitiesEntry.buildActivitiesByUserIdBabyIdUri(MainActivity.LOGGED_IN_USER_ID,MainActivity.ACTIVE_BABY_ID,
-                new Utilities(getActivity()).convDateDisp2Db(activityFilterDate.getText().toString()));
+                new Utilities().convDateDisp2Db(activityFilterDate.getText().toString()));
 
         return new CursorLoader(getActivity(),
                 buildActivitiesUri,
@@ -206,9 +218,29 @@ public class ActivitiesFragment extends Fragment implements LoaderManager.Loader
     public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
         Log.v(TAG, "onLoadFinished - " + loader.getId() + " loader - " + cursor.getCount() + " rows retrieved");
         activitiesListAdapter.swapCursor(null);
+        activitiesSummary.removeAllViews();
         if(cursor != null){
             if (cursor.getCount() > 0) {
                 new Utilities(getActivity()).updateEmptyLoadingGone(Utilities.LIST_OK,tvEmptyLoading,"");
+
+                Uri query_summary_uri = AppContract.ActivitiesEntry.buildActivitiesSummaryByUserIdBabyIdUri(MainActivity.LOGGED_IN_USER_ID,MainActivity.ACTIVE_BABY_ID,new Utilities().convDateDisp2Db(activityFilterDate.getText().toString()));
+                Cursor summaryCursor = getActivity().getContentResolver().query(query_summary_uri,SUMMARY_COLUMNS,null,null,null);
+                if(summaryCursor != null){
+                    if(summaryCursor.getCount() > 0){
+                        Log.v(TAG, "summaryCursor " + summaryCursor.getCount());
+                        while(summaryCursor.moveToNext()) {
+                            if(summaryCursor.getString(COL_SUMMARY_TYPE) != null & summaryCursor.getString(COL_SUMMARY_DETAIL) != null) {
+                                Log.v(TAG, "summaryCursor " + summaryCursor.getString(COL_SUMMARY_TYPE) + " " + summaryCursor.getString(COL_SUMMARY_DETAIL));
+                                TextView feedingInfo = new TextView(getActivity());
+                                feedingInfo.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+                                feedingInfo.setText(summaryCursor.getString(COL_SUMMARY_TYPE) + " " + summaryCursor.getString(COL_SUMMARY_DETAIL));
+                                activitiesSummary.addView(feedingInfo);
+                            }
+                        }
+                    }
+                    summaryCursor.close();
+                }
+
                 activitiesListAdapter.swapCursor(cursor);
             }else{
                 new Utilities(getActivity()).updateEmptyLoadingGone(Utilities.LIST_EMPTY,tvEmptyLoading,getString(R.string.text_activity_list_empty));

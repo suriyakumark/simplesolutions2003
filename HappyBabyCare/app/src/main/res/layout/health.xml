@@ -14,8 +14,10 @@
 
         <Spinner
             android:id="@+id/health_title"
-            android:layout_width="wrap_content"
+            android:layout_width="@dimen/spinner_width_health"
             android:layout_height="wrap_content"
+            android:dropDownWidth="@dimen/dropdown_width_health"
+            android:ellipsize="marquee"
             android:layout_marginTop="@dimen/margin_medium"
             android:layout_marginBottom="@dimen/margin_medium"
             android:layout_gravity="center"
@@ -24,7 +26,7 @@
             android:popupBackground="@color/colorAccent"
             android:paddingTop="@dimen/padding_spinner"
             android:paddingBottom="@dimen/padding_spinner"
-            android:paddingStart="@dimen/padding_spinner"
+            android:paddingStart="@dimen/padding_spinner_start"
             android:paddingEnd="@dimen/padding_spinner_wide"
             android:contentDescription="@string/cd_health_title"
             android:entries="@array/spinner_health_title"
@@ -36,9 +38,12 @@
             android:layout_height="@dimen/activity_summary_height"
             android:layout_marginTop="@dimen/margin_medium"
             android:layout_marginBottom="@dimen/margin_medium"
+            android:layout_marginStart="@dimen/margin_medium"
+            android:layout_marginEnd="@dimen/margin_medium"
             android:paddingStart="@dimen/padding_text"
             android:paddingEnd="@dimen/padding_text"
             android:maxLines="2"
+            android:background="@drawable/edittext_bg_accent"
             android:contentDescription="@string/cd_health_summary"
             android:hint="@string/text_health_summary" />
 

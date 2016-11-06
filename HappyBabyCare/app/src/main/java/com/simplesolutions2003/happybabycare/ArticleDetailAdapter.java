@@ -9,6 +9,8 @@ import android.view.ViewGroup;
 import android.widget.CursorAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
 
 /**
@@ -54,17 +56,15 @@ public class ArticleDetailAdapter extends CursorAdapter {
     public void bindView(View view, Context context, Cursor cursor) {
 
         Log.v(TAG, "bindView");
-        ViewHolder viewHolder = (ViewHolder) view.getTag();
+        final ViewHolder viewHolder = (ViewHolder) view.getTag();
         if(cursor != null){
             if(cursor.getPosition() == 0){
                 ArticleDetailFragment.articleDetailTitle.setText(cursor.getString(ArticleDetailFragment.COL_ARTICLE_TITLE));
                 ArticleDetailFragment.articleDetailTitle.setContentDescription(ArticleDetailFragment.articleDetailTitle.getText().toString());
             }
             if(cursor.getString(ArticleDetailFragment.COL_ARTICLE_DETAIL_TYPE).equals(ARTICLE_DETAIL_TYPE_IMAGE)) {
-                Picasso.with(context)
-                        .load(cursor.getString(ArticleDetailFragment.COL_ARTICLE_DETAIL_CONTENT))
-                        .noFade()
-                        .into(viewHolder.imageView);
+                new Utilities(context).loadImageView(viewHolder.imageView,
+                        cursor.getString(ArticleDetailFragment.COL_ARTICLE_DETAIL_CONTENT));
                 viewHolder.imageView.setVisibility(View.VISIBLE);
             }else{
                 viewHolder.imageView.setVisibility(View.GONE);

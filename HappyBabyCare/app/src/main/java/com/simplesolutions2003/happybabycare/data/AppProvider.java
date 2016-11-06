@@ -37,6 +37,7 @@ public class AppProvider extends ContentProvider {
     private static final SQLiteQueryBuilder sMediaQueryBuilder;
 
     private static final SQLiteQueryBuilder sActivitiesQueryBuilder;
+    private static final SQLiteQueryBuilder sActivitiesSummaryQueryBuilder;
     private static final SQLiteQueryBuilder sArticleDetailWithDetailQueryBuilder;
 
     static final int SETTINGS = 100;
@@ -66,6 +67,7 @@ public class AppProvider extends ContentProvider {
     static final int HEALTH_BY_ID = 901;
     static final int HEALTH_BY_USERID_BABYID = 902;
     static final int ACTIVITIES_BY_USERID_BABYID = 904;
+    static final int ACTIVITIES_SUMMARY_BY_USERID_BABYID = 905;
     static final int ARTICLE = 1000;
     static final int ARTICLE_BY_TYPE = 1001;
     static final int ARTICLE_BY_CATEGORY = 1002;
@@ -169,6 +171,10 @@ public class AppProvider extends ContentProvider {
 
     static{
         sActivitiesQueryBuilder = new SQLiteQueryBuilder();
+    }
+
+    static{
+        sActivitiesSummaryQueryBuilder = new SQLiteQueryBuilder();
     }
 
     static{
@@ -706,6 +712,56 @@ public class AppProvider extends ContentProvider {
         return mOpenHelper.getReadableDatabase().rawQuery(sActivitiesQueryBuilder.buildUnionQuery(subQueries, sortOrder, null),selectionArgs);
     }
 
+
+    private Cursor getActivitiesSummaryByUserIdBabyId(Uri uri, String[] projection, String sortOrder) {
+
+        Log.v(LOG_TAG, "getActivitiesSummaryByUserIdBabyId uri - " + uri);
+        String userId = AppContract.ActivitiesEntry.getUserIdFromUri(uri);
+        String babyId = Long.toString(AppContract.ActivitiesEntry.getBabyIdFromUri(uri));
+        String activityDate = AppContract.ActivitiesEntry.getActivityDateFromUri(uri);
+        Log.v(LOG_TAG, "getActivitiesSummaryByUserIdBabyId userId - " + userId);
+        Log.v(LOG_TAG, "getActivitiesSummaryByUserIdBabyId babyId - " + babyId);
+        Log.v(LOG_TAG, "getActivitiesSummaryByUserIdBabyId activityDate - " + activityDate);
+
+        String[] selectionArgs = new String[]{userId,babyId,activityDate,userId,babyId,activityDate,userId,babyId,activityDate};
+        String activitiesFeedingQuery;
+        String activitiesDiaperQuery;
+        String activitiesSleepingQuery;
+
+        activitiesFeedingQuery = "SELECT " +
+                "'Feeding'" + " AS " + AppContract.ActivitiesEntry.COLUMN_ACTIVITY_ID + ", " +
+                AppContract.FeedingEntry.COLUMN_TYPE + " AS " + AppContract.ActivitiesEntry.COLUMN_SUMMARY + ", " +
+                "SUM(" + AppContract.FeedingEntry.COLUMN_QUANTITY + ") || ' ' || " +
+                AppContract.FeedingEntry.COLUMN_UNIT + " AS " + AppContract.ActivitiesEntry.COLUMN_DETAIL + " " +
+                " FROM " + AppContract.FeedingEntry.TABLE_NAME +
+                " WHERE " +
+                sActivitiesFeedingByUserIdBabyIdSelection +
+                " GROUP BY " +
+                AppContract.FeedingEntry.COLUMN_TYPE + ", " +
+                AppContract.FeedingEntry.COLUMN_UNIT;
+
+        activitiesDiaperQuery = "SELECT " +
+                "'Diaper'" + " AS " + AppContract.ActivitiesEntry.COLUMN_ACTIVITY_ID + ", " +
+                AppContract.DiaperEntry.COLUMN_TYPE + " AS " + AppContract.ActivitiesEntry.COLUMN_SUMMARY + ", " +
+                "COUNT(*)" + " AS " + AppContract.ActivitiesEntry.COLUMN_DETAIL + " " +
+                " FROM " + AppContract.DiaperEntry.TABLE_NAME +
+                " WHERE " +
+                sActivitiesDiaperByUserIdBabyIdSelection +
+                " GROUP BY " +
+                AppContract.DiaperEntry.COLUMN_TYPE;
+
+        activitiesSleepingQuery = "SELECT " +
+                "'Sleeping'" + " AS " + AppContract.ActivitiesEntry.COLUMN_ACTIVITY_ID + ", " +
+                "'Sleeping'" + " AS " + AppContract.ActivitiesEntry.COLUMN_SUMMARY + ", " +
+                "SUM(" + AppContract.SleepingEntry.COLUMN_DURATION + ") AS " + AppContract.ActivitiesEntry.COLUMN_DETAIL + " " +
+                " FROM " + AppContract.SleepingEntry.TABLE_NAME +
+                " WHERE " +
+                sActivitiesSleepingByUserIdBabyIdSelection;
+
+        String[] subQueries = new String[] {activitiesFeedingQuery,activitiesDiaperQuery,activitiesSleepingQuery};
+        return mOpenHelper.getReadableDatabase().rawQuery(sActivitiesSummaryQueryBuilder.buildUnionQuery(subQueries, sortOrder, null),selectionArgs);
+    }
+
     private Cursor getArticleByType(Uri uri, String[] projection, String sortOrder) {
 
         Log.v(LOG_TAG, "getArticleByType uri - " + uri);
@@ -833,6 +889,7 @@ public class AppProvider extends ContentProvider {
         matcher.addURI(authority, AppContract.PATH_HEALTH + "/*", HEALTH_BY_ID);
         matcher.addURI(authority, AppContract.PATH_HEALTH + "/USER/*/BABY/#", HEALTH_BY_USERID_BABYID);
         matcher.addURI(authority, AppContract.PATH_ACTIVITIES + "/USER/*/BABY/*/DATE/*", ACTIVITIES_BY_USERID_BABYID);
+        matcher.addURI(authority, AppContract.PATH_ACTIVITIES_SUMMARY + "/USER/*/BABY/*/DATE/*", ACTIVITIES_SUMMARY_BY_USERID_BABYID);
         matcher.addURI(authority, AppContract.PATH_ARTICLE, ARTICLE);
         matcher.addURI(authority, AppContract.PATH_ARTICLE + "/TYPE/*", ARTICLE_BY_TYPE);
         matcher.addURI(authority, AppContract.PATH_ARTICLE + "/CATEGORY/*", ARTICLE_BY_CATEGORY);
@@ -901,6 +958,8 @@ public class AppProvider extends ContentProvider {
             case HEALTH_BY_USERID_BABYID:
                 return AppContract.HealthEntry.CONTENT_ITEM_TYPE;
             case ACTIVITIES_BY_USERID_BABYID:
+                return AppContract.ActivitiesEntry.CONTENT_ITEM_TYPE;
+            case ACTIVITIES_SUMMARY_BY_USERID_BABYID:
                 return AppContract.ActivitiesEntry.CONTENT_ITEM_TYPE;
             case ARTICLE:
                 return AppContract.ArticleEntry.CONTENT_TYPE;
@@ -1027,6 +1086,12 @@ public class AppProvider extends ContentProvider {
                     retCursor = getActivitiesByUserIdBabyId(uri, projection, sortOrder);
                     break;
                 }
+
+                case ACTIVITIES_SUMMARY_BY_USERID_BABYID: {
+                    retCursor = getActivitiesSummaryByUserIdBabyId(uri, projection, sortOrder);
+                    break;
+                }
+
                 case ARTICLE_BY_TYPE: {
                     retCursor = getArticleByType(uri, projection, sortOrder);
                     break;

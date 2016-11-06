@@ -28,6 +28,17 @@
 
     <include layout="@layout/empty_loading" />
 
+    <LinearLayout
+        android:id="@+id/activities_summary"
+        android:orientation="vertical"
+        android:gravity="start|center_vertical"
+        android:layout_gravity="start|center_vertical"
+        android:paddingStart="@dimen/padding_layout_more"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+    </LinearLayout>
+
     <ListView
         android:id="@+id/activities_listview"
         android:layout_width="match_parent"

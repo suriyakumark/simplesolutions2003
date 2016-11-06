@@ -8,9 +8,13 @@ import android.net.Uri;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.simplesolutions2003.happybabycare.data.AppContract;
+import com.squareup.picasso.Callback;
+import com.squareup.picasso.NetworkPolicy;
+import com.squareup.picasso.Picasso;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -211,6 +215,28 @@ public class Utilities {
                 break;
         }
 
+    }
+
+    public void loadImageView(final ImageView imageView, final String imageUrl){
+        Picasso.with(context)
+                .load(imageUrl)
+                .networkPolicy(NetworkPolicy.OFFLINE)
+                .noFade()
+                .into(imageView, new Callback() {
+                    @Override
+                    public void onSuccess() {
+
+                    }
+
+                    @Override
+                    public void onError() {
+                        // Try again online if cache failed
+                        Picasso.with(context)
+                                .load(imageUrl)
+                                .noFade()
+                                .into(imageView);
+                    }
+                });
     }
 
 }

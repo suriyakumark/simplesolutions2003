@@ -32,8 +32,8 @@
         <item name="android:textAppearance">@style/spinnerItemTextAppearance</item>
     </style>
 
-    <style name="mySpinnerDropItemStyle" parent="android:Widget.DropDownItem.Spinner">
-        <item name="android:textAppearance">@style/spinnerItemTextAppearance</item>
+    <style name="mySpinnerDropItemStyle" parent="@android:style/Widget.Holo.DropDownItem.Spinner">
+        <item name="android:textColor">@color/colorAccentLight</item>
     </style>
 
     <style name="spinnerItemTextAppearance" parent="android:TextAppearance.Widget.TextView.SpinnerItem">
@@ -41,6 +41,7 @@
     </style>
 
     <style name="mySpinnerListStyle" parent="android:Widget.DropDownItem.Spinner">
+        <item name="android:textColor">@color/colorAccentLight</item>
         <item name="android:divider">@color/colorAccentLight</item>
         <item name="android:dividerHeight">1dp</item>
     </style>
