@@ -97,37 +97,65 @@ public class Utilities {
         return db_time_fmt.format(new Date().getTime());
     }
 
-    public String getTimeDifferenceDisp(String dateIn){
-        Date dateTo = new Date();
+    public String getTimeDifferenceDisp(String dateStart, String dateEnd){
+        int precision = 0;
         try {
-            Date dateFrom = (Date) disp_date_fmt.parse(dateIn);
-            long dateDiffSec = Math.abs(dateTo.getTime() - dateFrom.getTime()) / (60 * 1000);
-            long dateDiffMin = dateDiffSec % 60;
-            long dateDiffHr = (dateDiffSec/60) % 60;
-            long dateDiffDays = (dateDiffSec/(60 * 60)) % 24;
+            Date dateTo = (Date) db_time_fmt.parse(dateEnd);
+            Date dateFrom = (Date) db_time_fmt.parse(dateStart);
+            if(dateFrom.after(dateTo)){
+                dateTo = new Date(dateTo.getTime() + (24*60*60*1000));
+            }
+            long dateDiffSec = Math.abs(dateTo.getTime() - dateFrom.getTime()) / (1000);
+            long dateDiffMin = (dateDiffSec/60) % 60;
+            long dateDiffHr = (dateDiffSec/(60 * 60)) % 60;
+            long dateDiffDays = (dateDiffSec/(60 * 60 * 24));
             String timeDiff = "";
             if(dateDiffDays > 1){
                 timeDiff += dateDiffDays + "days ";
+                precision++;
             }
             if(dateDiffDays == 1){
                 timeDiff += dateDiffDays + "day ";
+                precision++;
             }
-            if(dateDiffHr > 1){
+            if(dateDiffHr > 1 & precision < 3){
                 timeDiff += dateDiffHr + "hrs ";
+                precision++;
             }
-            if(dateDiffHr == 1){
+            if(dateDiffHr == 1 & precision < 3){
                 timeDiff += dateDiffHr + "hr ";
+                precision++;
             }
-            if(dateDiffMin > 1){
+            if(dateDiffMin > 1 & precision < 3){
                 timeDiff += dateDiffMin + "mins ";
+                precision++;
             }
-            if(dateDiffMin == 1){
+            if(dateDiffMin == 1 & precision < 3){
                 timeDiff += dateDiffMin + "min ";
+                precision++;
             }
             if(timeDiff.isEmpty()){
                 timeDiff = "just now";
             }
             return timeDiff;
+        }
+        catch(Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public String getTimeDifferenceMins(String dateStart, String dateEnd){
+        int precision = 0;
+        try {
+            Date dateTo = (Date) db_time_fmt.parse(dateEnd);
+            Date dateFrom = (Date) db_time_fmt.parse(dateStart);
+            if(dateFrom.after(dateTo)){
+                dateTo = new Date(dateTo.getTime() + (24*60*60*1000));
+            }
+            long dateDiffSec = Math.abs(dateTo.getTime() - dateFrom.getTime()) / (1000);
+            long dateDiffMin = dateDiffSec / 60;
+            return Long.toString(dateDiffMin);
         }
         catch(Exception e) {
             e.printStackTrace();

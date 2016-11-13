@@ -32,6 +32,54 @@
             android:entries="@array/spinner_health_title"
             android:prompt="@string/text_health_title" />
 
+        <LinearLayout
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:layout_marginTop="@dimen/margin_medium"
+            android:layout_marginBottom="@dimen/margin_medium">
+
+            <EditText
+                android:id="@+id/health_value"
+                android:layout_height="@dimen/edittext_height"
+                android:layout_width="wrap_content"
+                android:layout_gravity="start"
+                android:gravity="center"
+                android:visibility="gone"
+                android:paddingStart="@dimen/padding_text_wide"
+                android:paddingEnd="@dimen/padding_text_wide"
+                android:inputType="numberDecimal"
+                android:background="@drawable/edittext_bg_accent"
+                android:maxLines="1"
+                android:contentDescription="@string/cd_health_value"
+                android:hint="@string/text_health_value" />
+
+            <Spinner
+                android:id="@+id/health_unit"
+                android:layout_width="@dimen/spinner_width_health_unit"
+                android:layout_height="@dimen/spinner_height"
+                android:layout_gravity="end"
+                android:visibility="gone"
+                android:dropDownWidth="@dimen/dropdown_width_health_unit"
+                android:ellipsize="marquee"
+                android:gravity="center"
+                android:background="@drawable/spinner_bg"
+                android:popupBackground="@color/colorAccent"
+                android:layout_marginStart="@dimen/margin_small"
+                android:paddingTop="@dimen/padding_spinner"
+                android:paddingBottom="@dimen/padding_spinner"
+                android:paddingStart="@dimen/padding_spinner_start"
+                android:paddingEnd="@dimen/padding_spinner_wide"
+                android:contentDescription="@string/cd_health_unit"
+                android:entries="@array/spinner_health_unit_temp"
+                android:spinnerMode="dropdown"
+                android:prompt="@string/text_feeding_unit" />
+
+        </LinearLayout>
+
+
         <EditText
             android:id="@+id/health_summary"
             android:layout_width="match_parent"

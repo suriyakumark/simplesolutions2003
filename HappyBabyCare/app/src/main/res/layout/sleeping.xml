@@ -33,16 +33,29 @@
             android:prompt="@string/text_sleeping_where" />
 
         <EditText
-            android:id="@+id/sleep_duration"
+            android:id="@+id/sleep_end_time"
             android:layout_width="wrap_content"
             android:layout_height="@dimen/edittext_height"
             android:layout_gravity="center"
             android:gravity="center"
             android:layout_marginTop="@dimen/margin_medium"
-            android:layout_marginBottom="@dimen/margin_medium"
-            android:paddingStart="@dimen/padding_text"
-            android:paddingEnd="@dimen/padding_text"
+            android:layout_marginBottom="@dimen/margin_small"
+            android:paddingStart="@dimen/padding_text_wide"
+            android:paddingEnd="@dimen/padding_text_wide"
             android:background="@drawable/edittext_bg_accent"
+            android:inputType="number"
+            android:contentDescription="@string/cd_sleeping_end_time"
+            android:hint="@string/text_sleeping_end_time" />
+
+        <TextView
+            android:id="@+id/sleep_duration"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/edittext_height"
+            android:layout_gravity="center|top"
+            android:gravity="center|top"
+            android:layout_marginBottom="@dimen/margin_medium"
+            android:paddingStart="@dimen/padding_text_wider"
+            android:paddingEnd="@dimen/padding_text_wider"
             android:inputType="number"
             android:contentDescription="@string/cd_sleeping_duration"
             android:hint="@string/text_sleeping_duration" />

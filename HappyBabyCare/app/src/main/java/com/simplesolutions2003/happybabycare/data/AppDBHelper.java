@@ -206,6 +206,7 @@ public class AppDBHelper extends SQLiteOpenHelper  {
                 HealthEntry.COLUMN_TIME + " TIME, " +
                 HealthEntry.COLUMN_TYPE + " TEXT, " +
                 HealthEntry.COLUMN_VALUE + " TEXT, " +
+                HealthEntry.COLUMN_UNIT + " TEXT, " +
                 HealthEntry.COLUMN_NOTES + " TEXT, " +
                 HealthEntry.COLUMN_LAST_UPDATED_TS + " TIMESTAMP DEFAULT CURRENT_TIMESTAMP, " +
 

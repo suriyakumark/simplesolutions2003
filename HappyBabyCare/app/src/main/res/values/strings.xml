@@ -116,7 +116,8 @@
 
     <string name="text_sleeping_date">Date</string>
     <string name="text_sleeping_time">Time</string>
-    <string name="text_sleeping_duration">Duration (in mins)</string>
+    <string name="text_sleeping_end_time">Till when?</string>
+    <string name="text_sleeping_duration">Duration</string>
     <string name="text_sleeping_where">Where?</string>
 
     <string-array name="spinner_sleep_where">
@@ -129,6 +130,7 @@
 
     <string name="text_health_date">Date</string>
     <string name="text_health_time">Time</string>
+    <string name="text_health_value">Value</string>
     <string name="text_health_summary">Summary</string>
     <string name="text_health_title">Title</string>
 
@@ -137,10 +139,35 @@
         <item>Temperature</item>
         <item>Height</item>
         <item>Weight</item>
+        <item>Head Circumference</item>
         <item>Sickness</item>
         <item>Others</item>
     </string-array>
-    
+
+    <string-array name="spinner_health_unit_height">
+        <item>in</item>
+        <item>ft</item>
+        <item>cms</item>
+    </string-array>
+
+    <string-array name="spinner_health_unit_weight">
+        <item>g</item>
+        <item>kgs</item>
+        <item>oz</item>
+        <item>lbs</item>
+    </string-array>
+
+    <string-array name="spinner_health_unit_head">
+        <item>in</item>
+        <item>ft</item>
+        <item>cms</item>
+    </string-array>
+
+    <string-array name="spinner_health_unit_temp">
+        <item>&#xb0;C</item>
+        <item>&#xb0;F</item>
+    </string-array>
+
     <string name="btn_sounds_play">Play</string>
     <string name="btn_sounds_pause">Pause</string>
     <string name="btn_sounds_stop">Stop</string>
@@ -186,11 +213,14 @@
     <string name="cd_diaper_dry">Dry diaper</string>
     
     <string name="cd_sleeping">Enter when the baby slept</string>
+    <string name="cd_sleeping_end_time">Till when the baby slept</string>
     <string name="cd_sleeping_duration">How long the baby slept</string>
     <string name="cd_sleeping_where">Where did the baby sleep</string>
     
     <string name="cd_health">Enter growth, vaccinations and other health info</string>
     <string name="cd_health_title">Choose what type of health entry</string>
+    <string name="cd_health_value">Enter the value</string>
+    <string name="cd_health_unit">Choose the unit of measurement</string>
     <string name="cd_health_summary">Enter a short summary</string>
     
     <string name="cd_group">Create a new group or join an existing</string>

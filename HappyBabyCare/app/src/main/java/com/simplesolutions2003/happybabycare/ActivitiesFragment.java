@@ -231,10 +231,10 @@ public class ActivitiesFragment extends Fragment implements LoaderManager.Loader
                         while(summaryCursor.moveToNext()) {
                             if(summaryCursor.getString(COL_SUMMARY_TYPE) != null & summaryCursor.getString(COL_SUMMARY_DETAIL) != null) {
                                 Log.v(TAG, "summaryCursor " + summaryCursor.getString(COL_SUMMARY_TYPE) + " " + summaryCursor.getString(COL_SUMMARY_DETAIL));
-                                TextView feedingInfo = new TextView(getActivity());
-                                feedingInfo.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-                                feedingInfo.setText(summaryCursor.getString(COL_SUMMARY_TYPE) + " " + summaryCursor.getString(COL_SUMMARY_DETAIL));
-                                activitiesSummary.addView(feedingInfo);
+                                TextView summaryInfo = new TextView(getActivity());
+                                summaryInfo.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+                                summaryInfo.setText(summaryCursor.getString(COL_SUMMARY_TYPE) + " " + summaryCursor.getString(COL_SUMMARY_DETAIL));
+                                activitiesSummary.addView(summaryInfo);
                             }
                         }
                     }

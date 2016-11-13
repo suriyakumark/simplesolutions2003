@@ -34,7 +34,7 @@ public class FeedingFragment extends Fragment {
     public static long FEEDING_ID = -1;
 
     public static final String FEEDING_TYPE_NURSING = "Nursing";
-
+    boolean runSetupUnit = true;
     String activityTimestamp = null;
 
     private static final String[] FEEDING_COLUMNS = {
@@ -83,9 +83,6 @@ public class FeedingFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        final String[] spinnerNursingArray = getResources().getStringArray(R.array.spinner_feeding_unit_nursing);
-        final String[] spinnerOthersArray = getResources().getStringArray(R.array.spinner_feeding_unit_others);
-
         View rootView = inflater.inflate(R.layout.feeding, container, false);
 
         activityDate = (EditText) rootView.findViewById(R.id.activity_date);
@@ -107,17 +104,10 @@ public class FeedingFragment extends Fragment {
         feedingType.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                ArrayAdapter<String> spinnerArrayAdapter;
-                if(feedingType.getSelectedItem().toString().equals(FEEDING_TYPE_NURSING)){
-                    spinnerArrayAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, spinnerNursingArray);
-                    feedingQuantity.setHint(getString(R.string.text_feeding_duration));
-                }else{
-                    spinnerArrayAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, spinnerOthersArray);
-                    feedingQuantity.setHint(getString(R.string.text_feeding_qty));
+                if(runSetupUnit){
+                    setupUnit();
                 }
-                spinnerArrayAdapter.setDropDownViewResource(R.layout.dropdown_item);
-                feedingUnit.setAdapter(spinnerArrayAdapter);
-
+                runSetupUnit = true;
             }
 
             @Override
@@ -196,8 +186,10 @@ public class FeedingFragment extends Fragment {
                     activityNotes.setText(activityEntry.getString(COL_FEEDING_NOTES));
                     for(int iType = 0; iType < feedingType.getCount(); iType++){
                         if(activityEntry.getString(COL_FEEDING_TYPE).equals(feedingType.getItemAtPosition(iType).toString())){
+                            runSetupUnit = false;
                             feedingType.setSelection(iType);
                             feedingType.setContentDescription(activityEntry.getString(COL_FEEDING_TYPE));
+                            setupUnit();
                             break;
                         }
                     }
@@ -225,6 +217,23 @@ public class FeedingFragment extends Fragment {
         return rootView;
     }
 
+    public void setupUnit() {
+        Log.v(TAG, "called setup unit");
+
+        final String[] spinnerNursingArray = getResources().getStringArray(R.array.spinner_feeding_unit_nursing);
+        final String[] spinnerOthersArray = getResources().getStringArray(R.array.spinner_feeding_unit_others);
+
+        ArrayAdapter<String> spinnerArrayAdapter;
+        if(feedingType.getSelectedItem().toString().equals(FEEDING_TYPE_NURSING)){
+            spinnerArrayAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, spinnerNursingArray);
+            feedingQuantity.setHint(getString(R.string.text_feeding_duration));
+        }else{
+            spinnerArrayAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, spinnerOthersArray);
+            feedingQuantity.setHint(getString(R.string.text_feeding_qty));
+        }
+        spinnerArrayAdapter.setDropDownViewResource(R.layout.dropdown_item);
+        feedingUnit.setAdapter(spinnerArrayAdapter);
+    }
 
     @Override
     public void onResume()

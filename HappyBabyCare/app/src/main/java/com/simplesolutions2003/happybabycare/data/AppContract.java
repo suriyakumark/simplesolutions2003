@@ -447,6 +447,7 @@ public class AppContract {
         public static final String COLUMN_TIME = "time";
         public static final String COLUMN_TYPE = "type";
         public static final String COLUMN_VALUE = "value";
+        public static final String COLUMN_UNIT = "unit";
         public static final String COLUMN_NOTES = "notes";
         public static final String COLUMN_LAST_UPDATED_TS = "last_updated_timestamp";
 

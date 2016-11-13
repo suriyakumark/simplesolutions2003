@@ -39,6 +39,8 @@
     <dimen name="dropdown_width_sleeping">96dp</dimen>
     <dimen name="spinner_width_health">196dp</dimen>
     <dimen name="dropdown_width_health">132dp</dimen>
+    <dimen name="spinner_width_health_unit">120dp</dimen>
+    <dimen name="dropdown_width_health_unit">96dp</dimen>
     <dimen name="edittext_height">48dp</dimen>
     <dimen name="spinner_height">48dp</dimen>
 

@@ -81,10 +81,10 @@ public class BabyAdapter extends CursorAdapter implements View.OnClickListener {
                 while(summaryCursor.moveToNext()) {
                     if(summaryCursor.getString(COL_SUMMARY_TYPE) != null & summaryCursor.getString(COL_SUMMARY_DETAIL) != null) {
                         Log.v(TAG, "summaryCursor " + summaryCursor.getString(COL_SUMMARY_TYPE) + " " + summaryCursor.getString(COL_SUMMARY_DETAIL));
-                        TextView feedingInfo = new TextView(context);
-                        feedingInfo.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-                        feedingInfo.setText(summaryCursor.getString(COL_SUMMARY_TYPE) + " " + summaryCursor.getString(COL_SUMMARY_DETAIL));
-                        viewHolder.babySummary.addView(feedingInfo);
+                        TextView summaryInfo = new TextView(context);
+                        summaryInfo.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+                        summaryInfo.setText(summaryCursor.getString(COL_SUMMARY_TYPE) + " " + summaryCursor.getString(COL_SUMMARY_DETAIL));
+                        viewHolder.babySummary.addView(summaryInfo);
                     }
                 }
             }

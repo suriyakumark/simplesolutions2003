@@ -38,7 +38,7 @@ import com.simplesolutions2003.happybabycare.data.AppContract;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Locale;
-
+import android.widget.TextView;
 /**
  * Created by SuriyaKumar on 8/20/2016.
  */
@@ -57,6 +57,7 @@ public class SleepingFragment extends Fragment {
             AppContract.SleepingEntry.TABLE_NAME + "." + AppContract.SleepingEntry.COLUMN_TIMESTAMP,
             AppContract.SleepingEntry.TABLE_NAME + "." + AppContract.SleepingEntry.COLUMN_DATE,
             AppContract.SleepingEntry.TABLE_NAME + "." + AppContract.SleepingEntry.COLUMN_TIME,
+            AppContract.SleepingEntry.TABLE_NAME + "." + AppContract.SleepingEntry.COLUMN_END_TIME,
             AppContract.SleepingEntry.TABLE_NAME + "." + AppContract.SleepingEntry.COLUMN_DURATION,
             AppContract.SleepingEntry.TABLE_NAME + "." + AppContract.SleepingEntry.COLUMN_WHERE_SLEEP,
             AppContract.SleepingEntry.TABLE_NAME + "." + AppContract.SleepingEntry.COLUMN_NOTES
@@ -69,15 +70,17 @@ public class SleepingFragment extends Fragment {
     static final int COL_SLEEPING_TIMESTAMP = 3;
     static final int COL_SLEEPING_DATE = 4;
     static final int COL_SLEEPING_TIME = 5;
-    static final int COL_SLEEPING_DURATION = 6;
-    static final int COL_SLEEPING_WHERE_SLEEP = 7;
-    static final int COL_SLEEPING_NOTES = 8;
+    static final int COL_SLEEPING_END_TIME = 6;
+    static final int COL_SLEEPING_DURATION = 7;
+    static final int COL_SLEEPING_WHERE_SLEEP = 8;
+    static final int COL_SLEEPING_NOTES = 9;
 
     EditText activityDate;
     EditText activityTime;
     EditText activityNotes;
 
-    EditText sleepingDuration;
+    EditText sleepingEndTime;
+    TextView sleepingDuration;
     Spinner sleepingWhere;
 
     public SleepingFragment(){}
@@ -97,22 +100,29 @@ public class SleepingFragment extends Fragment {
         activityTime = (EditText) rootView.findViewById(R.id.activity_time);
         activityNotes = (EditText) rootView.findViewById(R.id.activity_notes);
 
-        sleepingDuration = (EditText) rootView.findViewById(R.id.sleep_duration);
+        sleepingEndTime = (EditText) rootView.findViewById(R.id.sleep_end_time);
+        sleepingDuration = (TextView) rootView.findViewById(R.id.sleep_duration);
         sleepingWhere = (Spinner) rootView.findViewById(R.id.sleep_place);
+
 
         activityDate.setInputType(InputType.TYPE_NULL);
         activityTime.setInputType(InputType.TYPE_NULL);
+        sleepingEndTime.setInputType(InputType.TYPE_NULL);
         activityDate.setText(new Utilities(getActivity()).getCurrentDateDisp());
         activityTime.setText(new Utilities(getActivity()).getCurrentTimeDB());
+        sleepingEndTime.setText(new Utilities(getActivity()).getCurrentTimeDB());
 
         SetDateEditText setActivityDate = new SetDateEditText(activityDate, getActivity());
         SetTimeEditText setActivityTime = new SetTimeEditText(activityTime, getActivity());
+        SetTimeEditText setSleepingEndTime = new SetTimeEditText(sleepingEndTime, getActivity());
 
-        sleepingDuration.addTextChangedListener(new TextWatcher() {
+        sleepingEndTime.addTextChangedListener(new TextWatcher() {
 
             @Override
             public void afterTextChanged(Editable s) {
-
+                sleepingDuration.setText(new Utilities().getTimeDifferenceDisp(activityTime.getText().toString(),sleepingEndTime.getText().toString()));
+                new Utilities(getActivity()).resetFocus(sleepingEndTime);
+                updateMenuVisibility();
             }
 
             @Override
@@ -122,7 +132,7 @@ public class SleepingFragment extends Fragment {
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                updateMenuVisibility();
+
             }
         });
 
@@ -150,6 +160,7 @@ public class SleepingFragment extends Fragment {
 
             @Override
             public void afterTextChanged(Editable s) {
+                sleepingDuration.setText(new Utilities().getTimeDifferenceDisp(activityTime.getText().toString(),sleepingEndTime.getText().toString()));
                 new Utilities(getActivity()).resetFocus(activityTime);
                 updateMenuVisibility();
             }
@@ -175,7 +186,9 @@ public class SleepingFragment extends Fragment {
                     activityDate.setText(new Utilities(getActivity()).convDateDb2Disp(activityEntry.getString(COL_SLEEPING_DATE)));
                     activityTime.setText(activityEntry.getString(COL_SLEEPING_TIME));
                     activityNotes.setText(activityEntry.getString(COL_SLEEPING_NOTES));
-                    sleepingDuration.setText(activityEntry.getString(COL_SLEEPING_DURATION));
+                    sleepingEndTime.setText(activityEntry.getString(COL_SLEEPING_END_TIME));
+                    //sleepingDuration.setText(activityEntry.getString(COL_SLEEPING_DURATION));
+                    sleepingDuration.setText(new Utilities().getTimeDifferenceDisp(activityTime.getText().toString(),sleepingEndTime.getText().toString()));
                     for(int iType = 0; iType < sleepingWhere.getCount(); iType++){
                         if(activityEntry.getString(COL_SLEEPING_WHERE_SLEEP).equals(sleepingWhere.getItemAtPosition(iType).toString())){
                             sleepingWhere.setSelection(iType);
@@ -188,6 +201,7 @@ public class SleepingFragment extends Fragment {
                     activityDate.setContentDescription(activityDate.getText().toString());
                     activityTime.setContentDescription(activityTime.getText().toString());
                     activityNotes.setContentDescription(activityNotes.getText().toString());
+                    sleepingEndTime.setContentDescription(sleepingEndTime.getText().toString());
                     sleepingDuration.setContentDescription(sleepingDuration.getText().toString());
                 }
             }else{
@@ -239,6 +253,7 @@ public class SleepingFragment extends Fragment {
     public void validateInputs() {
         if(activityDate.getText().toString().isEmpty() |
                 activityTime.getText().toString().isEmpty() |
+                sleepingEndTime.getText().toString().isEmpty() |
                 sleepingDuration.getText().toString().isEmpty()){
 
             MainActivity.saveMenuEnabled = false;
@@ -271,7 +286,8 @@ public class SleepingFragment extends Fragment {
         newValues.put(AppContract.SleepingEntry.COLUMN_TIMESTAMP, activityTimestamp);
         newValues.put(AppContract.SleepingEntry.COLUMN_DATE, new Utilities(getActivity()).convDateDisp2Db(activityDate.getText().toString()));
         newValues.put(AppContract.SleepingEntry.COLUMN_TIME, activityTime.getText().toString());
-        newValues.put(AppContract.SleepingEntry.COLUMN_DURATION, sleepingDuration.getText().toString());
+        newValues.put(AppContract.SleepingEntry.COLUMN_END_TIME, sleepingEndTime.getText().toString());
+        newValues.put(AppContract.SleepingEntry.COLUMN_DURATION, new Utilities().getTimeDifferenceMins(activityTime.getText().toString(),sleepingEndTime.getText().toString()));
         newValues.put(AppContract.SleepingEntry.COLUMN_WHERE_SLEEP, sleepingWhere.getSelectedItem().toString());
         newValues.put(AppContract.SleepingEntry.COLUMN_NOTES, activityNotes.getText().toString());
         newValues.put(AppContract.SleepingEntry.COLUMN_LAST_UPDATED_TS, currentTimestamp);

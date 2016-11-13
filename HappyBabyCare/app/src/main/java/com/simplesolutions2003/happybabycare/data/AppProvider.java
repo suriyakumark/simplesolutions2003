@@ -681,7 +681,9 @@ public class AppProvider extends ContentProvider {
                 AppContract.SleepingEntry.COLUMN_TIMESTAMP + " AS " + AppContract.ActivitiesEntry.COLUMN_TIMESTAMP + ", " +
                 AppContract.SleepingEntry.COLUMN_DATE + " AS " + AppContract.ActivitiesEntry.COLUMN_DATE + ", " +
                 AppContract.SleepingEntry.COLUMN_TIME + " AS " + AppContract.ActivitiesEntry.COLUMN_TIME + ", " +
-                AppContract.SleepingEntry.COLUMN_DURATION + " || ' ' || " +
+                "CASE WHEN " + AppContract.SleepingEntry.COLUMN_DURATION + " > 59 THEN " +
+                "CAST(" + AppContract.SleepingEntry.COLUMN_DURATION + "/60 AS INTEGER)" + " || 'hrs ' ELSE '' END || " +
+                "CAST(" + AppContract.SleepingEntry.COLUMN_DURATION + " % 60 AS INTEGER)" + " || 'mins ' || " +
                 AppContract.SleepingEntry.COLUMN_WHERE_SLEEP +
                                     " AS " + AppContract.ActivitiesEntry.COLUMN_SUMMARY + ", " +
                 AppContract.SleepingEntry.COLUMN_NOTES + " AS " + AppContract.ActivitiesEntry.COLUMN_DETAIL + ", " +
@@ -699,7 +701,8 @@ public class AppProvider extends ContentProvider {
                 AppContract.HealthEntry.COLUMN_DATE + " AS " + AppContract.ActivitiesEntry.COLUMN_DATE + ", " +
                 AppContract.HealthEntry.COLUMN_TIME + " AS " + AppContract.ActivitiesEntry.COLUMN_TIME + ", " +
                 AppContract.HealthEntry.COLUMN_TYPE + " || ' ' || " +
-                AppContract.HealthEntry.COLUMN_VALUE  +
+                AppContract.HealthEntry.COLUMN_VALUE + " || '' || " +
+                AppContract.HealthEntry.COLUMN_UNIT  +
                                 " AS " + AppContract.ActivitiesEntry.COLUMN_SUMMARY + ", " +
                 AppContract.HealthEntry.COLUMN_NOTES + " AS " + AppContract.ActivitiesEntry.COLUMN_DETAIL + ", " +
                 AppContract.HealthEntry.COLUMN_LAST_UPDATED_TS + " AS " + AppContract.ActivitiesEntry.COLUMN_LAST_UPDATED_TS + " " +
@@ -753,7 +756,10 @@ public class AppProvider extends ContentProvider {
         activitiesSleepingQuery = "SELECT " +
                 "'Sleeping'" + " AS " + AppContract.ActivitiesEntry.COLUMN_ACTIVITY_ID + ", " +
                 "'Sleeping'" + " AS " + AppContract.ActivitiesEntry.COLUMN_SUMMARY + ", " +
-                "SUM(" + AppContract.SleepingEntry.COLUMN_DURATION + ") AS " + AppContract.ActivitiesEntry.COLUMN_DETAIL + " " +
+                "CASE WHEN SUM(" + AppContract.SleepingEntry.COLUMN_DURATION + ") > 59 THEN " +
+                "CAST(SUM(" + AppContract.SleepingEntry.COLUMN_DURATION + ")/60 AS INTEGER)" + " || 'hrs ' ELSE '' END || " +
+                "CAST(SUM(" + AppContract.SleepingEntry.COLUMN_DURATION + ") % 60 AS INTEGER)" + " || 'mins'" +
+                " AS " + AppContract.ActivitiesEntry.COLUMN_DETAIL + " " +
                 " FROM " + AppContract.SleepingEntry.TABLE_NAME +
                 " WHERE " +
                 sActivitiesSleepingByUserIdBabyIdSelection;
