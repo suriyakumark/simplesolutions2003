@@ -9,7 +9,8 @@ import com.simplesolutions2003.happybabycare.data.AppContract.SettingsEntry;
 import com.simplesolutions2003.happybabycare.data.AppContract.UserEntry;
 import com.simplesolutions2003.happybabycare.data.AppContract.UserPreferenceEntry;
 import com.simplesolutions2003.happybabycare.data.AppContract.SyncLogEntry;
-import com.simplesolutions2003.happybabycare.data.AppContract.GroupEntry;
+import com.simplesolutions2003.happybabycare.data.AppContract.SubscribeEntry;
+import com.simplesolutions2003.happybabycare.data.AppContract.ShareEntry;
 import com.simplesolutions2003.happybabycare.data.AppContract.BabyEntry;
 import com.simplesolutions2003.happybabycare.data.AppContract.FeedingEntry;
 import com.simplesolutions2003.happybabycare.data.AppContract.DiaperEntry;
@@ -55,7 +56,6 @@ public class AppDBHelper extends SQLiteOpenHelper  {
                 UserEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
                 UserEntry.COLUMN_USER_ID + " TEXT NOT NULL, " +
                 UserEntry.COLUMN_PASSWORD + " TEXT, " +
-                UserEntry.COLUMN_GROUP_ID + " TEXT, " +
                 UserEntry.COLUMN_ACTIVE + " INTEGER, " +
                 UserEntry.COLUMN_LAST_SYNC_TS + " TIMESTAMP DEFAULT CURRENT_TIMESTAMP, " +
 
@@ -91,22 +91,36 @@ public class AppDBHelper extends SQLiteOpenHelper  {
                 " FOREIGN KEY (" + SyncLogEntry.COLUMN_USER_ID + ") REFERENCES " +
                 UserEntry.TABLE_NAME + " (" + UserEntry.COLUMN_USER_ID + "));";
 
-        final String SQL_CREATE_GROUP_TABLE = "CREATE TABLE " + GroupEntry.TABLE_NAME + " (" +
-                GroupEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
-                GroupEntry.COLUMN_GROUP_ID + " TEXT NOT NULL," +
-                GroupEntry.COLUMN_MEMBER_ID + " TEXT NOT NULL, " +
+        final String SQL_CREATE_SUBSCRIBE_TABLE = "CREATE TABLE " + SubscribeEntry.TABLE_NAME + " (" +
+                SubscribeEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
+                SubscribeEntry.COLUMN_USER_ID + " TEXT NOT NULL, " +
+                SubscribeEntry.COLUMN_OWNER_USER_ID + " TEXT NOT NULL, " +
 
-                " UNIQUE (" + GroupEntry._ID + ") ON CONFLICT REPLACE," +
+                " UNIQUE (" + SubscribeEntry._ID + ") ON CONFLICT REPLACE," +
 
-                " UNIQUE (" + GroupEntry.COLUMN_GROUP_ID + ", "
-                + GroupEntry.COLUMN_MEMBER_ID + ") ON CONFLICT REPLACE," +
+                " UNIQUE (" + SubscribeEntry.COLUMN_USER_ID + ", "
+                + SubscribeEntry.COLUMN_OWNER_USER_ID + ") ON CONFLICT REPLACE);";
 
-                " FOREIGN KEY (" + GroupEntry.COLUMN_GROUP_ID + ") REFERENCES " +
-                UserEntry.TABLE_NAME + " (" + UserEntry.COLUMN_USER_ID + "));";
+        final String SQL_CREATE_SHARE_TABLE = "CREATE TABLE " + ShareEntry.TABLE_NAME + " (" +
+                ShareEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
+                ShareEntry.COLUMN_BABY_ID + " INTEGER," +
+                ShareEntry.COLUMN_USER_ID + " TEXT NOT NULL, " +
+                ShareEntry.COLUMN_OWNER_BABY_ID + " INTEGER," +
+                ShareEntry.COLUMN_OWNER_USER_ID + " TEXT NOT NULL, " +
+
+                " UNIQUE (" + ShareEntry._ID + ") ON CONFLICT REPLACE," +
+
+                " UNIQUE (" + ShareEntry.COLUMN_BABY_ID + ", "
+                + ShareEntry.COLUMN_USER_ID + ") ON CONFLICT REPLACE," +
+
+                " FOREIGN KEY (" + ShareEntry.COLUMN_BABY_ID + ") REFERENCES " +
+                UserEntry.TABLE_NAME + " (" + BabyEntry._ID + "));";
 
         final String SQL_CREATE_BABY_TABLE = "CREATE TABLE " + BabyEntry.TABLE_NAME + " (" +
                 BabyEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
                 BabyEntry.COLUMN_USER_ID + " TEXT NOT NULL, " +
+                BabyEntry.COLUMN_OWNER_BABY_ID + " INTEGER, " +
+                BabyEntry.COLUMN_OWNER_USER_ID + " TEXT NOT NULL, " +
                 BabyEntry.COLUMN_NAME + " TEXT NOT NULL, " +
                 BabyEntry.COLUMN_GENDER + " TEXT NOT NULL, " +
                 BabyEntry.COLUMN_BIRTH_DATE + " DATE, " +
@@ -259,7 +273,8 @@ public class AppDBHelper extends SQLiteOpenHelper  {
         Log.v(LOG_TAG, "SQL_CREATE_USER_TABLE" + SQL_CREATE_USER_TABLE);
         Log.v(LOG_TAG, "SQL_CREATE_USER_PREF_TABLE" + SQL_CREATE_USER_PREF_TABLE);
         Log.v(LOG_TAG, "SQL_CREATE_SYNC_LOG_TABLE" + SQL_CREATE_SYNC_LOG_TABLE);
-        Log.v(LOG_TAG, "SQL_CREATE_GROUP_TABLE" + SQL_CREATE_GROUP_TABLE);
+        Log.v(LOG_TAG, "SQL_CREATE_SUBSCRIBE_TABLE" + SQL_CREATE_SUBSCRIBE_TABLE);
+        Log.v(LOG_TAG, "SQL_CREATE_SHARE_TABLE" + SQL_CREATE_SHARE_TABLE);
         Log.v(LOG_TAG, "SQL_CREATE_BABY_TABLE" + SQL_CREATE_BABY_TABLE);
         Log.v(LOG_TAG, "SQL_CREATE_FEEDING_TABLE" + SQL_CREATE_FEEDING_TABLE);
         Log.v(LOG_TAG, "SQL_CREATE_DIAPER_TABLE" + SQL_CREATE_DIAPER_TABLE);
@@ -273,7 +288,8 @@ public class AppDBHelper extends SQLiteOpenHelper  {
         sqLiteDatabase.execSQL(SQL_CREATE_USER_TABLE);
         sqLiteDatabase.execSQL(SQL_CREATE_USER_PREF_TABLE);
         sqLiteDatabase.execSQL(SQL_CREATE_SYNC_LOG_TABLE);
-        sqLiteDatabase.execSQL(SQL_CREATE_GROUP_TABLE);
+        sqLiteDatabase.execSQL(SQL_CREATE_SUBSCRIBE_TABLE);
+        sqLiteDatabase.execSQL(SQL_CREATE_SHARE_TABLE);
         sqLiteDatabase.execSQL(SQL_CREATE_BABY_TABLE);
         sqLiteDatabase.execSQL(SQL_CREATE_FEEDING_TABLE);
         sqLiteDatabase.execSQL(SQL_CREATE_DIAPER_TABLE);

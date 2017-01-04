@@ -23,6 +23,9 @@ import android.support.v4.app.Fragment;
 import android.os.ParcelFileDescriptor;
 import android.provider.MediaStore;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.CursorLoader;
+import android.support.v4.content.Loader;
 import android.text.Editable;
 import android.text.InputType;
 import android.text.TextWatcher;
@@ -38,8 +41,10 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.auth.api.Auth;
@@ -50,7 +55,7 @@ import com.squareup.picasso.Picasso;
 /**
  * Created by SuriyaKumar on 8/23/2016.
  */
-public class BabyProfileFragment extends Fragment {
+public class BabyProfileFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor>{
     public final static boolean KEEP_IN_STACK = false;
     public final static String TAG = BabyProfileFragment.class.getSimpleName();
 
@@ -63,13 +68,24 @@ public class BabyProfileFragment extends Fragment {
     RadioButton babyGenderMale;
     RadioButton babyGenderFeMale;
 
+    private final static int SHARE_LOADER = 0;
+    private int dPosition;
+    private ShareListAdapter shareListAdapter;
+    NonScrollListView shareListView;
+    TextView tvEmptyLoading;
+    EditText memberId;
+    Button addMember;
+
     Bitmap image = null;
     Bitmap rotateImage = null;
     private static final int GALLERY = 1;
+    private static String BABY_OWNER_ID = "";
 
     private static final String[] BABY_COLUMNS = {
             AppContract.BabyEntry.TABLE_NAME + "." + AppContract.BabyEntry._ID,
             AppContract.BabyEntry.TABLE_NAME + "." + AppContract.BabyEntry.COLUMN_USER_ID,
+            AppContract.BabyEntry.TABLE_NAME + "." + AppContract.BabyEntry.COLUMN_OWNER_BABY_ID,
+            AppContract.BabyEntry.TABLE_NAME + "." + AppContract.BabyEntry.COLUMN_OWNER_USER_ID,
             AppContract.BabyEntry.TABLE_NAME + "." + AppContract.BabyEntry.COLUMN_NAME,
             AppContract.BabyEntry.TABLE_NAME + "." + AppContract.BabyEntry.COLUMN_BIRTH_DATE,
             AppContract.BabyEntry.TABLE_NAME + "." + AppContract.BabyEntry.COLUMN_DUE_DATE,
@@ -81,12 +97,34 @@ public class BabyProfileFragment extends Fragment {
 
     static final int COL_BABY_ID = 0;
     static final int COL_BABY_USER_ID = 1;
-    static final int COL_BABY_NAME = 2;
-    static final int COL_BABY_BIRTH_DATE = 3;
-    static final int COL_BABY_DUE_DATE = 4;
-    static final int COL_BABY_GENDER = 5;
-    static final int COL_BABY_PHOTO = 6;
-    static final int COL_BABY_ACTIVE = 7;
+    static final int COL_OWNER_BABY_ID = 2;
+    static final int COL_OWNER_USER_ID = 3;
+    static final int COL_BABY_NAME = 4;
+    static final int COL_BABY_BIRTH_DATE = 5;
+    static final int COL_BABY_DUE_DATE = 6;
+    static final int COL_BABY_GENDER = 7;
+    static final int COL_BABY_PHOTO = 8;
+    static final int COL_BABY_ACTIVE = 9;
+
+
+    private static final String[] SHARE_COLUMNS = {
+            AppContract.ShareEntry.TABLE_NAME + "." + AppContract.ShareEntry._ID,
+            AppContract.ShareEntry.TABLE_NAME + "." + AppContract.ShareEntry.COLUMN_BABY_ID,
+            AppContract.ShareEntry.TABLE_NAME + "." + AppContract.ShareEntry.COLUMN_USER_ID,
+            AppContract.ShareEntry.TABLE_NAME + "." + AppContract.ShareEntry.COLUMN_OWNER_BABY_ID,
+            AppContract.ShareEntry.TABLE_NAME + "." + AppContract.ShareEntry.COLUMN_OWNER_USER_ID
+
+    };
+
+
+    static final int COL_SHARE_ID = 0;
+    static final int COL_SHARE_BABY_ID = 1;
+    static final int COL_SHARE_USER_ID = 2;
+    static final int COL_SHARE_OWNER_BABY_ID = 3;
+    static final int COL_SHARE_OWNER_USER_ID = 4;
+
+    public interface Callback {
+    }
 
     public BabyProfileFragment(){}
 
@@ -94,6 +132,7 @@ public class BabyProfileFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
+        dPosition = 0;
     }
 
     @Override
@@ -185,6 +224,60 @@ public class BabyProfileFragment extends Fragment {
         SetDateEditText setBirthDate = new SetDateEditText(babyBirthDate, getActivity());
         SetDateEditText setDueDate = new SetDateEditText(babyDueDate, getActivity());
 
+        shareListView = (NonScrollListView) rootView.findViewById(R.id.share_members_list);
+        memberId = (EditText) rootView.findViewById(R.id.new_member);
+        addMember = (Button) rootView.findViewById(R.id.share_add_member);
+        tvEmptyLoading = (TextView) rootView.findViewById(R.id.text_empty_loading);
+        addMember.setEnabled(false);
+
+        memberId.addTextChangedListener(new TextWatcher() {
+
+            @Override
+            public void afterTextChanged(Editable s) {
+            }
+
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if(!memberId.getText().toString().isEmpty()){
+                    addMember.setEnabled(true);
+                }else{
+                    addMember.setEnabled(false);
+                }
+            }
+        });
+
+        if(MainActivity.ACTIVE_BABY_ID == -1){
+            memberId.setEnabled(false);
+            addMember.setEnabled(false);
+            shareListView.setEnabled(false);
+        }
+
+
+        addMember.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Log.v(TAG, "addMember");
+                Uri uri = AppContract.ShareEntry.CONTENT_URI;
+
+                ContentValues newValues = new ContentValues();
+                newValues.put(AppContract.ShareEntry.COLUMN_OWNER_BABY_ID, MainActivity.ACTIVE_BABY_ID);
+                newValues.put(AppContract.ShareEntry.COLUMN_OWNER_USER_ID, MainActivity.LOGGED_IN_USER_ID);
+                newValues.put(AppContract.ShareEntry.COLUMN_USER_ID, memberId.getText().toString());
+                Log.v(TAG,"newValues - " + newValues);
+                getActivity().getContentResolver().insert(uri, newValues);
+                memberId.setText("");
+                refreshData();
+            }
+        });
+
+        shareListAdapter = new ShareListAdapter(getActivity(),null,0);
+        shareListView.setAdapter(shareListAdapter);
+
         if(MainActivity.ACTIVE_BABY_ID != -1) {
             Uri baby_uri = AppContract.BabyEntry.buildBabyByUserIdBabyIdUri(MainActivity.LOGGED_IN_USER_ID,MainActivity.ACTIVE_BABY_ID);
             Cursor babyprofile = getActivity().getContentResolver().query(baby_uri,BABY_COLUMNS,null,null,null);
@@ -192,6 +285,7 @@ public class BabyProfileFragment extends Fragment {
                 if(babyprofile.getCount() > 0){
                     Log.v(TAG,"got baby profile");
                     babyprofile.moveToFirst();
+                    BABY_OWNER_ID = babyprofile.getString(COL_OWNER_USER_ID);
                     babyName.setText(babyprofile.getString(COL_BABY_NAME));
                     babyBirthDate.setText(babyprofile.getString(COL_BABY_BIRTH_DATE));
                     babyDueDate.setText(babyprofile.getString(COL_BABY_DUE_DATE));
@@ -212,6 +306,17 @@ public class BabyProfileFragment extends Fragment {
                     babyName.setContentDescription(babyName.getText().toString());
                     babyBirthDate.setContentDescription(babyBirthDate.getText().toString());
                     babyDueDate.setContentDescription(babyDueDate.getText().toString());
+
+                    Log.v(TAG,"got baby profile - " + BABY_OWNER_ID);
+
+                    if(!BABY_OWNER_ID.equals(MainActivity.LOGGED_IN_USER_ID)){
+                        babyName.setEnabled(false);
+                        babyBirthDate.setEnabled(false);
+                        babyDueDate.setEnabled(false);
+                        babyGenderMale.setEnabled(false);
+                        babyGenderFeMale.setEnabled(false);
+                        babyProfilePhoto.setOnClickListener(null);
+                    }
 
                 }
             }else{
@@ -273,15 +378,79 @@ public class BabyProfileFragment extends Fragment {
         }
     }
 
+
+    public void onResume()
+    {
+        super.onResume();
+        getLoaderManager().initLoader(SHARE_LOADER, null, this);
+    }
+
+    private void refreshData(){
+        getLoaderManager().restartLoader(SHARE_LOADER, null, this);
+        //shareListAdapter.notifyDataSetChanged();
+    }
+
+    //check which loader is initiated and get appropriate cursor using content provider
+    @Override
+    public Loader<Cursor> onCreateLoader(int i, Bundle bundle) {
+        Log.v(TAG, "onCreateLoader - " + i + " loader");
+        new Utilities(getActivity()).updateEmptyLoadingGone(Utilities.LIST_LOADING,tvEmptyLoading,"");
+        Uri buildShare = AppContract.ShareEntry.buildShareByOwnerUserIdOwnerBabyIdUri(MainActivity.LOGGED_IN_USER_ID,MainActivity.ACTIVE_BABY_ID);
+
+        return new CursorLoader(getActivity(),
+                buildShare,
+                SHARE_COLUMNS,
+                null,
+                null,
+                null);
+
+    }
+
+    //check which loader has completed and use the data accordingly
+    @Override
+    public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
+        Log.v(TAG, "onLoadFinished - " + loader.getId() + " loader - " + cursor.getCount() + " rows retrieved");
+        if(cursor != null){
+            if (cursor.getCount() > 0) {
+                shareListAdapter.swapCursor(cursor);
+                new Utilities(getActivity()).updateEmptyLoadingGone(Utilities.LIST_OK,tvEmptyLoading,"");
+            }else{
+                shareListAdapter.swapCursor(null);
+                new Utilities(getActivity()).updateEmptyLoadingGone(Utilities.LIST_EMPTY,tvEmptyLoading,getString(R.string.text_share_list_empty));
+            }
+        }else{
+            shareListAdapter.swapCursor(null);
+            new Utilities(getActivity()).updateEmptyLoadingGone(Utilities.LIST_EMPTY,tvEmptyLoading,getString(R.string.text_share_list_empty));
+        }
+
+        //scroll to top, after listview are loaded it focuses on listview
+        Log.v(TAG, "onLoadFinished - dPosition " + dPosition);
+        if(dPosition > 0) {
+            shareListView.scrollTo(0, dPosition);
+        }else{
+            shareListView.scrollTo(0, 0);
+        }
+
+    }
+
+    @Override
+    public void onLoaderReset(Loader<Cursor> loader) {
+        shareListAdapter.swapCursor(null);
+    }
+
+
     public void validateInputs() {
-        if(babyName.getText().toString().isEmpty() |
+        if((!BABY_OWNER_ID.equals(MainActivity.LOGGED_IN_USER_ID) &
+                MainActivity.ACTIVE_BABY_ID != -1) |
+                babyName.getText().toString().isEmpty() |
             babyBirthDate.getText().toString().isEmpty()){
             MainActivity.saveMenuEnabled = false;
         }else{
             MainActivity.saveMenuEnabled = true;
         }
 
-        if (MainActivity.ACTIVE_BABY_ID == -1) {
+        if (!BABY_OWNER_ID.equals(MainActivity.LOGGED_IN_USER_ID) |
+                MainActivity.ACTIVE_BABY_ID == -1) {
             MainActivity.deleteMenuEnabled = false;
         } else {
             MainActivity.deleteMenuEnabled = true;
@@ -322,6 +491,8 @@ public class BabyProfileFragment extends Fragment {
 
         ContentValues newValues = new ContentValues();
         newValues.put(AppContract.BabyEntry.COLUMN_USER_ID, MainActivity.LOGGED_IN_USER_ID);
+        newValues.put(AppContract.BabyEntry.COLUMN_OWNER_BABY_ID, -1);
+        newValues.put(AppContract.BabyEntry.COLUMN_OWNER_USER_ID, MainActivity.LOGGED_IN_USER_ID);
         newValues.put(AppContract.BabyEntry.COLUMN_NAME , babyName.getText().toString());
         newValues.put(AppContract.BabyEntry.COLUMN_BIRTH_DATE, babyBirthDate.getText().toString());
         newValues.put(AppContract.BabyEntry.COLUMN_DUE_DATE, babyDueDate.getText().toString());
@@ -335,6 +506,7 @@ public class BabyProfileFragment extends Fragment {
             newValues.put(AppContract.BabyEntry.COLUMN_PHOTO, babyProfilePhotoUri.toString());
         }
 
+        Log.v(TAG,"newValues - " + newValues);
         MainActivity.ACTIVE_BABY_NAME = babyName.getText().toString();
         if(MainActivity.ACTIVE_BABY_ID == -1) {
             MainActivity.ACTIVE_BABY_ID = AppContract.BabyEntry.getIdFromUri(getActivity().getContentResolver().insert(baby_uri, newValues));

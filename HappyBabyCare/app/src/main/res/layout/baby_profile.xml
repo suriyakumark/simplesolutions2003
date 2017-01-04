@@ -1,73 +1,81 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
 	android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:contentDescription="@string/cd_baby_edit"
-        android:background="@color/colorAccentLight">
-        
-    <ImageButton
-    	android:id="@+id/baby_prof_image"
-		android:layout_gravity="center_horizontal"
-        android:layout_width="@dimen/profile_photo_width"
-        android:layout_height="@dimen/profile_photo_height"
-		android:scaleType="centerCrop"
-		android:adjustViewBounds="true"
-		android:contentDescription="@string/cd_baby_edit_pic"
-		android:src="@drawable/logo"
-		android:padding="8dp"/>
+	android:layout_height="match_parent"
+	android:background="@color/colorAccentLight"
+	android:fillViewport="true">
+	<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+		android:orientation="vertical"
+		android:layout_width="match_parent"
+			android:layout_height="match_parent"
+			android:contentDescription="@string/cd_baby_edit"
+			android:background="@color/colorAccentLight">
 
-	<EditText
-		android:id="@+id/baby_name"
-		android:layout_gravity="center_horizontal"
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-		android:contentDescription="@string/cd_baby_edit_name"
-		android:maxLines="1"
-		android:padding="@dimen/padding_text"
-		android:hint="@string/text_baby_name" />
-            
-	<RadioGroup
-		android:id="@+id/baby_gender"
-		android:layout_gravity="center_horizontal"
-		android:contentDescription="@string/cd_baby_edit_gender"
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-		android:padding="@dimen/padding_text">
+		<ImageButton
+			android:id="@+id/baby_prof_image"
+			android:layout_gravity="center_horizontal"
+			android:layout_width="@dimen/profile_photo_width"
+			android:layout_height="@dimen/profile_photo_height"
+			android:scaleType="centerCrop"
+			android:adjustViewBounds="true"
+			android:contentDescription="@string/cd_baby_edit_pic"
+			android:src="@drawable/logo"
+			android:padding="8dp"/>
 
-		<RadioButton
-			android:id="@+id/baby_gender_male"
+		<EditText
+			android:id="@+id/baby_name"
+			android:layout_gravity="center_horizontal"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
+			android:contentDescription="@string/cd_baby_edit_name"
+			android:maxLines="1"
 			android:padding="@dimen/padding_text"
-			android:text="@string/text_baby_gender_male"
-			android:checked="true" />
+			android:hint="@string/text_baby_name" />
 
-		<RadioButton
-			android:id="@+id/baby_gender_female"
+		<RadioGroup
+			android:id="@+id/baby_gender"
+			android:layout_gravity="center_horizontal"
+			android:contentDescription="@string/cd_baby_edit_gender"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
+			android:padding="@dimen/padding_text">
+
+			<RadioButton
+				android:id="@+id/baby_gender_male"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:padding="@dimen/padding_text"
+				android:text="@string/text_baby_gender_male"
+				android:checked="true" />
+
+			<RadioButton
+				android:id="@+id/baby_gender_female"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:padding="@dimen/padding_text"
+				android:text="@string/text_baby_gender_female" />
+
+		</RadioGroup>
+
+		<EditText
+			android:id="@+id/baby_birthdate"
+			android:layout_gravity="center_horizontal"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:contentDescription="@string/cd_baby_edit_birthdate"
 			android:padding="@dimen/padding_text"
-			android:text="@string/text_baby_gender_female" />
-	    
-	</RadioGroup>
-	
-	<EditText
-		android:id="@+id/baby_birthdate"
-		android:layout_gravity="center_horizontal"
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-		android:contentDescription="@string/cd_baby_edit_birthdate"
-		android:padding="@dimen/padding_text"
-		android:hint="@string/text_baby_birthdate" />
+			android:hint="@string/text_baby_birthdate" />
 
-	<EditText
-		android:id="@+id/baby_due_date"
-		android:layout_gravity="center_horizontal"
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-		android:contentDescription="@string/cd_baby_edit_duedate"
-		android:padding="@dimen/padding_text"
-		android:hint="@string/text_baby_due_date" />
+		<EditText
+			android:id="@+id/baby_due_date"
+			android:layout_gravity="center_horizontal"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:contentDescription="@string/cd_baby_edit_duedate"
+			android:padding="@dimen/padding_text"
+			android:hint="@string/text_baby_due_date" />
 
-</LinearLayout>
+		<include layout="@layout/manage_share" />
+
+	</LinearLayout>
+</ScrollView>

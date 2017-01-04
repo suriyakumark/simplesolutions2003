@@ -17,7 +17,8 @@ public class AppContract {
     public static final String PATH_USER = "user";
     public static final String PATH_USER_PREF = "user_preference";
     public static final String PATH_SYNC_LOG = "sync_log";
-    public static final String PATH_GROUP = "group";
+    public static final String PATH_SUBSCRIBE = "subscribe";
+    public static final String PATH_SHARE = "share";
     public static final String PATH_BABY = "baby";
     public static final String PATH_FEEDING = "feeding";
     public static final String PATH_DIAPER = "diaper";
@@ -84,7 +85,6 @@ public class AppContract {
         public static final String COLUMN_USER_ID = "user_id";
         public static final String COLUMN_PASSWORD = "password";
         public static final String COLUMN_ACTIVE = "active";
-        public static final String COLUMN_GROUP_ID = "group_id";
         public static final String COLUMN_LAST_SYNC_TS = "last_sync_timestamp";
 
         public static Uri buildUserUri(long _id) {
@@ -180,51 +180,112 @@ public class AppContract {
         }
     }
 
-
-    public static final class GroupEntry implements BaseColumns {
+    public static final class SubscribeEntry implements BaseColumns {
 
         public static final Uri CONTENT_URI =
-                BASE_CONTENT_URI.buildUpon().appendPath(PATH_GROUP).build();
+                BASE_CONTENT_URI.buildUpon().appendPath(PATH_SUBSCRIBE).build();
 
         public static final String CONTENT_TYPE =
-                ContentResolver.CURSOR_DIR_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + PATH_GROUP;
+                ContentResolver.CURSOR_DIR_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + PATH_SUBSCRIBE;
         public static final String CONTENT_ITEM_TYPE =
-                ContentResolver.CURSOR_ITEM_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + PATH_GROUP;
+                ContentResolver.CURSOR_ITEM_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + PATH_SUBSCRIBE;
 
-        public static final String TABLE_NAME = "group_manage";
+        public static final String TABLE_NAME = "subscribe";
         public static final String _ID = "_id";
-        public static final String COLUMN_GROUP_ID = "group_id";
-        public static final String COLUMN_MEMBER_ID = "member_id";
+        public static final String COLUMN_USER_ID = "user_id";
+        public static final String COLUMN_OWNER_USER_ID = "owner_user_id";
 
-        public static Uri buildGroupUri(long _id) {
+        public static Uri buildSubscribeUri(long _id) {
             return ContentUris.withAppendedId(CONTENT_URI, _id);
         }
 
-        public static Uri buildGroupByGroupIdUri(String groupId) {
-            return CONTENT_URI.buildUpon().appendPath("GROUP").appendPath(groupId).build();
-        }
-
-        public static Uri buildGroupByGroupIdMemberIdUri(String groupId, String memberId) {
-            return CONTENT_URI.buildUpon().appendPath("GROUP").appendPath(groupId).appendPath("MEMBER").appendPath(memberId).build();
+        public static Uri buildSubscribeByUserIdUri(String userId) {
+            return CONTENT_URI.buildUpon().appendPath("USER").appendPath(userId).build();
         }
 
         public static long getIdFromUri(Uri uri) {
             return Long.parseLong(uri.getPathSegments().get(1));
         }
 
-        public static String getGroupIdFromUri(Uri uri) {
-            if(uri.getPathSegments().get(1).equals("GROUP")) {
+        public static String getUserIdFromUri(Uri uri) {
+            if(uri.getPathSegments().get(1).equals("USER")) {
                 return uri.getPathSegments().get(2);
             }
             return null;
         }
 
-        public static String getMemberIdFromUri(Uri uri) {
-            if(uri.getPathSegments().get(3).equals("MEMBER")) {
-                return uri.getPathSegments().get(4);
+    }
+
+
+    public static final class ShareEntry implements BaseColumns {
+
+        public static final Uri CONTENT_URI =
+                BASE_CONTENT_URI.buildUpon().appendPath(PATH_SHARE).build();
+
+        public static final String CONTENT_TYPE =
+                ContentResolver.CURSOR_DIR_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + PATH_SHARE;
+        public static final String CONTENT_ITEM_TYPE =
+                ContentResolver.CURSOR_ITEM_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + PATH_SHARE;
+
+        public static final String TABLE_NAME = "share_manage";
+        public static final String _ID = "_id";
+        public static final String COLUMN_BABY_ID = "baby_id";
+        public static final String COLUMN_USER_ID = "user_id";
+        public static final String COLUMN_OWNER_BABY_ID = "owner_baby_id";
+        public static final String COLUMN_OWNER_USER_ID = "owner_user_id";
+
+        public static Uri buildShareUri(long _id) {
+            return ContentUris.withAppendedId(CONTENT_URI, _id);
+        }
+
+        public static Uri buildShareByUserIdUri(String userId) {
+            return CONTENT_URI.buildUpon().appendPath("USER").appendPath(userId).build();
+        }
+
+        public static Uri buildShareByUserIdBabyIdUri(String userId, Long babyId) {
+            return CONTENT_URI.buildUpon().appendPath("USER").appendPath(userId).appendPath("BABY").appendPath(Long.toString(babyId)).build();
+        }
+
+        public static Uri buildShareByOwnerUserIdOwnerBabyIdUri(String userId, Long babyId) {
+            return CONTENT_URI.buildUpon().appendPath("OWNER_USER").appendPath(userId).appendPath("OWNER_BABY").appendPath(Long.toString(babyId)).build();
+        }
+
+        public static Uri buildShareByOwnerUserIdUri(String userId) {
+            return CONTENT_URI.buildUpon().appendPath("OWNER_USER").appendPath(userId).build();
+        }
+
+        public static long getIdFromUri(Uri uri) {
+            return Long.parseLong(uri.getPathSegments().get(1));
+        }
+
+        public static String getUserIdFromUri(Uri uri) {
+            if(uri.getPathSegments().get(1).equals("USER")) {
+                return uri.getPathSegments().get(2);
             }
             return null;
         }
+
+        public static long getBabyIdFromUri(Uri uri) {
+            if(uri.getPathSegments().get(3).equals("BABY")) {
+                return Long.parseLong(uri.getPathSegments().get(4));
+            }
+            return -1;
+        }
+
+        public static String getOwnerUserIdFromUri(Uri uri) {
+            if(uri.getPathSegments().get(1).equals("OWNER_USER")) {
+                return uri.getPathSegments().get(2);
+            }
+            return null;
+        }
+
+        public static long getOwnerBabyIdFromUri(Uri uri) {
+            if(uri.getPathSegments().get(3).equals("OWNER_BABY")) {
+                return Long.parseLong(uri.getPathSegments().get(4));
+            }
+            return -1;
+        }
+
     }
 
     public static final class BabyEntry implements BaseColumns {
@@ -240,6 +301,8 @@ public class AppContract {
         public static final String TABLE_NAME = "baby";
         public static final String _ID = "_id";
         public static final String COLUMN_USER_ID = "user_id";
+        public static final String COLUMN_OWNER_BABY_ID = "owner_baby_id";
+        public static final String COLUMN_OWNER_USER_ID = "owner_user_id";
         public static final String COLUMN_NAME = "name";
         public static final String COLUMN_GENDER = "gender";
         public static final String COLUMN_BIRTH_DATE = "birth_date";
@@ -499,12 +562,12 @@ public class AppContract {
         public static final String COLUMN_DETAIL = "activity_detail";
         public static final String COLUMN_LAST_UPDATED_TS = "activity_last_updated_timestamp";
 
-        public static Uri buildActivitiesByUserIdBabyIdUri(String user_id, long baby_id,String activity_date) {
-            return CONTENT_URI.buildUpon().appendPath("USER").appendPath(user_id).appendPath("BABY").appendPath(Long.toString(baby_id)).appendPath("DATE").appendPath(activity_date).build();
+        public static Uri buildActivitiesByUserIdBabyIdUri(String user_id, long baby_id,String activity_date,String activity_type) {
+            return CONTENT_URI.buildUpon().appendPath("USER").appendPath(user_id).appendPath("BABY").appendPath(Long.toString(baby_id)).appendPath("DATE").appendPath(activity_date).appendPath("TYPE").appendPath(activity_type).build();
         }
 
-        public static Uri buildActivitiesSummaryByUserIdBabyIdUri(String user_id, long baby_id,String activity_date) {
-            return BASE_CONTENT_URI.buildUpon().appendPath(PATH_ACTIVITIES_SUMMARY).appendPath("USER").appendPath(user_id).appendPath("BABY").appendPath(Long.toString(baby_id)).appendPath("DATE").appendPath(activity_date).build();
+        public static Uri buildActivitiesSummaryByUserIdBabyIdUri(String user_id, long baby_id,String activity_date,String activity_type) {
+            return BASE_CONTENT_URI.buildUpon().appendPath(PATH_ACTIVITIES_SUMMARY).appendPath("USER").appendPath(user_id).appendPath("BABY").appendPath(Long.toString(baby_id)).appendPath("DATE").appendPath(activity_date).appendPath("TYPE").appendPath(activity_type).build();
         }
 
         public static String getUserIdFromUri(Uri uri) {
@@ -529,6 +592,16 @@ public class AppContract {
             }
             return null;
         }
+
+        public static String getActivityTypeFromUri(Uri uri) {
+            if(uri.getPathSegments().get(7).equals("TYPE")) {
+                return uri.getPathSegments().get(8);
+            }else if(uri.getPathSegments().get(5).equals("TYPE")) {
+                return uri.getPathSegments().get(6);
+            }
+            return null;
+        }
+
     }
 
     public static final class ArticleEntry implements BaseColumns {

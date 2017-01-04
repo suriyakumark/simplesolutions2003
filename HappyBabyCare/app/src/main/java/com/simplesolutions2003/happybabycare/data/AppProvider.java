@@ -26,7 +26,8 @@ public class AppProvider extends ContentProvider {
     private static final SQLiteQueryBuilder sUserQueryBuilder;
     private static final SQLiteQueryBuilder sUserPrefQueryBuilder;
     private static final SQLiteQueryBuilder sSyncLogQueryBuilder;
-    private static final SQLiteQueryBuilder sGroupQueryBuilder;
+    private static final SQLiteQueryBuilder sSubscribeQueryBuilder;
+    private static final SQLiteQueryBuilder sShareQueryBuilder;
     private static final SQLiteQueryBuilder sBabyQueryBuilder;
     private static final SQLiteQueryBuilder sFeedingQueryBuilder;
     private static final SQLiteQueryBuilder sDiaperQueryBuilder;
@@ -48,9 +49,13 @@ public class AppProvider extends ContentProvider {
     static final int USER_PREF_BY_USERID = 301;
     static final int SYNC_LOG = 400;
     static final int SYNC_LOG_BY_USERID = 401;
-    static final int GROUP = 4000;
-    static final int GROUP_BY_GROUPID = 4001;
-    static final int GROUP_BY_GROUPID_MEMBERID = 4002;
+    static final int SUBSCRIBE = 4000;
+    static final int SUBSCRIBE_BY_USERID = 4001;
+    static final int SHARE = 4100;
+    static final int SHARE_BY_USERID = 4101;
+    static final int SHARE_BY_USERID_BABYID = 4102;
+    static final int SHARE_BY_OWNERUSERID = 4103;
+    static final int SHARE_BY_OWNERUSERID_OWNERBABYID = 4104;
     static final int BABY = 500;
     static final int BABY_BY_USERID = 501;
     static final int BABY_BY_USERID_BABYID = 502;
@@ -107,12 +112,19 @@ public class AppProvider extends ContentProvider {
     }
 
     static{
-        sGroupQueryBuilder = new SQLiteQueryBuilder();
+        sSubscribeQueryBuilder = new SQLiteQueryBuilder();
 
-        sGroupQueryBuilder.setTables(
-                AppContract.GroupEntry.TABLE_NAME);
+        sSubscribeQueryBuilder.setTables(
+                AppContract.SubscribeEntry.TABLE_NAME);
     }
 
+    static{
+        sShareQueryBuilder = new SQLiteQueryBuilder();
+
+        sShareQueryBuilder.setTables(
+                AppContract.ShareEntry.TABLE_NAME);
+    }
+    
     static{
         sBabyQueryBuilder = new SQLiteQueryBuilder();
 
@@ -221,19 +233,37 @@ public class AppProvider extends ContentProvider {
             AppContract.SyncLogEntry.TABLE_NAME +
                     "." + AppContract.SyncLogEntry.COLUMN_USER_ID + " = ? ";
 
-    private static final String sGroupSelection =
-            AppContract.GroupEntry.TABLE_NAME +
-                    "." + AppContract.GroupEntry._ID + " = ? ";
+    private static final String sSubscribeSelection =
+            AppContract.SubscribeEntry.TABLE_NAME +
+                    "." + AppContract.SubscribeEntry._ID + " = ? ";
 
-    private static final String sGroupByGroupIdSelection =
-            AppContract.GroupEntry.TABLE_NAME +
-                    "." + AppContract.GroupEntry.COLUMN_GROUP_ID + " = ? ";
+    private static final String sSubscribeByUserIdSelection =
+            AppContract.SubscribeEntry.TABLE_NAME +
+                    "." + AppContract.SubscribeEntry.COLUMN_USER_ID + " = ? ";
 
-    private static final String sGroupByGroupIdMemberIdSelection =
-            AppContract.GroupEntry.TABLE_NAME +
-                    "." + AppContract.GroupEntry.COLUMN_GROUP_ID + " = ? AND " +
-            AppContract.GroupEntry.TABLE_NAME +
-                    "." + AppContract.GroupEntry.COLUMN_MEMBER_ID + " = ? ";
+    private static final String sShareSelection =
+            AppContract.ShareEntry.TABLE_NAME +
+                    "." + AppContract.ShareEntry._ID + " = ? ";
+
+    private static final String sShareByUserIdBabyIdSelection =
+            AppContract.ShareEntry.TABLE_NAME +
+                    "." + AppContract.ShareEntry.COLUMN_USER_ID + " = ? AND " +
+            AppContract.ShareEntry.TABLE_NAME +
+                    "." + AppContract.ShareEntry.COLUMN_BABY_ID + " = ? ";
+
+    private static final String sShareByUserIdSelection =
+            AppContract.ShareEntry.TABLE_NAME +
+                    "." + AppContract.ShareEntry.COLUMN_USER_ID + " = ? ";
+
+    private static final String sShareByOwnerUserIdOwnerBabyIdSelection =
+            AppContract.ShareEntry.TABLE_NAME +
+                    "." + AppContract.ShareEntry.COLUMN_OWNER_USER_ID + " = ? AND " +
+                    AppContract.ShareEntry.TABLE_NAME +
+                    "." + AppContract.ShareEntry.COLUMN_OWNER_BABY_ID + " = ? ";
+
+    private static final String sShareByOwnerUserIdSelection =
+            AppContract.ShareEntry.TABLE_NAME +
+                    "." + AppContract.ShareEntry.COLUMN_OWNER_USER_ID + " = ? ";
 
     private static final String sBabySelection =
             AppContract.BabyEntry.TABLE_NAME +
@@ -266,7 +296,8 @@ public class AppProvider extends ContentProvider {
     private static final String sActivitiesFeedingByUserIdBabyIdSelection =
             sFeedingByUserIdBabyIdSelection +
                     " AND " + AppContract.FeedingEntry.TABLE_NAME +
-                    "." + AppContract.FeedingEntry.COLUMN_DATE + " = ? ";
+                    "." + AppContract.FeedingEntry.COLUMN_DATE + " = ? " +
+                    " AND ('Feeding' = ? OR 'All' = ? ) ";
 
     private static final String sDiaperSelection =
             AppContract.DiaperEntry.TABLE_NAME +
@@ -285,7 +316,8 @@ public class AppProvider extends ContentProvider {
     private static final String sActivitiesDiaperByUserIdBabyIdSelection =
             sDiaperByUserIdBabyIdSelection +
                     " AND " + AppContract.DiaperEntry.TABLE_NAME +
-                    "." + AppContract.DiaperEntry.COLUMN_DATE + " = ? ";
+                    "." + AppContract.DiaperEntry.COLUMN_DATE + " = ? " +
+                    " AND ('Diaper' = ? OR 'All' = ? ) ";
 
     private static final String sSleepingSelection =
             AppContract.SleepingEntry.TABLE_NAME +
@@ -304,7 +336,8 @@ public class AppProvider extends ContentProvider {
     private static final String sActivitiesSleepingByUserIdBabyIdSelection =
             sSleepingByUserIdBabyIdSelection +
                     " AND " + AppContract.SleepingEntry.TABLE_NAME +
-                    "." + AppContract.SleepingEntry.COLUMN_DATE + " = ? ";
+                    "." + AppContract.SleepingEntry.COLUMN_DATE + " = ? " +
+                    " AND ('Sleeping' = ? OR 'All' = ? ) ";
 
     private static final String sHealthSelection =
             AppContract.HealthEntry.TABLE_NAME +
@@ -319,7 +352,8 @@ public class AppProvider extends ContentProvider {
     private static final String sActivitiesHealthByUserIdBabyIdSelection =
             sHealthByUserIdBabyIdSelection +
                     " AND " + AppContract.HealthEntry.TABLE_NAME +
-                    "." + AppContract.HealthEntry.COLUMN_DATE + " = ? ";
+                    "." + AppContract.HealthEntry.COLUMN_DATE + " = ? " +
+                    " AND ('Health' = ? OR 'All' = ? ) ";
 
     private static final String sArticleSelection =
             AppContract.ArticleEntry.TABLE_NAME +
@@ -421,35 +455,85 @@ public class AppProvider extends ContentProvider {
         );
     }
 
+    private Cursor getSubscribeByUserId(Uri uri, String[] projection, String sortOrder) {
 
-    private Cursor getGroupByGroupId(Uri uri, String[] projection, String sortOrder) {
+        Log.v(LOG_TAG, "getSubscribeByUserId uri - " + uri);
+        String userId = AppContract.SubscribeEntry.getUserIdFromUri(uri);
+        Log.v(LOG_TAG, "getSubscribeByUserId userId - " + userId);
 
-        Log.v(LOG_TAG, "getGroupByGroupId uri - " + uri);
-        String groupId = AppContract.GroupEntry.getGroupIdFromUri(uri);
-        Log.v(LOG_TAG, "getGroupByGroupId userId - " + groupId);
-
-        return sGroupQueryBuilder.query(mOpenHelper.getReadableDatabase(),
+        return sSubscribeQueryBuilder.query(mOpenHelper.getReadableDatabase(),
                 projection,
-                sGroupByGroupIdSelection,
-                new String[]{groupId},
+                sSubscribeByUserIdSelection,
+                new String[]{userId},
                 null,
                 null,
                 sortOrder
         );
     }
 
-    private Cursor getGroupByGroupIdMemberId(Uri uri, String[] projection, String sortOrder) {
+    private Cursor getShareByUserId(Uri uri, String[] projection, String sortOrder) {
 
-        Log.v(LOG_TAG, "getGroupByGroupIdMemberId uri - " + uri);
-        String groupId = AppContract.GroupEntry.getGroupIdFromUri(uri);
-        String memberId = AppContract.GroupEntry.getMemberIdFromUri(uri);
-        Log.v(LOG_TAG, "getGroupByGroupIdMemberId userId - " + groupId);
-        Log.v(LOG_TAG, "getGroupByGroupIdMemberId memberId - " + memberId);
+        Log.v(LOG_TAG, "getShareByUserId uri - " + uri);
+        String userId = AppContract.ShareEntry.getUserIdFromUri(uri);
+        Log.v(LOG_TAG, "getShareByUserId userId - " + userId);
 
-        return sGroupQueryBuilder.query(mOpenHelper.getReadableDatabase(),
+        return sShareQueryBuilder.query(mOpenHelper.getReadableDatabase(),
                 projection,
-                sGroupByGroupIdMemberIdSelection,
-                new String[]{groupId,memberId},
+                sShareByUserIdSelection,
+                new String[]{userId},
+                null,
+                null,
+                sortOrder
+        );
+    }
+
+    private Cursor getShareByUserIdBabyId(Uri uri, String[] projection, String sortOrder) {
+
+        Log.v(LOG_TAG, "getShareByUserIdBabyId uri - " + uri);
+        String userId = AppContract.ShareEntry.getUserIdFromUri(uri);
+        String babyId = Long.toString(AppContract.ShareEntry.getBabyIdFromUri(uri));
+        Log.v(LOG_TAG, "getShareByUserIdBabyId userId - " + userId);
+        Log.v(LOG_TAG, "getShareByUserIdBabyId babyId - " + babyId);
+
+        return sShareQueryBuilder.query(mOpenHelper.getReadableDatabase(),
+                projection,
+                sShareByUserIdBabyIdSelection,
+                new String[]{userId,babyId},
+                null,
+                null,
+                sortOrder
+        );
+    }
+
+
+    private Cursor getShareByOwnerUserId(Uri uri, String[] projection, String sortOrder) {
+
+        Log.v(LOG_TAG, "getShareByOwnerUserId uri - " + uri);
+        String ownerUserId = AppContract.ShareEntry.getOwnerUserIdFromUri(uri);
+        Log.v(LOG_TAG, "getShareByOwnerUserId ownerUserId - " + ownerUserId);
+
+        return sShareQueryBuilder.query(mOpenHelper.getReadableDatabase(),
+                projection,
+                sShareByOwnerUserIdSelection,
+                new String[]{ownerUserId},
+                null,
+                null,
+                sortOrder
+        );
+    }
+
+    private Cursor getShareByOwnerUserIdOwnerBabyId(Uri uri, String[] projection, String sortOrder) {
+
+        Log.v(LOG_TAG, "getShareByOwnerUserIdOwnerBabyId uri - " + uri);
+        String ownerUserId = AppContract.ShareEntry.getOwnerUserIdFromUri(uri);
+        String ownerBabyId = Long.toString(AppContract.ShareEntry.getOwnerBabyIdFromUri(uri));
+        Log.v(LOG_TAG, "getShareByOwnerUserIdOwnerBabyId ownerUserId - " + ownerUserId);
+        Log.v(LOG_TAG, "getShareByOwnerUserIdOwnerBabyId babyId - " + ownerBabyId);
+
+        return sShareQueryBuilder.query(mOpenHelper.getReadableDatabase(),
+                projection,
+                sShareByOwnerUserIdOwnerBabyIdSelection,
+                new String[]{ownerUserId,ownerBabyId},
                 null,
                 null,
                 sortOrder
@@ -627,11 +711,17 @@ public class AppProvider extends ContentProvider {
         String userId = AppContract.ActivitiesEntry.getUserIdFromUri(uri);
         String babyId = Long.toString(AppContract.ActivitiesEntry.getBabyIdFromUri(uri));
         String activityDate = AppContract.ActivitiesEntry.getActivityDateFromUri(uri);
+        String activityType = AppContract.ActivitiesEntry.getActivityTypeFromUri(uri);
         Log.v(LOG_TAG, "getActivitiesByBabyId userId - " + userId);
         Log.v(LOG_TAG, "getActivitiesByBabyId babyId - " + babyId);
         Log.v(LOG_TAG, "getActivitiesByBabyId activityDate - " + activityDate);
+        Log.v(LOG_TAG, "getActivitiesByBabyId activityType - " + activityType);
 
-        String[] selectionArgs = new String[]{userId,babyId,activityDate,userId,babyId,activityDate,userId,babyId,activityDate,userId,babyId,activityDate};
+        String[] selectionArgs = new String[]{userId,babyId,activityDate,activityType,activityType,
+                userId,babyId,activityDate,activityType,activityType,
+                userId,babyId,activityDate,activityType,activityType,
+                userId,babyId,activityDate,activityType,activityType};
+
         String activitiesFeedingQuery;
         String activitiesDiaperQuery;
         String activitiesSleepingQuery;
@@ -722,11 +812,17 @@ public class AppProvider extends ContentProvider {
         String userId = AppContract.ActivitiesEntry.getUserIdFromUri(uri);
         String babyId = Long.toString(AppContract.ActivitiesEntry.getBabyIdFromUri(uri));
         String activityDate = AppContract.ActivitiesEntry.getActivityDateFromUri(uri);
+        String activityType = AppContract.ActivitiesEntry.getActivityTypeFromUri(uri);
+
         Log.v(LOG_TAG, "getActivitiesSummaryByUserIdBabyId userId - " + userId);
         Log.v(LOG_TAG, "getActivitiesSummaryByUserIdBabyId babyId - " + babyId);
         Log.v(LOG_TAG, "getActivitiesSummaryByUserIdBabyId activityDate - " + activityDate);
+        Log.v(LOG_TAG, "getActivitiesSummaryByUserIdBabyId activityType - " + activityType);
 
-        String[] selectionArgs = new String[]{userId,babyId,activityDate,userId,babyId,activityDate,userId,babyId,activityDate};
+        String[] selectionArgs = new String[]{userId,babyId,activityDate,activityType,activityType,
+                userId,babyId,activityDate,activityType,activityType,
+                userId,babyId,activityDate,activityType,activityType};
+
         String activitiesFeedingQuery;
         String activitiesDiaperQuery;
         String activitiesSleepingQuery;
@@ -876,9 +972,13 @@ public class AppProvider extends ContentProvider {
         matcher.addURI(authority, AppContract.PATH_USER_PREF + "/USER/*", USER_PREF_BY_USERID);
         matcher.addURI(authority, AppContract.PATH_SYNC_LOG, SYNC_LOG);
         matcher.addURI(authority, AppContract.PATH_SYNC_LOG + "/USER/*", SYNC_LOG_BY_USERID);
-        matcher.addURI(authority, AppContract.PATH_GROUP, GROUP);
-        matcher.addURI(authority, AppContract.PATH_GROUP + "/GROUP/*", GROUP_BY_GROUPID);
-        matcher.addURI(authority, AppContract.PATH_GROUP + "/GROUP/*/MEMBER/*", GROUP_BY_GROUPID_MEMBERID);
+        matcher.addURI(authority, AppContract.PATH_SUBSCRIBE, SUBSCRIBE);
+        matcher.addURI(authority, AppContract.PATH_SUBSCRIBE + "/USER/*", SUBSCRIBE_BY_USERID);
+        matcher.addURI(authority, AppContract.PATH_SHARE, SHARE);
+        matcher.addURI(authority, AppContract.PATH_SHARE + "/USER/*", SHARE_BY_USERID);
+        matcher.addURI(authority, AppContract.PATH_SHARE + "/USER/*/BABY/*", SHARE_BY_USERID_BABYID);
+        matcher.addURI(authority, AppContract.PATH_SHARE + "/OWNER_USER/*", SHARE_BY_OWNERUSERID);
+        matcher.addURI(authority, AppContract.PATH_SHARE + "/OWNER_USER/*/OWNER_BABY/*", SHARE_BY_OWNERUSERID_OWNERBABYID);
         matcher.addURI(authority, AppContract.PATH_BABY, BABY);
         matcher.addURI(authority, AppContract.PATH_BABY + "/USER/*", BABY_BY_USERID);
         matcher.addURI(authority, AppContract.PATH_BABY + "/USER/*/BABY/#", BABY_BY_USERID_BABYID);
@@ -894,8 +994,8 @@ public class AppProvider extends ContentProvider {
         matcher.addURI(authority, AppContract.PATH_HEALTH, HEALTH);
         matcher.addURI(authority, AppContract.PATH_HEALTH + "/*", HEALTH_BY_ID);
         matcher.addURI(authority, AppContract.PATH_HEALTH + "/USER/*/BABY/#", HEALTH_BY_USERID_BABYID);
-        matcher.addURI(authority, AppContract.PATH_ACTIVITIES + "/USER/*/BABY/*/DATE/*", ACTIVITIES_BY_USERID_BABYID);
-        matcher.addURI(authority, AppContract.PATH_ACTIVITIES_SUMMARY + "/USER/*/BABY/*/DATE/*", ACTIVITIES_SUMMARY_BY_USERID_BABYID);
+        matcher.addURI(authority, AppContract.PATH_ACTIVITIES + "/USER/*/BABY/*/DATE/*/TYPE/*", ACTIVITIES_BY_USERID_BABYID);
+        matcher.addURI(authority, AppContract.PATH_ACTIVITIES_SUMMARY + "/USER/*/BABY/*/DATE/*/TYPE/*", ACTIVITIES_SUMMARY_BY_USERID_BABYID);
         matcher.addURI(authority, AppContract.PATH_ARTICLE, ARTICLE);
         matcher.addURI(authority, AppContract.PATH_ARTICLE + "/TYPE/*", ARTICLE_BY_TYPE);
         matcher.addURI(authority, AppContract.PATH_ARTICLE + "/CATEGORY/*", ARTICLE_BY_CATEGORY);
@@ -935,12 +1035,20 @@ public class AppProvider extends ContentProvider {
                 return AppContract.SyncLogEntry.CONTENT_TYPE;
             case SYNC_LOG_BY_USERID:
                 return AppContract.SyncLogEntry.CONTENT_ITEM_TYPE;
-            case GROUP:
-                return AppContract.GroupEntry.CONTENT_TYPE;
-            case GROUP_BY_GROUPID:
-                return AppContract.GroupEntry.CONTENT_ITEM_TYPE;
-            case GROUP_BY_GROUPID_MEMBERID:
-                return AppContract.GroupEntry.CONTENT_ITEM_TYPE;
+            case SUBSCRIBE:
+                return AppContract.SubscribeEntry.CONTENT_TYPE;
+            case SUBSCRIBE_BY_USERID:
+                return AppContract.SubscribeEntry.CONTENT_ITEM_TYPE;
+            case SHARE:
+                return AppContract.ShareEntry.CONTENT_TYPE;
+            case SHARE_BY_USERID:
+                return AppContract.ShareEntry.CONTENT_ITEM_TYPE;
+            case SHARE_BY_USERID_BABYID:
+                return AppContract.ShareEntry.CONTENT_ITEM_TYPE;
+            case SHARE_BY_OWNERUSERID:
+                return AppContract.ShareEntry.CONTENT_ITEM_TYPE;
+            case SHARE_BY_OWNERUSERID_OWNERBABYID:
+                return AppContract.ShareEntry.CONTENT_ITEM_TYPE;
             case BABY:
                 return AppContract.BabyEntry.CONTENT_TYPE;
             case BABY_BY_USERID:
@@ -1028,13 +1136,28 @@ public class AppProvider extends ContentProvider {
                     break;
                 }
 
-                case GROUP_BY_GROUPID: {
-                    retCursor = getGroupByGroupId(uri, projection, sortOrder);
+                case SUBSCRIBE_BY_USERID: {
+                    retCursor = getSubscribeByUserId(uri, projection, sortOrder);
                     break;
                 }
 
-                case GROUP_BY_GROUPID_MEMBERID: {
-                    retCursor = getGroupByGroupIdMemberId(uri, projection, sortOrder);
+                case SHARE_BY_USERID: {
+                    retCursor = getShareByUserId(uri, projection, sortOrder);
+                    break;
+                }
+
+                case SHARE_BY_USERID_BABYID: {
+                    retCursor = getShareByUserIdBabyId(uri, projection, sortOrder);
+                    break;
+                }
+
+                case SHARE_BY_OWNERUSERID: {
+                    retCursor = getShareByOwnerUserId(uri, projection, sortOrder);
+                    break;
+                }
+
+                case SHARE_BY_OWNERUSERID_OWNERBABYID: {
+                    retCursor = getShareByOwnerUserIdOwnerBabyId(uri, projection, sortOrder);
                     break;
                 }
 
@@ -1234,8 +1357,10 @@ public class AppProvider extends ContentProvider {
                 return AppContract.UserPreferenceEntry.TABLE_NAME;
             case SYNC_LOG:
                 return AppContract.SyncLogEntry.TABLE_NAME;
-            case GROUP:
-                return AppContract.GroupEntry.TABLE_NAME;
+            case SUBSCRIBE:
+                return AppContract.SubscribeEntry.TABLE_NAME;
+            case SHARE:
+                return AppContract.ShareEntry.TABLE_NAME;
             case BABY:
                 return AppContract.BabyEntry.TABLE_NAME;
             case FEEDING:
@@ -1265,8 +1390,10 @@ public class AppProvider extends ContentProvider {
                 return AppContract.UserPreferenceEntry.buildUserPreferenceUri(_id);
             case SYNC_LOG:
                 return AppContract.SyncLogEntry.buildSyncLogUri(_id);
-            case GROUP:
-                return AppContract.GroupEntry.buildGroupUri(_id);
+            case SUBSCRIBE:
+                return AppContract.SubscribeEntry.buildSubscribeUri(_id);
+            case SHARE:
+                return AppContract.ShareEntry.buildShareUri(_id);
             case BABY:
                 return AppContract.BabyEntry.buildBabyUri(_id);
             case FEEDING:

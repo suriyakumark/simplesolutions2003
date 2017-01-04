@@ -7,6 +7,7 @@
     <dimen name="activity_vertical_margin">16dp</dimen>
 
     <dimen name="size_action_icon">48dp</dimen>
+    <dimen name="size_action_icon_small">24dp</dimen>
     <dimen name="size_widget_icon">24dp</dimen>
     <dimen name="size_summary_icon">24dp</dimen>
 
@@ -41,6 +42,9 @@
     <dimen name="dropdown_width_health">132dp</dimen>
     <dimen name="spinner_width_health_unit">120dp</dimen>
     <dimen name="dropdown_width_health_unit">96dp</dimen>
+    <dimen name="spinner_width_activity_filter">160dp</dimen>
+    <dimen name="dropdown_width_activity_filter">96dp</dimen>
+
     <dimen name="edittext_height">48dp</dimen>
     <dimen name="spinner_height">48dp</dimen>
 

@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/manage_subscribe_layout"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:contentDescription="@string/cd_subscribe_manage"
+    android:background="@color/colorAccentLight">
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/margin_small">
+        <EditText
+            android:id="@+id/new_member"
+            android:layout_width="0dp"
+            android:layout_weight="0.7"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_medium"
+            android:maxLength="50"
+            android:maxLines="1"
+            android:contentDescription="@string/cd_subscribe_manage_member_id"
+            android:hint="@string/text_subscribe_member" />
+        <Button
+            android:id="@+id/subscribe_add_member"
+            android:layout_width="0dp"
+            android:layout_weight="0.3"
+            android:layout_height="wrap_content"
+            android:background="@color/colorPrimary"
+            android:layout_margin="@dimen/margin_medium"
+            android:contentDescription="@string/cd_subscribe_manage_add"
+            android:textColor="@color/colorAccentLight"
+            android:text="@string/btn_subscribe_member_add" />
+    </LinearLayout>
+
+    <include layout="@layout/empty_loading" />
+
+    <ListView
+        android:id="@+id/subscribe_members_list"
+        android:layout_marginTop="@dimen/margin_small"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+</LinearLayout>

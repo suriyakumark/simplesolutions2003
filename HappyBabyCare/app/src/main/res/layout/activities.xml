@@ -10,21 +10,55 @@
     android:focusable="true"
     android:background="@color/colorAccentLight">
 
-    <EditText
-        android:id="@+id/activities_filter_date"
-        android:layout_width="wrap_content"
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:contentDescription="@string/cd_activity_date"
-        android:layout_gravity="center"
-        android:gravity="start|center_vertical"
-        android:background="@drawable/date_bg"
-        android:textColor="@color/colorAccentLight"
-        android:layout_margin="@dimen/margin_small"
-        android:paddingTop="@dimen/padding_text"
-        android:paddingBottom="@dimen/padding_text"
-        android:paddingStart="@dimen/padding_text_wide"
-        android:paddingEnd="@dimen/padding_text_wider"
-        android:hint="@string/text_date" />
+        android:layout_marginTop="@dimen/margin_small"
+        android:descendantFocusability="beforeDescendants"
+        android:focusableInTouchMode="true"
+        android:focusable="true"
+        android:weightSum="1">
+        <EditText
+            android:id="@+id/activities_filter_date"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/spinner_height"
+            android:contentDescription="@string/cd_activity_date"
+            android:layout_gravity="start"
+            android:gravity="start|center_vertical"
+            android:background="@drawable/date_bg"
+            android:textColor="@color/colorAccentLight"
+            android:layout_margin="@dimen/margin_small"
+            android:paddingTop="@dimen/padding_text"
+            android:paddingBottom="@dimen/padding_text"
+            android:paddingStart="@dimen/padding_text_wide"
+            android:paddingEnd="@dimen/padding_text_wider"
+            android:hint="@string/text_date" />
+
+        <View android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_weight="1" />
+        <Spinner
+            android:id="@+id/activity_filter"
+            android:layout_width="@dimen/spinner_width_activity_filter"
+            android:layout_height="@dimen/spinner_height"
+            android:layout_gravity="end"
+            android:dropDownWidth="@dimen/dropdown_width_activity_filter"
+            android:ellipsize="marquee"
+            android:gravity="start|center_vertical"
+            android:background="@drawable/spinner_bg"
+            android:popupBackground="@color/colorAccent"
+            android:layout_margin="@dimen/margin_small"
+            android:paddingTop="@dimen/padding_spinner"
+            android:paddingBottom="@dimen/padding_spinner"
+            android:paddingStart="@dimen/padding_spinner_start"
+            android:paddingEnd="@dimen/padding_spinner_wide"
+            android:contentDescription="@string/cd_activity_filter"
+            android:entries="@array/spinner_activities"
+            android:spinnerMode="dropdown"
+            android:prompt="@string/text_activity_filter" />
+    </LinearLayout>
 
     <include layout="@layout/empty_loading" />
 

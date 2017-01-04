@@ -73,7 +73,7 @@ public class BabyAdapter extends CursorAdapter implements View.OnClickListener {
         ViewHolder viewHolder = new ViewHolder(view);
         view.setTag(viewHolder);
 
-        Uri query_summary_uri = AppContract.ActivitiesEntry.buildActivitiesSummaryByUserIdBabyIdUri(MainActivity.LOGGED_IN_USER_ID,cursor.getLong(BabyFragment.COL_BABY_ID),new Utilities().getCurrentDateDB());
+        Uri query_summary_uri = AppContract.ActivitiesEntry.buildActivitiesSummaryByUserIdBabyIdUri(MainActivity.LOGGED_IN_USER_ID,cursor.getLong(BabyFragment.COL_BABY_ID),new Utilities().getCurrentDateDB(),"All");
         Cursor summaryCursor = context.getContentResolver().query(query_summary_uri,SUMMARY_COLUMNS,null,null,null);
         if(summaryCursor != null){
             if(summaryCursor.getCount() > 0){

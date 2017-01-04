@@ -52,13 +52,11 @@ public class SignInFragment extends Fragment implements GoogleApiClient.Connecti
 
     private static final String[] USER_COLUMNS = {
             AppContract.UserEntry.TABLE_NAME + "." + AppContract.UserEntry._ID,
-            AppContract.UserEntry.TABLE_NAME + "." + AppContract.UserEntry.COLUMN_USER_ID,
-            AppContract.UserEntry.TABLE_NAME + "." + AppContract.UserEntry.COLUMN_GROUP_ID
+            AppContract.UserEntry.TABLE_NAME + "." + AppContract.UserEntry.COLUMN_USER_ID
     };
 
     private static final int COL_ID = 0;
     private static final int COL_USER_ID = 1;
-    private static final int COL_GROUP_ID = 2;
 
     public SignInFragment(){}
     GoogleApiClient mGoogleApiClient;
@@ -167,7 +165,6 @@ public class SignInFragment extends Fragment implements GoogleApiClient.Connecti
                 userCursor.moveToFirst();
                 MainActivity.LOGGED_IN_USER_ID_ID = userCursor.getLong(COL_ID);
                 MainActivity.LOGGED_IN_USER_ID = userCursor.getString(COL_USER_ID);
-                MainActivity.GROUP_ID = userCursor.getString(COL_GROUP_ID);
                 MainActivity.USER_LOGGED_IN = true;
                 Log.v(TAG, "offlineSignIn - active user found");
                 goLoginSuccess();
@@ -296,7 +293,6 @@ public class SignInFragment extends Fragment implements GoogleApiClient.Connecti
             } else {
                 userCursor.moveToFirst();
                 MainActivity.LOGGED_IN_USER_ID_ID = userCursor.getLong(COL_ID);
-                MainActivity.GROUP_ID = userCursor.getString(COL_GROUP_ID);
                 Log.v(TAG, "checkAndCreateNewUser - user exists");
                 updateActiveUser(MainActivity.LOGGED_IN_USER_ID_ID);
                 //start initial sync
@@ -342,11 +338,7 @@ public class SignInFragment extends Fragment implements GoogleApiClient.Connecti
         ActivityCompat.invalidateOptionsMenu(getActivity());
         showProgressBar(false);
         signInButton.setEnabled(false);
-        if(MainActivity.GROUP_ID == null){
-            ((MainActivity) getActivity()).handleFragments(new GroupFragment(), GroupFragment.TAG, GroupFragment.KEEP_IN_STACK);
-        }else {
-            ((MainActivity) getActivity()).handleFragments(new BabyFragment(), BabyFragment.TAG, BabyFragment.KEEP_IN_STACK);
-        }
+        ((MainActivity) getActivity()).handleFragments(new BabyFragment(), BabyFragment.TAG, BabyFragment.KEEP_IN_STACK);
     }
 
     public void showProgressBar(boolean visible){

@@ -24,7 +24,7 @@
     <string name="navigation_drawer_close">Close navigation drawer</string>
 
     <string name="action_baby_profiles">Baby Profiles</string>
-    <string name="action_manage_group">Manage Group</string>
+    <string name="action_manage_subscribe">Subscribe</string>
     <string name="action_save">Save</string>
     <string name="action_add">Add</string>
     <string name="action_delete">Delete</string>
@@ -37,16 +37,13 @@
 
     <string name="text_date">Date</string>
     <string name="text_time">Time</string>
-    
-    <string name="text_group_name">Group Name</string>
-    <string name="text_group_member">Member Email</string>
-    <string name="text_group_msg">Create or Join a group</string>
-    <string name="text_group_id">Group Id</string>
-    <string name="btn_group_create">Create</string>
-    <string name="btn_group_join">Join</string>
-    <string name="btn_group_skip">Skip</string>
-    <string name="btn_group_member_add">Add</string>
-    <string name="btn_group_member_remove">Remove</string>
+
+    <string name="text_subscribe_member">Owner Email</string>
+    <string name="btn_subscribe_member_add">Add</string>
+    <string name="btn_subscribe_member_remove">Remove</string>
+    <string name="text_share_member">Share Email</string>
+    <string name="btn_share_member_add">Add</string>
+    <string name="btn_share_member_remove">Remove</string>
 
     <string name="btn_baby_add">Add Baby</string>
     <string name="btn_baby_save">Save</string>
@@ -66,7 +63,8 @@
 
     <string name="text_activity_list_empty">No activities found for selected day</string>
     <string name="text_baby_list_empty">No baby profiles found</string>
-    <string name="text_group_list_empty">No group members found</string>
+    <string name="text_subscribe_list_empty">Not subscribed to anyone.</string>
+    <string name="text_share_list_empty">Not shared with anyone.</string>
     <string name="text_articles_sync_progress">Sync in progress. Check back soon.</string>
     <string name="text_articles_no_data">Need internet connection to get latest stories and rhymes from server. Once fetched, you can access them offline. </string>
     <string name="text_list_loading">refreshing...</string>
@@ -116,9 +114,11 @@
 
     <string name="text_sleeping_date">Date</string>
     <string name="text_sleeping_time">Time</string>
-    <string name="text_sleeping_end_time">Till when?</string>
+    <string name="text_sleeping_start_time">Start time?</string>
+    <string name="text_sleeping_end_time">End time?\u0020\u0020</string>
     <string name="text_sleeping_duration">Duration</string>
     <string name="text_sleeping_where">Where?</string>
+    <string name="text_sleeping_to">to</string>
 
     <string-array name="spinner_sleep_where">
         <item>Crib</item>
@@ -176,6 +176,16 @@
     <string name="text_rattle_01">Rattle 1</string>
     <string name="text_rattle_02">Rattle 2</string>
     <string name="text_white_noise_01">White Noise</string>
+    <string name="text_bells">Bells</string>
+    <string name="text_birds_01">Birds 1</string>
+    <string name="text_birds_02">Birds 2</string>
+    <string name="text_blender">Blender</string>
+    <string name="text_clock">Clock</string>
+    <string name="text_fanfare">Fanfare</string>
+    <string name="text_forest">Forest</string>
+    <string name="text_frog">Frog</string>
+    <string name="text_shhh">Shhh</string>
+
 
 
     <string name="cd_navigation">Select a menu item here</string>
@@ -200,6 +210,16 @@
     <string name="cd_activity_date">Enter a date to view baby\'s activities</string>
     <string name="cd_activity_list_empty">No activities found for today</string>
     <string name="cd_activity_list_loading">refreshing...</string>
+    <string name="cd_activity_filter">Choose activity type to filter</string>
+    <string name="text_activity_filter">Filter by activity type</string>
+
+    <string-array name="spinner_activities">
+        <item>All</item>
+        <item>Feeding</item>
+        <item>Diaper</item>
+        <item>Sleeping</item>
+        <item>Health</item>
+    </string-array>
 
     <string name="cd_feeding">Enter the feeding details</string>
     <string name="cd_feeding_type">Choose what type of food</string>
@@ -222,23 +242,30 @@
     <string name="cd_health_value">Enter the value</string>
     <string name="cd_health_unit">Choose the unit of measurement</string>
     <string name="cd_health_summary">Enter a short summary</string>
-    
-    <string name="cd_group">Create a new group or join an existing</string>
-    <string name="cd_group_id">Enter group id to join</string>
-    <string name="cd_group_join">Click to join</string>
-    <string name="cd_group_create">Create your own group</string>
-    <string name="cd_group_skip">Skip for now</string>
-    
-    <string name="cd_group_manage">Add or remove members from your group</string>
-    <string name="cd_group_manage_member_id">Enter member id to add</string>
-    <string name="cd_group_manage_add">Click to add member</string>
-    
+
+    <string name="cd_subscribe_manage">Add or remove subscription</string>
+    <string name="cd_subscribe_manage_member_id">Enter owner id to subscribe</string>
+    <string name="cd_subscribe_manage_add">Click to add subscription</string>
+
+    <string name="cd_share_manage">Add or remove email ids to share</string>
+    <string name="cd_share_manage_member_id">Enter email id to share</string>
+    <string name="cd_share_manage_add">Click to start sharing</string>
+
     <string name="cd_articles">Select a story or rhyme to read for your baby</string>
     
     <string name="cd_sounds">Select a sound to play for your baby</string>
     <string name="cd_sounds_rattle_1">Rattle sound</string>
     <string name="cd_sounds_rattle_2">Another rattle sound</string>
     <string name="cd_sounds_white_noise">White Noise</string>
+    <string name="cd_sounds_bells">Bells</string>
+    <string name="cd_sounds_birds_01">Birds sound</string>
+    <string name="cd_sounds_birds_02">Another Birds sound</string>
+    <string name="cd_sounds_blender">Blender</string>
+    <string name="cd_sounds_clock">Clock</string>
+    <string name="cd_sounds_fanfare">Fanfare</string>
+    <string name="cd_sounds_forest">Forest</string>
+    <string name="cd_sounds_frog">Frog</string>
+    <string name="cd_sounds_shhh">Shhh</string>
 
 </resources>
 

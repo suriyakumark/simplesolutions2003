@@ -131,6 +131,8 @@ public class BabyFragment extends Fragment implements LoaderManager.LoaderCallba
 
     public void validateInputs() {
         MainActivity.addMenuEnabled = true;
+        //MainActivity.saveMenuEnabled = false;
+        //MainActivity.deleteMenuEnabled = false;
     }
 
     public void onResume()

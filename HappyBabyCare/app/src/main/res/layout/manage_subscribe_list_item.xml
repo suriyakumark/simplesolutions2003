@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/manage_subscribe_list"
+    android:orientation="horizontal"
+    android:descendantFocusability="blocksDescendants"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <ImageButton
+        android:layout_width="@dimen/size_action_icon_small"
+        android:layout_height="@dimen/size_action_icon"
+        android:gravity="center_vertical|end"
+        android:layout_gravity="center_vertical|end"
+        android:focusable="false"
+        android:focusableInTouchMode="false"
+        android:scaleType="fitCenter"
+        android:adjustViewBounds="true"
+        android:layout_margin="@dimen/margin_small"
+        android:background="@color/colorAccent"
+        android:src="@drawable/action_remove"
+        android:id="@+id/member_delete" />
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical|start"
+        android:layout_gravity="center_vertical|start"
+        android:orientation="vertical">
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical|start"
+        android:layout_gravity="center_vertical|start"
+        android:paddingStart="@dimen/padding_text"
+        android:textSize="18sp"
+        android:id="@+id/user_id" />
+    </LinearLayout>
+    <View android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_weight="1" />
+
+</LinearLayout>

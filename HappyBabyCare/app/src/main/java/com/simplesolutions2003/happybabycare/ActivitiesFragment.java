@@ -21,6 +21,7 @@ import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.Spinner;
 import android.widget.Switch;
 import android.widget.TextView;
 
@@ -39,6 +40,7 @@ public class ActivitiesFragment extends Fragment implements LoaderManager.Loader
     private ActivitiesAdapter activitiesListAdapter;
     ListView activitiesListView;
     EditText activityFilterDate;
+    Spinner activityFilterType;
     TextView tvEmptyLoading;
     LinearLayout activitiesSummary;
 
@@ -104,6 +106,7 @@ public class ActivitiesFragment extends Fragment implements LoaderManager.Loader
 
         activitiesListView = (ListView) rootView.findViewById(R.id.activities_listview);
         activityFilterDate = (EditText) rootView.findViewById(R.id.activities_filter_date);
+        activityFilterType = (Spinner) rootView.findViewById(R.id.activity_filter);
         tvEmptyLoading = (TextView) rootView.findViewById(R.id.text_empty_loading);
         activitiesSummary = (LinearLayout) rootView.findViewById(R.id.activities_summary);
 
@@ -115,6 +118,18 @@ public class ActivitiesFragment extends Fragment implements LoaderManager.Loader
             ACTIVITIES_DATE = new Utilities(getActivity()).getCurrentDateDisp();
         }
         activityFilterDate.setText(ACTIVITIES_DATE);
+
+        activityFilterType.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                refreshData();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
 
         activityFilterDate.addTextChangedListener(new TextWatcher() {
 
@@ -202,7 +217,7 @@ public class ActivitiesFragment extends Fragment implements LoaderManager.Loader
         new Utilities(getActivity()).updateEmptyLoadingGone(Utilities.LIST_LOADING,tvEmptyLoading,"");
 
         Uri buildActivitiesUri = AppContract.ActivitiesEntry.buildActivitiesByUserIdBabyIdUri(MainActivity.LOGGED_IN_USER_ID,MainActivity.ACTIVE_BABY_ID,
-                new Utilities().convDateDisp2Db(activityFilterDate.getText().toString()));
+                new Utilities().convDateDisp2Db(activityFilterDate.getText().toString()),activityFilterType.getSelectedItem().toString());
 
         return new CursorLoader(getActivity(),
                 buildActivitiesUri,
@@ -210,7 +225,6 @@ public class ActivitiesFragment extends Fragment implements LoaderManager.Loader
                 null,
                 null,
                 ACTIVITY_SORT);
-
     }
 
     //check which loader has completed and use the data accordingly
@@ -223,7 +237,7 @@ public class ActivitiesFragment extends Fragment implements LoaderManager.Loader
             if (cursor.getCount() > 0) {
                 new Utilities(getActivity()).updateEmptyLoadingGone(Utilities.LIST_OK,tvEmptyLoading,"");
 
-                Uri query_summary_uri = AppContract.ActivitiesEntry.buildActivitiesSummaryByUserIdBabyIdUri(MainActivity.LOGGED_IN_USER_ID,MainActivity.ACTIVE_BABY_ID,new Utilities().convDateDisp2Db(activityFilterDate.getText().toString()));
+                Uri query_summary_uri = AppContract.ActivitiesEntry.buildActivitiesSummaryByUserIdBabyIdUri(MainActivity.LOGGED_IN_USER_ID,MainActivity.ACTIVE_BABY_ID,new Utilities().convDateDisp2Db(activityFilterDate.getText().toString()),activityFilterType.getSelectedItem().toString());
                 Cursor summaryCursor = getActivity().getContentResolver().query(query_summary_uri,SUMMARY_COLUMNS,null,null,null);
                 if(summaryCursor != null){
                     if(summaryCursor.getCount() > 0){

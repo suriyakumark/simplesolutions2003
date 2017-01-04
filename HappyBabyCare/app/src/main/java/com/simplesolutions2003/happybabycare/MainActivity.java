@@ -40,7 +40,6 @@ public class MainActivity extends AppCompatActivity
     public static boolean USER_LOGGED_IN = false;
     public static long LOGGED_IN_USER_ID_ID = -1;
     public static String LOGGED_IN_USER_ID = null;
-    public static String GROUP_ID = null;
     public static long ACTIVE_BABY_ID = -1;
     public static String ACTIVE_BABY_NAME = null;
 
@@ -126,6 +125,9 @@ public class MainActivity extends AppCompatActivity
                 //currFragmentTag = prevFragmentTag;
                 //keepFragmentInStack = keepPrevFragmentInStack;
                 keepPrevFragmentInStack = true;
+                addMenuEnabled = false;
+                saveMenuEnabled = false;
+                deleteMenuEnabled = false;
                 fragmentManager.popBackStack();
             } else {
                 Log.i(TAG, "nothing on backstack, calling super");
@@ -167,11 +169,7 @@ public class MainActivity extends AppCompatActivity
                 handleFragments(new BabyFragment(),BabyFragment.TAG,BabyFragment.KEEP_IN_STACK);
                 break;
             case R.id.action_manage_group:
-                if(GROUP_ID != null) {
-                    handleFragments(new GroupManageFragment(), GroupManageFragment.TAG, GroupManageFragment.KEEP_IN_STACK);
-                }else{
-                    handleFragments(new GroupFragment(), GroupFragment.TAG, GroupFragment.KEEP_IN_STACK);
-                }
+                handleFragments(new SubscribeManageFragment(), SubscribeManageFragment.TAG, SubscribeManageFragment.KEEP_IN_STACK);
                 break;
             case R.id.action_add:
                 return false;

@@ -151,7 +151,7 @@ public class ActivitiesWidgetRemoteViewsService extends RemoteViewsService {
             remoteViews.setTextViewText(R.id.widget_baby, data.getString(COL_BABY_NAME));
             long babyId = data.getLong(COL_BABY_ID);
             String activityDate = new Utilities().getCurrentDateDB();
-            Uri activitiesUri = AppContract.ActivitiesEntry.buildActivitiesByUserIdBabyIdUri(activeUser,babyId,activityDate);
+            Uri activitiesUri = AppContract.ActivitiesEntry.buildActivitiesByUserIdBabyIdUri(activeUser,babyId,activityDate,"All");
             Cursor activitiesCursor = getContentResolver().query(activitiesUri,ACTIVITY_COLUMNS,null,null,ACTIVITY_SORT);
             remoteViews.setTextViewText(R.id.last_feeding, "None today");
             remoteViews.setTextViewText(R.id.last_diaper, "None today");

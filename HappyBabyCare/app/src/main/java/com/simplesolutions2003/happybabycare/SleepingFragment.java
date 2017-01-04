@@ -104,7 +104,6 @@ public class SleepingFragment extends Fragment {
         sleepingDuration = (TextView) rootView.findViewById(R.id.sleep_duration);
         sleepingWhere = (Spinner) rootView.findViewById(R.id.sleep_place);
 
-
         activityDate.setInputType(InputType.TYPE_NULL);
         activityTime.setInputType(InputType.TYPE_NULL);
         sleepingEndTime.setInputType(InputType.TYPE_NULL);

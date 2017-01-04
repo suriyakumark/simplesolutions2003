@@ -43,13 +43,11 @@ public class Utilities {
 
     private static final String[] USER_COLUMNS = {
             AppContract.UserEntry.TABLE_NAME + "." + AppContract.UserEntry._ID,
-            AppContract.UserEntry.TABLE_NAME + "." + AppContract.UserEntry.COLUMN_USER_ID,
-            AppContract.UserEntry.TABLE_NAME + "." + AppContract.UserEntry.COLUMN_GROUP_ID
+            AppContract.UserEntry.TABLE_NAME + "." + AppContract.UserEntry.COLUMN_USER_ID
     };
 
     private static final int COL_ID = 0;
     private static final int COL_USER_ID = 1;
-    private static final int COL_GROUP_ID = 2;
 
     public Utilities(){}
 
