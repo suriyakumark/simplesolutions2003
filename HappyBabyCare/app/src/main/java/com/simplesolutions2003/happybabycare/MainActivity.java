@@ -32,6 +32,8 @@ import com.google.android.gms.ads.AdView;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
 import com.simplesolutions2003.happybabycare.sync.ArticleSyncAdapter;
+import com.simplesolutions2003.happybabycare.sync.GetActivitiesSyncAdapter;
+import com.simplesolutions2003.happybabycare.sync.SyncAdapter;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -98,7 +100,7 @@ public class MainActivity extends AppCompatActivity
         }
 
         Log.v(TAG, "initializeSyncAdapter");
-        ArticleSyncAdapter.initializeSyncAdapter(this);
+        SyncAdapter.initializeSyncAdapter(this);
 
     }
 

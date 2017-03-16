@@ -50,7 +50,7 @@ import java.util.concurrent.ExecutionException;
  * Created by SuriyaKumar on 9/6/2016.
  */
 public class ArticleSyncAdapter extends AbstractThreadedSyncAdapter {
-    public final String TAG = ArticleSyncAdapter.class.getSimpleName();
+    public final static String TAG = ArticleSyncAdapter.class.getSimpleName();
     public static final String ACTION_DATA_UPDATED =
             "com.simplesolutions2003.happybabycare.ACTION_DATA_UPDATED";
 
@@ -261,7 +261,7 @@ public class ArticleSyncAdapter extends AbstractThreadedSyncAdapter {
      */
     public static void configurePeriodicSync(Context context, int syncInterval, int flexTime) {
         Account account = getSyncAccount(context);
-        String authority = context.getString(R.string.content_authority);
+        String authority = context.getString(R.string.content_authority_article);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             // we can enable inexact timers in our periodic sync
             SyncRequest request = new SyncRequest.Builder().
@@ -284,7 +284,7 @@ public class ArticleSyncAdapter extends AbstractThreadedSyncAdapter {
         bundle.putBoolean(ContentResolver.SYNC_EXTRAS_EXPEDITED, true);
         bundle.putBoolean(ContentResolver.SYNC_EXTRAS_MANUAL, true);
         ContentResolver.requestSync(getSyncAccount(context),
-                context.getString(R.string.content_authority), bundle);
+                context.getString(R.string.content_authority_article), bundle);
     }
 
     /**
@@ -296,6 +296,7 @@ public class ArticleSyncAdapter extends AbstractThreadedSyncAdapter {
      * @return a fake account.
      */
     public static Account getSyncAccount(Context context) {
+        Log.v(TAG, "getSyncAccount");
         // Get an instance of the Android account manager
         AccountManager accountManager =
                 (AccountManager) context.getSystemService(Context.ACCOUNT_SERVICE);
@@ -304,9 +305,9 @@ public class ArticleSyncAdapter extends AbstractThreadedSyncAdapter {
         Account newAccount = new Account(
                 context.getString(R.string.app_name), context.getString(R.string.sync_account_type));
 
+
         // If the password doesn't exist, the account doesn't exist
         if ( null == accountManager.getPassword(newAccount) ) {
-
         /*
          * Add the account and account type, no password or user data
          * If successful, return the Account object, otherwise report an error.
@@ -326,7 +327,9 @@ public class ArticleSyncAdapter extends AbstractThreadedSyncAdapter {
         return newAccount;
     }
 
+
     private static void onAccountCreated(Account newAccount, Context context) {
+        Log.v(TAG, "onAccountCreated");
         /*
          * Since we've created an account
          */
@@ -335,7 +338,7 @@ public class ArticleSyncAdapter extends AbstractThreadedSyncAdapter {
         /*
          * Without calling setSyncAutomatically, our periodic sync will not be enabled.
          */
-        ContentResolver.setSyncAutomatically(newAccount, context.getString(R.string.content_authority), true);
+        ContentResolver.setSyncAutomatically(newAccount, context.getString(R.string.content_authority_article), true);
 
         /*
          * Finally, let's do a sync to get things started
@@ -346,5 +349,6 @@ public class ArticleSyncAdapter extends AbstractThreadedSyncAdapter {
     public static void initializeSyncAdapter(Context context) {
         getSyncAccount(context);
     }
+
 
 }

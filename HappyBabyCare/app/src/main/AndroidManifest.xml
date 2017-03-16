@@ -33,9 +33,10 @@
             android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize"
             android:theme="@android:style/Theme.Translucent" />
         <provider
-            android:authorities="com.simplesolutions2003.happybabycare"
+            android:authorities="com.simplesolutions2003.happybabycare;com.simplesolutions2003.happybabycare.article;com.simplesolutions2003.happybabycare.activities"
             android:name=".data.AppProvider"
             android:exported="true" />
+
         <!-- The SyncAdapter service -->
         <service
             android:name=".sync.ArticleSyncService"
@@ -46,8 +47,21 @@
 
             <meta-data
                 android:name="android.content.SyncAdapter"
-                android:resource="@xml/syncadapter" />
+                android:resource="@xml/article_syncadapter" />
         </service>
+
+        <service
+            android:name=".sync.GetActivitiesSyncService"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.content.SyncAdapter" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.content.SyncAdapter"
+                android:resource="@xml/activities_syncadapter" />
+        </service>
+
         <!-- SyncAdapter's dummy authentication service -->
         <service android:name=".sync.AppAuthenticatorService">
             <intent-filter>

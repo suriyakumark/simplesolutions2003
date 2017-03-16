@@ -5,7 +5,8 @@
 
     <!-- SyncAdapter related -->
     <string name="sync_account_type">happybabycare.simplesolutions2003.com</string>
-    <string name="content_authority">com.simplesolutions2003.happybabycare</string>
+    <string name="content_authority_article">com.simplesolutions2003.happybabycare.article</string>
+    <string name="content_authority_activities">com.simplesolutions2003.happybabycare.activities</string>
 
     <!-- navigation -->
     <string name="nav_baby_care_category">Baby Care</string>

@@ -193,6 +193,7 @@ public class AppDBHelper extends SQLiteOpenHelper  {
                 SleepingEntry.COLUMN_TIMESTAMP + " TIMESTAMP DEFAULT CURRENT_TIMESTAMP, " +
                 SleepingEntry.COLUMN_DATE + " DATE, " +
                 SleepingEntry.COLUMN_TIME + " TIME, " +
+                SleepingEntry.COLUMN_TYPE + " TEXT DEFAULT 'Sleeping', " +
                 SleepingEntry.COLUMN_END_TIME + " TIME, " +
                 SleepingEntry.COLUMN_DURATION + " INTEGER, " +
                 SleepingEntry.COLUMN_WHERE_SLEEP + " TEXT, " +

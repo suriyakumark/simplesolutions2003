@@ -459,6 +459,7 @@ public class AppContract {
         public static final String COLUMN_TIMESTAMP = "timestamp";
         public static final String COLUMN_DATE = "date";
         public static final String COLUMN_TIME = "time";
+        public static final String COLUMN_TYPE = "type";
         public static final String COLUMN_END_TIME = "end_time";
         public static final String COLUMN_DURATION = "duration";
         public static final String COLUMN_WHERE_SLEEP = "where_sleep";
