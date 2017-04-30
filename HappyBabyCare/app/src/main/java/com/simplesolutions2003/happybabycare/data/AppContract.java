@@ -11,7 +11,10 @@ public class AppContract {
     private static final String LOG_TAG = AppContract.class.getSimpleName();
 
     public static final String CONTENT_AUTHORITY = "com.simplesolutions2003.happybabycare";
+    public static final String CONTENT_AUTHORITY_ARTICLE = "com.simplesolutions2003.happybabycare.article";
+
     public static final Uri BASE_CONTENT_URI = Uri.parse("content://" + CONTENT_AUTHORITY);
+    public static final Uri BASE_CONTENT_URI_ARTICLE = Uri.parse("content://" + CONTENT_AUTHORITY_ARTICLE);
 
     public static final String PATH_SETTINGS = "settings";
     public static final String PATH_USER = "user";
@@ -323,6 +326,10 @@ public class AppContract {
             return CONTENT_URI.buildUpon().appendPath("USER").appendPath(userId).appendPath("BABY").appendPath(Long.toString(babyId)).build();
         }
 
+        public static Uri buildBabyByOwnerUserIdOwnerBabyIdUri(String ownerUserId, Long ownerBabyId) {
+            return CONTENT_URI.buildUpon().appendPath("OWNER_USER").appendPath(ownerUserId).appendPath("OWNER_BABY").appendPath(Long.toString(ownerBabyId)).build();
+        }
+
         public static long getIdFromUri(Uri uri) {
             return Long.parseLong(uri.getPathSegments().get(1));
         }
@@ -336,6 +343,20 @@ public class AppContract {
 
         public static long getBabyIdFromUri(Uri uri) {
             if(uri.getPathSegments().get(3).equals("BABY")) {
+                return Long.parseLong(uri.getPathSegments().get(4));
+            }
+            return -1;
+        }
+
+        public static String getOwnerUserIdFromUri(Uri uri) {
+            if(uri.getPathSegments().get(1).equals("OWNER_USER")) {
+                return uri.getPathSegments().get(2);
+            }
+            return null;
+        }
+
+        public static long getOwnerBabyIdFromUri(Uri uri) {
+            if(uri.getPathSegments().get(3).equals("OWNER_BABY")) {
                 return Long.parseLong(uri.getPathSegments().get(4));
             }
             return -1;
@@ -374,6 +395,9 @@ public class AppContract {
             return CONTENT_URI.buildUpon().appendPath("USER").appendPath(user_id).appendPath("BABY").appendPath(Long.toString(baby_id)).build();
         }
 
+        public static Uri buildFeedingByUserIdBabyIdTimestampUri(String user_id, long baby_id, String timestamp) {
+            return CONTENT_URI.buildUpon().appendPath("USER").appendPath(user_id).appendPath("BABY").appendPath(Long.toString(baby_id)).appendPath("TIMESTAMP").appendPath(timestamp).build();
+        }
 
         public static long getIdFromUri(Uri uri) {
             return Long.parseLong(uri.getPathSegments().get(1));
@@ -391,6 +415,13 @@ public class AppContract {
                 return Long.parseLong(uri.getPathSegments().get(4));
             }
             return -1;
+        }
+
+        public static String getTimestampFromUri(Uri uri) {
+            if(uri.getPathSegments().get(5).equals("TIMESTAMP")) {
+                return uri.getPathSegments().get(6);
+            }
+            return null;
         }
 
     }
@@ -424,6 +455,10 @@ public class AppContract {
             return CONTENT_URI.buildUpon().appendPath("USER").appendPath(user_id).appendPath("BABY").appendPath(Long.toString(baby_id)).build();
         }
 
+        public static Uri buildDiaperByUserIdBabyIdTimestampUri(String user_id, long baby_id, String timestamp) {
+            return CONTENT_URI.buildUpon().appendPath("USER").appendPath(user_id).appendPath("BABY").appendPath(Long.toString(baby_id)).appendPath("TIMESTAMP").appendPath(timestamp).build();
+        }
+
         public static long getIdFromUri(Uri uri) {
             return Long.parseLong(uri.getPathSegments().get(1));
         }
@@ -440,6 +475,13 @@ public class AppContract {
                 return Long.parseLong(uri.getPathSegments().get(4));
             }
             return -1;
+        }
+
+        public static String getTimestampFromUri(Uri uri) {
+            if(uri.getPathSegments().get(5).equals("TIMESTAMP")) {
+                return uri.getPathSegments().get(6);
+            }
+            return null;
         }
     }
 
@@ -474,6 +516,10 @@ public class AppContract {
             return CONTENT_URI.buildUpon().appendPath("USER").appendPath(user_id).appendPath("BABY").appendPath(Long.toString(baby_id)).build();
         }
 
+        public static Uri buildSleepingByUserIdBabyIdTimestampUri(String user_id, long baby_id, String timestamp) {
+            return CONTENT_URI.buildUpon().appendPath("USER").appendPath(user_id).appendPath("BABY").appendPath(Long.toString(baby_id)).appendPath("TIMESTAMP").appendPath(timestamp).build();
+        }
+
         public static long getIdFromUri(Uri uri) {
             return Long.parseLong(uri.getPathSegments().get(1));
         }
@@ -490,6 +536,13 @@ public class AppContract {
                 return Long.parseLong(uri.getPathSegments().get(4));
             }
             return -1;
+        }
+
+        public static String getTimestampFromUri(Uri uri) {
+            if(uri.getPathSegments().get(5).equals("TIMESTAMP")) {
+                return uri.getPathSegments().get(6);
+            }
+            return null;
         }
     }
 
@@ -519,8 +572,12 @@ public class AppContract {
             return ContentUris.withAppendedId(CONTENT_URI, _id);
         }
 
-        public static Uri buildHealthByUserBabyUri(String user_id, long baby_id) {
+        public static Uri buildHealthByUserIdBabyIdUri(String user_id, long baby_id) {
             return CONTENT_URI.buildUpon().appendPath("USER").appendPath(user_id).appendPath("BABY").appendPath(Long.toString(baby_id)).build();
+        }
+
+        public static Uri buildHealthByUserIdBabyIdTimestampUri(String user_id, long baby_id, String timestamp) {
+            return CONTENT_URI.buildUpon().appendPath("USER").appendPath(user_id).appendPath("BABY").appendPath(Long.toString(baby_id)).appendPath("TIMESTAMP").appendPath(timestamp).build();
         }
 
         public static long getIdFromUri(Uri uri) {
@@ -539,6 +596,13 @@ public class AppContract {
                 return Long.parseLong(uri.getPathSegments().get(4));
             }
             return -1;
+        }
+
+        public static String getTimestampFromUri(Uri uri) {
+            if(uri.getPathSegments().get(5).equals("TIMESTAMP")) {
+                return uri.getPathSegments().get(6);
+            }
+            return null;
         }
     }
 
@@ -607,12 +671,12 @@ public class AppContract {
 
     public static final class ArticleEntry implements BaseColumns {
         public static final Uri CONTENT_URI =
-                BASE_CONTENT_URI.buildUpon().appendPath(PATH_ARTICLE).build();
+                BASE_CONTENT_URI_ARTICLE.buildUpon().appendPath(PATH_ARTICLE).build();
 
         public static final String CONTENT_TYPE =
-                ContentResolver.CURSOR_DIR_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + PATH_ARTICLE;
+                ContentResolver.CURSOR_DIR_BASE_TYPE + "/" + CONTENT_AUTHORITY_ARTICLE + "/" + PATH_ARTICLE;
         public static final String CONTENT_ITEM_TYPE =
-                ContentResolver.CURSOR_ITEM_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + PATH_ARTICLE;
+                ContentResolver.CURSOR_ITEM_BASE_TYPE + "/" + CONTENT_AUTHORITY_ARTICLE + "/" + PATH_ARTICLE;
 
         public static final String TABLE_NAME = "article";
         public static final String _ID = "_id";
@@ -655,12 +719,12 @@ public class AppContract {
 
     public static final class ArticleDetailEntry implements BaseColumns {
         public static final Uri CONTENT_URI =
-                BASE_CONTENT_URI.buildUpon().appendPath(PATH_ARTICLE_DETAIL).build();
+                BASE_CONTENT_URI_ARTICLE.buildUpon().appendPath(PATH_ARTICLE_DETAIL).build();
 
         public static final String CONTENT_TYPE =
-                ContentResolver.CURSOR_DIR_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + PATH_ARTICLE_DETAIL;
+                ContentResolver.CURSOR_DIR_BASE_TYPE + "/" + CONTENT_AUTHORITY_ARTICLE + "/" + PATH_ARTICLE_DETAIL;
         public static final String CONTENT_ITEM_TYPE =
-                ContentResolver.CURSOR_ITEM_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + PATH_ARTICLE_DETAIL;
+                ContentResolver.CURSOR_ITEM_BASE_TYPE + "/" + CONTENT_AUTHORITY_ARTICLE + "/" + PATH_ARTICLE_DETAIL;
 
         public static final String TABLE_NAME = "article_detail";
         public static final String _ID = "_id";

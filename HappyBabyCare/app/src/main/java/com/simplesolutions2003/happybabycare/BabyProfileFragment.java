@@ -97,8 +97,8 @@ public class BabyProfileFragment extends Fragment implements LoaderManager.Loade
 
     static final int COL_BABY_ID = 0;
     static final int COL_BABY_USER_ID = 1;
-    static final int COL_OWNER_BABY_ID = 2;
-    static final int COL_OWNER_USER_ID = 3;
+    static final int COL_BABY_OWNER_BABY_ID = 2;
+    static final int COL_BABY_OWNER_USER_ID = 3;
     static final int COL_BABY_NAME = 4;
     static final int COL_BABY_BIRTH_DATE = 5;
     static final int COL_BABY_DUE_DATE = 6;
@@ -285,7 +285,7 @@ public class BabyProfileFragment extends Fragment implements LoaderManager.Loade
                 if(babyprofile.getCount() > 0){
                     Log.v(TAG,"got baby profile");
                     babyprofile.moveToFirst();
-                    BABY_OWNER_ID = babyprofile.getString(COL_OWNER_USER_ID);
+                    BABY_OWNER_ID = babyprofile.getString(COL_BABY_OWNER_USER_ID);
                     babyName.setText(babyprofile.getString(COL_BABY_NAME));
                     babyBirthDate.setText(babyprofile.getString(COL_BABY_BIRTH_DATE));
                     babyDueDate.setText(babyprofile.getString(COL_BABY_DUE_DATE));
@@ -515,6 +515,11 @@ public class BabyProfileFragment extends Fragment implements LoaderManager.Loade
                 MainActivity.ACTIVE_BABY_NAME = null;
             }else{
                 Toast.makeText(getActivity(), getString(R.string.text_baby_added), Toast.LENGTH_LONG).show();
+                ContentValues newValues1 = new ContentValues();
+                newValues1.put(AppContract.BabyEntry.COLUMN_OWNER_BABY_ID, -1);
+                String babyWhere = AppContract.BabyEntry._ID + " = ? AND " + AppContract.BabyEntry.COLUMN_USER_ID + " = ? ";
+                String[] babyWhereArgs = new String[]{Long.toString(MainActivity.ACTIVE_BABY_ID),MainActivity.LOGGED_IN_USER_ID};
+                getActivity().getContentResolver().update(baby_uri, newValues1, babyWhere,babyWhereArgs);
             }
         }else{
             String babyWhere = AppContract.BabyEntry._ID + " = ? AND " + AppContract.BabyEntry.COLUMN_USER_ID + " = ? ";

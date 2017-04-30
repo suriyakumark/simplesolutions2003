@@ -1,12 +1,14 @@
 <resources>
     <string name="app_name">Happy Baby Care</string>
     <string name="banner_ad_unit_id">ca-app-pub-1979618719371623/6491972002</string>
-    <string name="ad_device_id">1D3D2254E4F4E858E1A2552829E2063B</string>
+    <string name="ad_device_id">B2326D174CA4865A2848DC62EC04ADAB</string>
 
     <!-- SyncAdapter related -->
     <string name="sync_account_type">happybabycare.simplesolutions2003.com</string>
+    <string name="content_authority">com.simplesolutions2003.happybabycare</string>
     <string name="content_authority_article">com.simplesolutions2003.happybabycare.article</string>
-    <string name="content_authority_activities">com.simplesolutions2003.happybabycare.activities</string>
+    <string name="provider_content_authority">com.simplesolutions2003.happybabycare;com.simplesolutions2003.happybabycare.article;</string>
+
 
     <!-- navigation -->
     <string name="nav_baby_care_category">Baby Care</string>

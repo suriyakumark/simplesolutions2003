@@ -37,9 +37,11 @@ public class BabyFragment extends Fragment implements LoaderManager.LoaderCallba
     ListView babyListView;
     TextView tvEmptyLoading;
 
-    private static final String[] BABY_COLUMNS = {
+    public static final String[] BABY_COLUMNS = {
             AppContract.BabyEntry.TABLE_NAME + "." + AppContract.BabyEntry._ID,
             AppContract.BabyEntry.TABLE_NAME + "." + AppContract.BabyEntry.COLUMN_USER_ID,
+            AppContract.BabyEntry.TABLE_NAME + "." + AppContract.BabyEntry.COLUMN_OWNER_USER_ID,
+            AppContract.BabyEntry.TABLE_NAME + "." + AppContract.BabyEntry.COLUMN_OWNER_BABY_ID,
             AppContract.BabyEntry.TABLE_NAME + "." + AppContract.BabyEntry.COLUMN_NAME,
             AppContract.BabyEntry.TABLE_NAME + "." + AppContract.BabyEntry.COLUMN_BIRTH_DATE,
             AppContract.BabyEntry.TABLE_NAME + "." + AppContract.BabyEntry.COLUMN_DUE_DATE,
@@ -51,12 +53,14 @@ public class BabyFragment extends Fragment implements LoaderManager.LoaderCallba
 
     static final int COL_BABY_ID = 0;
     static final int COL_BABY_USER_ID = 1;
-    static final int COL_BABY_NAME = 2;
-    static final int COL_BABY_BIRTH_DATE = 3;
-    static final int COL_BABY_DUE_DATE = 4;
-    static final int COL_BABY_GENDER = 5;
-    static final int COL_BABY_PHOTO = 6;
-    static final int COL_BABY_ACTIVE = 7;
+    static final int COL_BABY_OWNER_USER_ID = 2;
+    static final int COL_BABY_OWNER_BABY_ID = 3;
+    static final int COL_BABY_NAME = 4;
+    static final int COL_BABY_BIRTH_DATE = 5;
+    static final int COL_BABY_DUE_DATE = 6;
+    static final int COL_BABY_GENDER = 7;
+    static final int COL_BABY_PHOTO = 8;
+    static final int COL_BABY_ACTIVE = 9;
 
     public interface Callback {
     }

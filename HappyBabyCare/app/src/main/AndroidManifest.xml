@@ -32,8 +32,9 @@
             android:windowSoftInputMode="adjustPan"
             android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize"
             android:theme="@android:style/Theme.Translucent" />
+
         <provider
-            android:authorities="com.simplesolutions2003.happybabycare;com.simplesolutions2003.happybabycare.article;com.simplesolutions2003.happybabycare.activities"
+            android:authorities="@string/provider_content_authority"
             android:name=".data.AppProvider"
             android:exported="true" />
 

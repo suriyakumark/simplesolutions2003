@@ -28,7 +28,10 @@ import android.support.v4.app.TaskStackBuilder;
 import android.text.format.Time;
 import android.util.Log;
 
+import com.simplesolutions2003.happybabycare.BabyFragment;
+import com.simplesolutions2003.happybabycare.MainActivity;
 import com.simplesolutions2003.happybabycare.R;
+import com.simplesolutions2003.happybabycare.Utilities;
 import com.simplesolutions2003.happybabycare.data.AppContract;
 
 import org.json.JSONArray;
@@ -65,8 +68,7 @@ public class GetActivitiesSyncAdapter extends AbstractThreadedSyncAdapter {
     private static final String RECORD_ACTION_UPDATE = "update";
     private static final String RECORD_ACTION_DELETE = "delete";
 
-    private static String USER_ID;
-    private static long BABY_ID;
+    private static String USER_ID = null;
 
     private Context context;
 
@@ -86,20 +88,30 @@ public class GetActivitiesSyncAdapter extends AbstractThreadedSyncAdapter {
 
         // Will contain the raw JSON response as a string.
         String activitiesJsonStr = null;
+        String ackSyncJsonStr = null;
+
+        final String ACK_SYNC_BASE_URL =
+                "http://simplesolutions2003.com/happybabycare/api/ackSync";
+
+        final String ACTIVITIES_BASE_URL =
+                "http://simplesolutions2003.com/happybabycare/api/getActivities";
+
+        String userId = "suriya.hidden@gmail.com";
+        USER_ID = userId;
+
+        Uri builtActivitiesUri = Uri.parse(ACTIVITIES_BASE_URL).buildUpon().appendPath("user").appendPath(userId)
+                .build();
+
+
+        Uri builtAckSyncUri = Uri.parse(ACK_SYNC_BASE_URL).buildUpon().appendPath("user").appendPath(userId)
+                .appendPath("timestamp").appendPath(new Utilities().getCurrentTimestampDB())
+                .build();
+
 
         try {
-            final String FORECAST_BASE_URL =
-                    "http://simplesolutions2003.com/happybabycare/api/getActivities";
+            URL urlActivities = new URL(builtActivitiesUri.toString());
 
-            String userId = "suriya.hidden@gmail.com";
-            USER_ID = userId;
-
-            Uri builtUri = Uri.parse(FORECAST_BASE_URL).buildUpon().appendPath("user").appendPath(userId)
-                    .build();
-
-            URL url = new URL(builtUri.toString());
-
-            urlConnection = (HttpURLConnection) url.openConnection();
+            urlConnection = (HttpURLConnection) urlActivities.openConnection();
             urlConnection.setRequestMethod("GET");
             urlConnection.connect();
 
@@ -141,6 +153,55 @@ public class GetActivitiesSyncAdapter extends AbstractThreadedSyncAdapter {
                 }
             }
         }
+
+        try {
+
+            URL urlAckSync = new URL(builtAckSyncUri.toString());
+
+            urlConnection = (HttpURLConnection) urlAckSync.openConnection();
+            urlConnection.setRequestMethod("GET");
+            urlConnection.connect();
+
+            // Read the input stream into a String
+            InputStream inputStream = urlConnection.getInputStream();
+            StringBuffer buffer = new StringBuffer();
+            if (inputStream == null) {
+                // Nothing to do.
+                return;
+            }
+            reader = new BufferedReader(new InputStreamReader(inputStream));
+
+            String line;
+            while ((line = reader.readLine()) != null) {
+                buffer.append(line + "\n");
+            }
+
+            if (buffer.length() == 0) {
+                // Stream was empty.  No point in parsing.
+                Log.v(TAG, "Empty response");
+                return;
+            }
+            ackSyncJsonStr = buffer.toString();
+            getAckSyncDataFromJson(ackSyncJsonStr);
+        } catch (IOException e) {
+            Log.e(TAG, "Error ", e);
+        } catch (JSONException e) {
+            Log.e(TAG, e.getMessage(), e);
+            e.printStackTrace();
+        } finally {
+            if (urlConnection != null) {
+                urlConnection.disconnect();
+            }
+            if (reader != null) {
+                try {
+                    reader.close();
+                } catch (final IOException e) {
+                    Log.e(TAG, "Error closing stream", e);
+                }
+            }
+        }
+
+
         return;
     }
 
@@ -199,7 +260,9 @@ public class GetActivitiesSyncAdapter extends AbstractThreadedSyncAdapter {
         final String OWM_MESSAGE_CODE = "success";
 
         int insertedBabies = 0;
+        int updatedBabies = 0;
         int insertedActivities = 0;
+        int updatedActivities = 0;
 
         try {
             JSONObject activitiesJson = new JSONObject(activitiesJsonStr);
@@ -262,8 +325,40 @@ public class GetActivitiesSyncAdapter extends AbstractThreadedSyncAdapter {
                 babyValues.put(AppContract.BabyEntry.COLUMN_PHOTO, babyPhoto);
                 babyValues.put(AppContract.BabyEntry.COLUMN_ACTIVE, babyActive);
 
-                BABY_ID = AppContract.BabyEntry.getIdFromUri(getContext().getContentResolver().insert(AppContract.BabyEntry.CONTENT_URI, babyValues));
-                insertedBabies++;
+                //check if baby exists
+                int COL_BABY_ID = 0;
+                int COL_BABY_USER_ID = 1;
+                int COL_BABY_OWNER_USER_ID = 2;
+                int COL_BABY_OWNER_BABY_ID = 3;
+                int COL_BABY_NAME = 4;
+                int COL_BABY_BIRTH_DATE = 5;
+                int COL_BABY_DUE_DATE = 6;
+                int COL_BABY_GENDER = 7;
+                int COL_BABY_PHOTO = 8;
+                int COL_BABY_ACTIVE = 9;
+
+                long BABY_ID = -1;
+                Uri babyUri = AppContract.BabyEntry.buildBabyByOwnerUserIdOwnerBabyIdUri(babyOwnerUserId,Long.parseLong(babyOwnerBabyId));
+                Cursor babyRecord = getContext().getContentResolver().query(babyUri, BabyFragment.BABY_COLUMNS,null,null,null);
+
+                if(babyRecord != null) {
+                    if (babyRecord.getCount() > 0) {
+                        babyRecord.moveToNext();
+                        BABY_ID = babyRecord.getLong(COL_BABY_ID);
+                        Log.v(TAG, "babyRecord Found " + BABY_ID);
+
+                        //update baby record based on timestamp
+                        //updatedBabies++;
+
+                    }
+                }
+
+                if(BABY_ID == -1) {
+                    BABY_ID = AppContract.BabyEntry.getIdFromUri(getContext().getContentResolver().insert(AppContract.BabyEntry.CONTENT_URI, babyValues));
+                    insertedBabies++;
+                    Log.v(TAG, "babyRecord New " + BABY_ID);
+                }
+
 
                 JSONArray activitiesArray =
                         baby.getJSONArray(OWM_ACTIVITIES);
@@ -293,7 +388,7 @@ public class GetActivitiesSyncAdapter extends AbstractThreadedSyncAdapter {
 
                     JSONObject activity = activitiesArray.getJSONObject(j);
 
-                    activityAction = activity.getString(OWM_ACTIVITY_ACTION);
+                    //activityAction = activity.getString(OWM_ACTIVITY_ACTION);
 
                     activityId = activity.getString(OWM_ACTIVITY_ID);
                     activityUserId = activity.getString(OWM_ACTIVITY_USER_ID);
@@ -318,56 +413,60 @@ public class GetActivitiesSyncAdapter extends AbstractThreadedSyncAdapter {
                     String activityRecordAction = RECORD_ACTION_SKIP;
                     Uri uri = null;
                     String[] sColumnsActivity = null;
-                    String sSelection = null;
-                    String[] sSelectionArgs = null;
+
                     Cursor activityRecord = null;
+
                     Integer COL_ACTIVITY_ID = 0;
                     Integer COL_ACTIVITY_LAST_UPD_TS = 1;
 
                     long checkActivityId = -1;
                     String activityLastUpdatedTS = null;
 
+                    Log.v(TAG,"activityType " + activityType);
+                    Log.v(TAG,"activityTimestamp " + activityTimestamp);
+
                     switch (activityType) {
                         case "feeding":
-                            uri = AppContract.FeedingEntry.buildFeedingByUserIdBabyIdUri(USER_ID,BABY_ID);
+                            uri = AppContract.FeedingEntry.buildFeedingByUserIdBabyIdTimestampUri(USER_ID,BABY_ID,activityTimestamp);
                             sColumnsActivity = new String[]{AppContract.FeedingEntry._ID,
                                     AppContract.FeedingEntry.COLUMN_LAST_UPDATED_TS};
-                            sSelection = AppContract.FeedingEntry.COLUMN_TIMESTAMP + " = ? ";
-                            sSelectionArgs = new String[]{activityTimestamp};
-                            activityRecord = getContext().getContentResolver().query(uri,sColumnsActivity,sSelection,sSelectionArgs,null);
+                            activityRecord = getContext().getContentResolver().query(uri,sColumnsActivity,null,null,null);
                             break;
                         case "diaper":
-                            uri = AppContract.DiaperEntry.buildDiaperByUserIdBabyIdUri(USER_ID,BABY_ID);
-                            sColumnsActivity = new String[]{AppContract.FeedingEntry._ID,
+                            uri = AppContract.DiaperEntry.buildDiaperByUserIdBabyIdTimestampUri(USER_ID,BABY_ID,activityTimestamp);
+                            sColumnsActivity = new String[]{AppContract.DiaperEntry._ID,
                                     AppContract.DiaperEntry.COLUMN_LAST_UPDATED_TS};
-                            sSelection = AppContract.DiaperEntry.COLUMN_TIMESTAMP + " = ? ";
-                            sSelectionArgs = new String[]{activityTimestamp};
-                            activityRecord = getContext().getContentResolver().query(uri,sColumnsActivity,sSelection,sSelectionArgs,null);
+                            activityRecord = getContext().getContentResolver().query(uri,sColumnsActivity,null,null,null);
                             break;
                         case "sleeping":
-                            uri = AppContract.SleepingEntry.buildSleepingByUserIdBabyIdUri(USER_ID,BABY_ID);
-                            sColumnsActivity = new String[]{AppContract.FeedingEntry._ID,
+                            uri = AppContract.SleepingEntry.buildSleepingByUserIdBabyIdTimestampUri(USER_ID,BABY_ID,activityTimestamp);
+                            sColumnsActivity = new String[]{AppContract.SleepingEntry._ID,
                                     AppContract.SleepingEntry.COLUMN_LAST_UPDATED_TS};
-                            sSelection = AppContract.SleepingEntry.COLUMN_TIMESTAMP + " = ? ";
-                            sSelectionArgs = new String[]{activityTimestamp};
-                            activityRecord = getContext().getContentResolver().query(uri,sColumnsActivity,sSelection,sSelectionArgs,null);
+
+                            activityRecord = getContext().getContentResolver().query(uri,sColumnsActivity,null,null,null);
                             break;
                         case "health":
-                            uri = AppContract.HealthEntry.buildHealthByUserBabyUri(USER_ID,BABY_ID);
-                            sColumnsActivity = new String[]{AppContract.FeedingEntry._ID,
+                            uri = AppContract.HealthEntry.buildHealthByUserIdBabyIdTimestampUri(USER_ID,BABY_ID,activityTimestamp);
+                            sColumnsActivity = new String[]{AppContract.HealthEntry._ID,
                                     AppContract.HealthEntry.COLUMN_LAST_UPDATED_TS};
-                            sSelection = AppContract.HealthEntry.COLUMN_TIMESTAMP + " = ? ";
-                            sSelectionArgs = new String[]{activityTimestamp};
-                            activityRecord = getContext().getContentResolver().query(uri,sColumnsActivity,sSelection,sSelectionArgs,null);
+                            activityRecord = getContext().getContentResolver().query(uri,sColumnsActivity,null,null,null);
                             break;
                         default:
                             break;
                     }
 
+                    Log.v(TAG,"activityRecord " + activityRecord);
                     if(activityRecord != null){
+                        Log.v(TAG,"activityRecord getCount " + activityRecord.getCount());
                         if(activityRecord.getCount() > 0 ){
+
+                            activityRecord.moveToNext();
                             checkActivityId = activityRecord.getLong(COL_ACTIVITY_ID);
                             activityLastUpdatedTS = activityRecord.getString(COL_ACTIVITY_LAST_UPD_TS);
+
+                            Log.v(TAG,"activityRecord Found " + checkActivityId);
+                            Log.v(TAG,"activityLastUpdatedTS " + activityLastUpdatedTS + " lastUpdatedTimestamp " + lastUpdatedTimestamp);
+
                             int compare = activityLastUpdatedTS.compareTo(lastUpdatedTimestamp);
                             if(compare < 0){
                                 activityRecordAction = RECORD_ACTION_UPDATE;
@@ -379,7 +478,11 @@ public class GetActivitiesSyncAdapter extends AbstractThreadedSyncAdapter {
                         }else{
                             activityRecordAction = RECORD_ACTION_INSERT;
                         }
+                    }else{
+                        activityRecordAction = RECORD_ACTION_INSERT;
                     }
+
+                    Log.v(TAG,"activityRecordAction " + activityRecordAction);
 
                     switch (activityRecordAction){
                         case RECORD_ACTION_INSERT:
@@ -405,6 +508,7 @@ public class GetActivitiesSyncAdapter extends AbstractThreadedSyncAdapter {
                                     ContentValues diaperValues = new ContentValues();
                                     diaperValues.put(AppContract.DiaperEntry.COLUMN_USER_ID, USER_ID);
                                     diaperValues.put(AppContract.DiaperEntry.COLUMN_BABY_ID, BABY_ID);
+                                    diaperValues.put(AppContract.DiaperEntry.COLUMN_TIMESTAMP, activityTimestamp);
                                     diaperValues.put(AppContract.DiaperEntry.COLUMN_DATE, activityDate);
                                     diaperValues.put(AppContract.DiaperEntry.COLUMN_TIME, activityTime);
                                     diaperValues.put(AppContract.DiaperEntry.COLUMN_LAST_UPDATED_TS, lastUpdatedTimestamp);
@@ -420,11 +524,12 @@ public class GetActivitiesSyncAdapter extends AbstractThreadedSyncAdapter {
                                     ContentValues sleepingValues = new ContentValues();
                                     sleepingValues.put(AppContract.SleepingEntry.COLUMN_USER_ID, USER_ID);
                                     sleepingValues.put(AppContract.SleepingEntry.COLUMN_BABY_ID, BABY_ID);
+                                    sleepingValues.put(AppContract.SleepingEntry.COLUMN_TIMESTAMP, activityTimestamp);
                                     sleepingValues.put(AppContract.SleepingEntry.COLUMN_DATE, activityDate);
                                     sleepingValues.put(AppContract.SleepingEntry.COLUMN_TIME, activityTime);
                                     sleepingValues.put(AppContract.SleepingEntry.COLUMN_LAST_UPDATED_TS, lastUpdatedTimestamp);
                                     sleepingValues.put(AppContract.SleepingEntry.COLUMN_NOTES, activityNotes);
-                                    sleepingValues.put(AppContract.SleepingEntry.COLUMN_TYPE, activityFieldType);
+                                    //sleepingValues.put(AppContract.SleepingEntry.COLUMN_TYPE, activityFieldType);
 
                                     sleepingValues.put(AppContract.SleepingEntry.COLUMN_END_TIME, activityFieldEndTime);
                                     sleepingValues.put(AppContract.SleepingEntry.COLUMN_DURATION, activityFieldDuration);
@@ -437,6 +542,7 @@ public class GetActivitiesSyncAdapter extends AbstractThreadedSyncAdapter {
                                     ContentValues healthValues = new ContentValues();
                                     healthValues.put(AppContract.HealthEntry.COLUMN_USER_ID, USER_ID);
                                     healthValues.put(AppContract.HealthEntry.COLUMN_BABY_ID, BABY_ID);
+                                    healthValues.put(AppContract.HealthEntry.COLUMN_TIMESTAMP, activityTimestamp);
                                     healthValues.put(AppContract.HealthEntry.COLUMN_DATE, activityDate);
                                     healthValues.put(AppContract.HealthEntry.COLUMN_TIME, activityTime);
                                     healthValues.put(AppContract.HealthEntry.COLUMN_LAST_UPDATED_TS, lastUpdatedTimestamp);
@@ -468,13 +574,17 @@ public class GetActivitiesSyncAdapter extends AbstractThreadedSyncAdapter {
                                     feedingValues.put(AppContract.FeedingEntry.COLUMN_QUANTITY, activityFieldQuantity);
                                     feedingValues.put(AppContract.FeedingEntry.COLUMN_UNIT, activityFieldUnit);
 
-                                    getContext().getContentResolver().insert(AppContract.FeedingEntry.CONTENT_URI, feedingValues);
-                                    insertedActivities++;
+                                    String feedingWhere = AppContract.FeedingEntry._ID + " = ? ";
+                                    String[] feedingWhereArgs = new String[]{Long.toString(checkActivityId)};
+                                    getContext().getContentResolver().update(AppContract.FeedingEntry.CONTENT_URI, feedingValues, feedingWhere,feedingWhereArgs);
+
+                                    updatedActivities++;
                                     break;
                                 case "diaper":
                                     ContentValues diaperValues = new ContentValues();
                                     diaperValues.put(AppContract.DiaperEntry.COLUMN_USER_ID, USER_ID);
                                     diaperValues.put(AppContract.DiaperEntry.COLUMN_BABY_ID, BABY_ID);
+                                    diaperValues.put(AppContract.DiaperEntry.COLUMN_TIMESTAMP, activityTimestamp);
                                     diaperValues.put(AppContract.DiaperEntry.COLUMN_DATE, activityDate);
                                     diaperValues.put(AppContract.DiaperEntry.COLUMN_TIME, activityTime);
                                     diaperValues.put(AppContract.DiaperEntry.COLUMN_LAST_UPDATED_TS, lastUpdatedTimestamp);
@@ -483,30 +593,36 @@ public class GetActivitiesSyncAdapter extends AbstractThreadedSyncAdapter {
 
                                     diaperValues.put(AppContract.DiaperEntry.COLUMN_CREAM, activityFieldCream);
 
-                                    getContext().getContentResolver().insert(AppContract.DiaperEntry.CONTENT_URI, diaperValues);
-                                    insertedActivities++;
+                                    String diaperWhere = AppContract.DiaperEntry._ID + " = ? ";
+                                    String[] diaperWhereArgs = new String[]{Long.toString(checkActivityId)};
+                                    getContext().getContentResolver().update(AppContract.DiaperEntry.CONTENT_URI, diaperValues, diaperWhere,diaperWhereArgs);
+                                    updatedActivities++;
                                     break;
                                 case "sleeping":
                                     ContentValues sleepingValues = new ContentValues();
                                     sleepingValues.put(AppContract.SleepingEntry.COLUMN_USER_ID, USER_ID);
                                     sleepingValues.put(AppContract.SleepingEntry.COLUMN_BABY_ID, BABY_ID);
+                                    sleepingValues.put(AppContract.SleepingEntry.COLUMN_TIMESTAMP, activityTimestamp);
                                     sleepingValues.put(AppContract.SleepingEntry.COLUMN_DATE, activityDate);
                                     sleepingValues.put(AppContract.SleepingEntry.COLUMN_TIME, activityTime);
                                     sleepingValues.put(AppContract.SleepingEntry.COLUMN_LAST_UPDATED_TS, lastUpdatedTimestamp);
                                     sleepingValues.put(AppContract.SleepingEntry.COLUMN_NOTES, activityNotes);
-                                    sleepingValues.put(AppContract.SleepingEntry.COLUMN_TYPE, activityFieldType);
+                                    //sleepingValues.put(AppContract.SleepingEntry.COLUMN_TYPE, activityFieldType);
 
                                     sleepingValues.put(AppContract.SleepingEntry.COLUMN_END_TIME, activityFieldEndTime);
                                     sleepingValues.put(AppContract.SleepingEntry.COLUMN_DURATION, activityFieldDuration);
                                     sleepingValues.put(AppContract.SleepingEntry.COLUMN_WHERE_SLEEP, activityFieldWhereSleep);
 
-                                    getContext().getContentResolver().insert(AppContract.SleepingEntry.CONTENT_URI, sleepingValues);
-                                    insertedActivities++;
+                                    String sleepingWhere = AppContract.SleepingEntry._ID + " = ? ";
+                                    String[] sleepingWhereArgs = new String[]{Long.toString(checkActivityId)};
+                                    getContext().getContentResolver().update(AppContract.SleepingEntry.CONTENT_URI, sleepingValues, sleepingWhere,sleepingWhereArgs);
+                                    updatedActivities++;
                                     break;
                                 case "health":
                                     ContentValues healthValues = new ContentValues();
                                     healthValues.put(AppContract.HealthEntry.COLUMN_USER_ID, USER_ID);
                                     healthValues.put(AppContract.HealthEntry.COLUMN_BABY_ID, BABY_ID);
+                                    healthValues.put(AppContract.HealthEntry.COLUMN_TIMESTAMP, activityTimestamp);
                                     healthValues.put(AppContract.HealthEntry.COLUMN_DATE, activityDate);
                                     healthValues.put(AppContract.HealthEntry.COLUMN_TIME, activityTime);
                                     healthValues.put(AppContract.HealthEntry.COLUMN_LAST_UPDATED_TS, lastUpdatedTimestamp);
@@ -515,8 +631,10 @@ public class GetActivitiesSyncAdapter extends AbstractThreadedSyncAdapter {
 
                                     healthValues.put(AppContract.HealthEntry.COLUMN_VALUE, activityFieldValue);
 
-                                    getContext().getContentResolver().insert(AppContract.HealthEntry.CONTENT_URI, healthValues);
-                                    insertedActivities++;
+                                    String healthWhere = AppContract.HealthEntry._ID + " = ? ";
+                                    String[] healthWhereArgs = new String[]{Long.toString(checkActivityId)};
+                                    getContext().getContentResolver().update(AppContract.HealthEntry.CONTENT_URI, healthValues, healthWhere,healthWhereArgs);
+                                    updatedActivities++;
                                     break;
                                 default:
                                     break;
@@ -533,7 +651,46 @@ public class GetActivitiesSyncAdapter extends AbstractThreadedSyncAdapter {
 
             }
 
-            Log.d(TAG, "Sync Complete. " + "activities inserted - " + insertedActivities + "; babies inserted - " + insertedBabies);
+            Log.d(TAG, "Sync Complete. ");
+            Log.d(TAG, "babies inserted - " + insertedBabies + "; babies updated - " + updatedBabies);
+            Log.d(TAG, "activites inserted - " + insertedActivities + "; activities updated - " + updatedActivities);
+
+        } catch (JSONException e) {
+            Log.e(TAG, e.getMessage(), e);
+            e.printStackTrace();
+        }
+    }
+
+    private void getAckSyncDataFromJson(String activitiesJsonStr)
+            throws JSONException {
+        Log.v(TAG, "getAckSyncDataFromJson");
+        // into an Object hierarchy for us.
+        // These are the names of the JSON objects that need to be extracted.
+
+
+        final String OWM_MESSAGE_CODE = "success";
+
+        try {
+            JSONObject activitiesJson = new JSONObject(activitiesJsonStr);
+
+            // do we have an error?
+            if ( activitiesJson.has(OWM_MESSAGE_CODE) ) {
+                int errorCode = activitiesJson.getInt(OWM_MESSAGE_CODE);
+
+                switch (errorCode) {
+                    case 1:
+                        break;
+                    case 0:
+                        Log.v(TAG, "getActivitiesDataFromJson - error");
+                        return;
+                    default:
+                        Log.v(TAG, "getActivitiesDataFromJson - unknown error");
+                        return;
+                }
+            }
+
+
+            Log.d(TAG, "Sync Complete. ");
 
         } catch (JSONException e) {
             Log.e(TAG, e.getMessage(), e);
@@ -546,7 +703,7 @@ public class GetActivitiesSyncAdapter extends AbstractThreadedSyncAdapter {
      */
     public static void configurePeriodicSync(Context context, int syncInterval, int flexTime) {
         Account account = getSyncAccount(context);
-        String authority = context.getString(R.string.content_authority_activities);
+        String authority = context.getString(R.string.content_authority);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             // we can enable inexact timers in our periodic sync
             SyncRequest request = new SyncRequest.Builder().
@@ -569,7 +726,7 @@ public class GetActivitiesSyncAdapter extends AbstractThreadedSyncAdapter {
         bundle.putBoolean(ContentResolver.SYNC_EXTRAS_EXPEDITED, true);
         bundle.putBoolean(ContentResolver.SYNC_EXTRAS_MANUAL, true);
         ContentResolver.requestSync(getSyncAccount(context),
-                context.getString(R.string.content_authority_activities), bundle);
+                context.getString(R.string.content_authority), bundle);
     }
 
     /**
@@ -622,7 +779,7 @@ public class GetActivitiesSyncAdapter extends AbstractThreadedSyncAdapter {
         /*
          * Without calling setSyncAutomatically, our periodic sync will not be enabled.
          */
-        ContentResolver.setSyncAutomatically(newAccount, context.getString(R.string.content_authority_activities), true);
+        ContentResolver.setSyncAutomatically(newAccount, context.getString(R.string.content_authority), true);
 
         /*
          * Finally, let's do a sync to get things started

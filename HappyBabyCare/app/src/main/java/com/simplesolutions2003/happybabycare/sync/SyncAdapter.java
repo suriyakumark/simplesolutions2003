@@ -62,7 +62,7 @@ public class SyncAdapter {
         ArticleSyncAdapter.syncImmediately(context);
 
         GetActivitiesSyncAdapter.configurePeriodicSync(context, GetActivitiesSyncAdapter.SYNC_INTERVAL, GetActivitiesSyncAdapter.SYNC_FLEXTIME);
-        ContentResolver.setSyncAutomatically(newAccount, context.getString(R.string.content_authority_activities), true);
+        ContentResolver.setSyncAutomatically(newAccount, context.getString(R.string.content_authority), true);
         GetActivitiesSyncAdapter.syncImmediately(context);
     }
 

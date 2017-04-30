@@ -57,7 +57,7 @@ public class ArticleSyncAdapter extends AbstractThreadedSyncAdapter {
     // 60 seconds (1 minute) * 180 = 3 hours
     //public static final int SYNC_INTERVAL = 60 * 180;
     //for testing let us use 15 minutes
-    public static final int SYNC_INTERVAL = 60 * 60 * 3;
+    public static final int SYNC_INTERVAL = 60 * 5;
     public static final int SYNC_FLEXTIME = SYNC_INTERVAL/3;
     private static final long DAY_IN_MILLIS = 1000 * 60 * 60 * 24;
 

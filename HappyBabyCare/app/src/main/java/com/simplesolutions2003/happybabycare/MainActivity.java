@@ -101,6 +101,7 @@ public class MainActivity extends AppCompatActivity
 
         Log.v(TAG, "initializeSyncAdapter");
         SyncAdapter.initializeSyncAdapter(this);
+        //GetActivitiesSyncAdapter.initializeSyncAdapter(this);
 
     }
 
