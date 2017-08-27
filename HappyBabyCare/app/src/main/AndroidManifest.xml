@@ -63,6 +63,18 @@
                 android:resource="@xml/activities_syncadapter" />
         </service>
 
+        <service
+            android:name=".sync.PutActivitiesSyncService"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.content.SyncAdapter" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.content.SyncAdapter"
+                android:resource="@xml/activities_syncadapter" />
+        </service>
+
         <!-- SyncAdapter's dummy authentication service -->
         <service android:name=".sync.AppAuthenticatorService">
             <intent-filter>
