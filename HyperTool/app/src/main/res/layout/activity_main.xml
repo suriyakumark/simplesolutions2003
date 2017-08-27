@@ -15,7 +15,7 @@
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:grid="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools"
-        android:background="@color/colorPrimaryDark"
+        android:background="@color/colorPrimary"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_centerHorizontal="true"
@@ -134,51 +134,71 @@
                     android:text="--"/>
             </LinearLayout>
         </LinearLayout>
-        <LinearLayout android:id="@+id/battery_info" android:orientation="vertical"
+        <LinearLayout android:id="@+id/battery_info" android:orientation="horizontal"
             style="@style/GridLinearLayout">
-            <ImageButton android:id="@+id/battery_img"
-                style="@style/ButtonImage"
-                android:src="@drawable/battery_90_100" />
-            <TextView android:id="@+id/battery_level"
-                style="@style/TextViewSmall"
-                android:text="---"/>
-            <TextView android:id="@+id/battery_status"
-                style="@style/TextViewSmall"
-                android:text="---"/>
-            <TextView android:id="@+id/battery_volt"
-                style="@style/TextViewSmall"
-                android:text="---"/>
-            <TextView android:id="@+id/battery_temp"
-                style="@style/TextViewSmall"
-                android:text="---"/>
+            <LinearLayout android:id="@+id/battery_info_inner1" android:orientation="vertical"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+                <ImageButton android:id="@+id/battery_img"
+                    style="@style/ButtonImage"
+                    android:src="@drawable/battery_90_100" />
+                <ImageButton android:id="@+id/battery_status"
+                    style="@style/ButtonImage"
+                    android:layout_marginTop="-4dp"
+                    android:src="@drawable/charging" />
+            </LinearLayout>
+            <LinearLayout android:id="@+id/battery_info_inner2" android:orientation="vertical"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+                <TextView android:id="@+id/battery_level"
+                    style="@style/TextViewSmall"
+                    android:paddingStart="2dp"
+                    android:text="---"/>
+                <TextView android:id="@+id/battery_volt"
+                    style="@style/TextViewSmall"
+                    android:paddingStart="2dp"
+                    android:text="---"/>
+                <TextView android:id="@+id/battery_temp"
+                    style="@style/TextViewSmall"
+                    android:paddingStart="2dp"
+                    android:text="---"/>
+            </LinearLayout>
         </LinearLayout>
         <LinearLayout android:id="@+id/volume_brightness" android:orientation="vertical"
             style="@style/GridLinearLayout">
-            <LinearLayout android:id="@+id/volume" android:orientation="horizontal"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content">
-                <ImageButton android:id="@+id/volume_img"
+            <LinearLayout android:id="@+id/volume_brightness_inner" android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+                <LinearLayout android:id="@+id/volume" android:orientation="vertical"
+                    android:layout_width="wrap_content"
                     android:layout_gravity="center"
-                    style="@style/ButtonImage"
-                    android:src="@drawable/volume_high"
-                    />
-                <TextView android:id="@+id/volume_level"
+                    android:layout_height="0dp"
+                    android:layout_weight="1">
+                    <ImageButton android:id="@+id/volume_img"
+                        android:layout_gravity="center"
+                        style="@style/ButtonImage"
+                        android:src="@drawable/volume_high"
+                        />
+                    <TextView android:id="@+id/volume_level"
+                        android:layout_gravity="center"
+                        style="@style/TextViewSmall"
+                        android:text="---"/>
+                </LinearLayout>
+                <LinearLayout android:id="@+id/brightness" android:orientation="vertical"
+                    android:layout_width="wrap_content"
                     android:layout_gravity="center"
-                    style="@style/TextViewSmall"
-                    android:text="---"/>
-            </LinearLayout>
-            <LinearLayout android:id="@+id/brightness" android:orientation="horizontal"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content">
-                <ImageButton android:id="@+id/brightness_img"
-                    style="@style/ButtonImage"
-                    android:layout_gravity="center"
-                    android:src="@drawable/brightness"
-                    />
-                <TextView android:id="@+id/brightness_level"
-                    style="@style/TextViewSmall"
-                    android:layout_gravity="center"
-                    android:text="---"/>
+                    android:layout_height="0dp"
+                    android:layout_weight="1">
+                    <ImageButton android:id="@+id/brightness_img"
+                        style="@style/ButtonImage"
+                        android:layout_gravity="center"
+                        android:src="@drawable/brightness"
+                        />
+                    <TextView android:id="@+id/brightness_level"
+                        style="@style/TextViewSmall"
+                        android:layout_gravity="center"
+                        android:text="---"/>
+                </LinearLayout>
             </LinearLayout>
         </LinearLayout>
 
@@ -265,27 +285,39 @@
         </LinearLayout>
         <LinearLayout android:id="@+id/data_wifi" android:orientation="vertical"
             style="@style/GridLinearLayout">
-            <LinearLayout android:id="@+id/data" android:orientation="horizontal"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content">
-                <ImageButton android:id="@+id/data_img"
-                    style="@style/ButtonImage"
-                    android:src="@drawable/data"
-                    />
-                <TextView android:id="@+id/data_usage"
-                    style="@style/TextViewSmall"
-                    android:text="----"/>
-            </LinearLayout>
-            <LinearLayout android:id="@+id/wifi" android:orientation="horizontal"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content">
-                <ImageButton android:id="@+id/wifi_img"
-                    style="@style/ButtonImage"
-                    android:src="@drawable/wifi"
-                    />
-                <TextView android:id="@+id/wifi_usage"
-                    style="@style/TextViewSmall"
-                    android:text="---"/>
+            <LinearLayout android:id="@+id/data_wifi_inner" android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+                <LinearLayout android:id="@+id/data" android:orientation="vertical"
+                    android:layout_width="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_height="0dp"
+                    android:layout_weight="1">
+                    <ImageButton android:id="@+id/data_img"
+                        style="@style/ButtonImage"
+                        android:layout_gravity="center"
+                        android:src="@drawable/data"
+                        />
+                    <TextView android:id="@+id/data_usage"
+                        style="@style/TextViewSmall"
+                        android:layout_gravity="center"
+                        android:text="----"/>
+                </LinearLayout>
+                <LinearLayout android:id="@+id/wifi" android:orientation="vertical"
+                    android:layout_width="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_height="0dp"
+                    android:layout_weight="1">
+                    <ImageButton android:id="@+id/wifi_img"
+                        style="@style/ButtonImage"
+                        android:layout_gravity="center"
+                        android:src="@drawable/wifi"
+                        />
+                    <TextView android:id="@+id/wifi_usage"
+                        style="@style/TextViewSmall"
+                        android:layout_gravity="center"
+                        android:text="---"/>
+                </LinearLayout>
             </LinearLayout>
         </LinearLayout>
 
@@ -336,10 +368,14 @@
             style="@style/GridLinearLayout">
             <ImageButton android:id="@+id/airplane_img"
                 style="@style/ButtonImageSwitch"
+                android:layout_gravity="center"
+                android:gravity="center"
                 android:src="@drawable/airplane"
                 />
             <ImageButton android:id="@+id/gps_img"
                 style="@style/ButtonImageSwitch"
+                android:layout_gravity="center"
+                android:gravity="center"
                 android:src="@drawable/gps"
                 />
         </LinearLayout>
@@ -403,10 +439,12 @@
             style="@style/GridLinearLayout">
             <ImageButton android:id="@+id/bluetooth_img"
                 style="@style/ButtonImageSwitch"
+                android:layout_gravity="center"
                 android:src="@drawable/bluetooth"
                 />
             <ImageButton android:id="@+id/torch_img"
                 style="@style/ButtonImageSwitch"
+                android:layout_gravity="center"
                 android:src="@drawable/torch"
                 />
         </LinearLayout>

@@ -54,13 +54,15 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     public static TextView tvRamFree;
 
     public static TextView tvBatteryLevel;
-    public static TextView tvBatteryStatus;
+    public static ImageView ivBatteryStatus;
     public static TextView tvBatteryVolt;
     public static TextView tvBatteryTemp;
 
     public static TextView tvVolumeLevel;
+    public static ImageButton ibSoundSwitch;
 
     public static TextView tvBrightnessLevel;
+    public static ImageButton ibDisplaySwitch;
 
     public static TextView tvDateDay;
     public static TextView tvDateMonthName;
@@ -154,11 +156,13 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         tvRamUsed = (TextView) findViewById(R.id.ram_used);
         tvRamFree = (TextView) findViewById(R.id.ram_free);
         tvBatteryLevel = (TextView) findViewById(R.id.battery_level);
-        tvBatteryStatus = (TextView) findViewById(R.id.battery_status);
+        ivBatteryStatus = (ImageView) findViewById(R.id.battery_status);
         tvBatteryVolt = (TextView) findViewById(R.id.battery_volt);
         tvBatteryTemp = (TextView) findViewById(R.id.battery_temp);
         tvVolumeLevel = (TextView) findViewById(R.id.volume_level);
+        ibSoundSwitch = (ImageButton) findViewById(R.id.volume_img);
         tvBrightnessLevel = (TextView) findViewById(R.id.brightness_level);
+        ibDisplaySwitch = (ImageButton) findViewById(R.id.brightness_img);
         tvDateDay = (TextView) findViewById(R.id.date_day);
         tvDateMonthName = (TextView) findViewById(R.id.date_month);
         tvDateYear_cc = (TextView) findViewById(R.id.date_year_cc);
@@ -222,6 +226,13 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         setupCompassInfo();
         setupVolumeBluetoothInfo();
         setupCarrierInfo();
+        setupGps();
+        setupAirplane();
+        setupSound();
+        setupDisplay();
+        setupData();
+        setupWifi();
+        setupBluetooth();
         setupTorch();
     }
 
@@ -300,7 +311,72 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         ibAirplaneSwitch.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
-                //Utilities.setAirplane();
+                Utilities.airplaneOnOff();
+            }
+        });
+    }
+
+    public void setupSound(){
+        ibSoundSwitch.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v) {
+                Utilities.soundOnOff();
+            }
+        });
+    }
+
+    public void setupDisplay(){
+        ibDisplaySwitch.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v) {
+                Utilities.displayOnOff();
+            }
+        });
+    }
+
+    public void setupData(){
+        ibDataSwitch.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v) {
+                Utilities.dataOnOff();
+                updateDataInfo();
+            }
+        });
+    }
+    public void setupGps(){
+        ibGpsSwitch.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v) {
+                Utilities.gpsOnOff();
+                updateGpsInfo();
+            }
+        });
+    }
+
+    public void setupWifi(){
+        ibWifiSwitch.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v) {
+                if(bWifiSwitch) {
+                    Utilities.wifiOff();
+                }else{
+                    Utilities.wifiOn();
+                }
+                updateWifiInfo();
+            }
+        });
+    }
+
+    public void setupBluetooth(){
+        ibBluetoothSwitch.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v) {
+                if(bBluetoothSwitch) {
+                    Utilities.bluetoothOff();
+                }else{
+                    Utilities.bluetoothOn();
+                }
+                updateBluetoothInfo();
             }
         });
     }
@@ -348,7 +424,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         Utilities.getStorageInternalInfo();
         tvStorageInternalTotal.setText(Utilities.sStorageInternalTotal);
         tvStorageInternalUsed.setText(Utilities.sStorageInternalUsed);
-        tvStorageInternalFree.setText(Utilities.sStorageExternalFree);
+        tvStorageInternalFree.setText(Utilities.sStorageInternalFree);
     }
 
     public static void updateStorageExternalInfo(){
@@ -401,7 +477,11 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     public static void updateBatteryInfo(){
         Utilities.getBatteryInfo();
         tvBatteryLevel.setText(Utilities.sBatteryLevel);
-        tvBatteryStatus.setText(Utilities.sBatteryStatus);
+        if(Utilities.bBatteryStatus){
+            ivBatteryStatus.setAlpha(fSwitchOn);
+        }else{
+            ivBatteryStatus.setAlpha(fSwitchOff);
+        }
         tvBatteryTemp.setText(Utilities.sBatteryTemp);
         tvBatteryVolt.setText(Utilities.sBatteryVolt);
     }
@@ -588,3 +668,4 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     }
 
 }
+

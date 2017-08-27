@@ -2,6 +2,8 @@ package com.simplesolutions2003.hypertool;
 
 import android.app.Activity;
 import android.app.ActivityManager;
+import android.bluetooth.BluetoothAdapter;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
@@ -13,6 +15,7 @@ import android.hardware.SensorManager;
 import android.location.LocationManager;
 import android.media.AudioManager;
 import android.net.ConnectivityManager;
+import android.net.TrafficStats;
 import android.net.wifi.WifiManager;
 import android.os.BatteryManager;
 import android.os.Build;
@@ -45,6 +48,8 @@ import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
+import static android.content.Context.BATTERY_SERVICE;
+
 /**
  * Created by Suriya on 5/4/2016.
  */
@@ -71,7 +76,7 @@ public class Utilities  {
     public static String sRamUsed;
     public static String sRamFree;
     public static String sBatteryLevel;
-    public static String sBatteryStatus;
+    public static boolean bBatteryStatus;
     public static String sBatteryVolt;
     public static String sBatteryTemp;
     public static String sVolumeLevel;
@@ -247,7 +252,7 @@ public class Utilities  {
     }
 
     public static void getStorageInternalInfo(){
-        StatFs statFs = new StatFs(Environment.getExternalStorageDirectory().getAbsolutePath());
+        StatFs statFs = new StatFs(Environment.getRootDirectory().getAbsolutePath());
         long Total = ((long) statFs.getBlockCountLong() * (long) statFs.getBlockSizeLong());
         long Free =  ((long) statFs.getAvailableBlocksLong() * (long) statFs.getBlockSizeLong());
         long Used = Total - Free;
@@ -353,27 +358,28 @@ public class Utilities  {
     }
 
     public static void getBatteryInfo() {
+
         Intent batteryIntent = context.registerReceiver(null, new IntentFilter(Intent.ACTION_BATTERY_CHANGED));
         int currBattery = batteryIntent.getIntExtra(BatteryManager.EXTRA_LEVEL, -1);
         int maxBattery = batteryIntent.getIntExtra(BatteryManager.EXTRA_SCALE, -1);
         int currBatteryLevel = (int) ((currBattery * 100.0f) /maxBattery);
 
-        int currBatteryStatus = batteryIntent.getIntExtra(BatteryManager.EXTRA_STATUS, -1);
-        boolean isBatterCharging = currBatteryStatus == BatteryManager.BATTERY_STATUS_CHARGING;
-        boolean isBatteryFull =    currBatteryStatus == BatteryManager.BATTERY_STATUS_FULL;
         float currBatteryVolt = batteryIntent.getIntExtra(BatteryManager.EXTRA_VOLTAGE, -1)/1000.0f;
         float currBatteryTemp = batteryIntent.getIntExtra(BatteryManager.EXTRA_TEMPERATURE, -1)/10.0f;
 
         sBatteryLevel = oneDigitIntForm(currBatteryLevel) + "%";
-        if(isBatteryFull) {
-            sBatteryStatus = "charged";
-        }else if(isBatterCharging){
-            sBatteryStatus = "charging";
-        }else{
-            sBatteryStatus = "";
-        }
         sBatteryVolt = Float.toString(currBatteryVolt) +"v";
         sBatteryTemp = Float.toString(currBatteryTemp) +"c";
+
+        int status = batteryIntent.getIntExtra(BatteryManager.EXTRA_STATUS, -1);
+        bBatteryStatus = status == BatteryManager.BATTERY_STATUS_CHARGING ||
+                status == BatteryManager.BATTERY_STATUS_FULL;
+
+        int plugged = batteryIntent.getIntExtra(BatteryManager.EXTRA_PLUGGED, -1);
+        boolean pluggedAC = (plugged == BatteryManager.BATTERY_PLUGGED_AC);
+        boolean pluggedUSB = (plugged == BatteryManager.BATTERY_PLUGGED_USB);
+
+        bBatteryStatus = pluggedAC || pluggedUSB;
     }
 
     public static void getCompassInfo() {
@@ -393,13 +399,70 @@ public class Utilities  {
         } catch (Exception e) {
             Log.v(LOG_TAG, e.getMessage());
         }
-        sDataUsage = "x.xx GB";
+        long mobileTx = TrafficStats.getMobileTxBytes();
+        long mobileRx = TrafficStats.getMobileRxBytes();
+        sDataUsage = bytesFormat(mobileTx + mobileRx);
     }
 
     public static void getWifiInfo() {
         WifiManager wifiManager = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
         bWifiSwitch = wifiManager.isWifiEnabled();
-        sWifiUsage = "x.xx GB";
+        long mobileTx = TrafficStats.getMobileTxBytes();
+        long mobileRx = TrafficStats.getMobileRxBytes();
+        long wifiTx = TrafficStats.getTotalTxBytes() - mobileTx;
+        long wifiRx = TrafficStats.getTotalRxBytes() - mobileRx;
+        sWifiUsage = bytesFormat(wifiTx + wifiRx);
+    }
+
+    public static void dataOnOff(){
+        Intent intent = new Intent(Intent.ACTION_MAIN);
+        intent.setComponent(new ComponentName("com.android.settings",
+                "com.android.settings.Settings$DataUsageSummaryActivity"));
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        ((Activity) context).startActivityForResult(intent,0);
+    }
+
+    public static void gpsOnOff(){
+        Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+        ((Activity) context).startActivityForResult(intent,0);
+    }
+
+
+    public static void soundOnOff(){
+        Intent intent = new Intent(Settings.ACTION_SOUND_SETTINGS);
+        ((Activity) context).startActivityForResult(intent,0);
+    }
+
+
+    public static void displayOnOff(){
+        Intent intent = new Intent(Settings.ACTION_DISPLAY_SETTINGS);
+        ((Activity) context).startActivityForResult(intent,0);
+    }
+
+
+    public static void airplaneOnOff(){
+        Intent intent = new Intent(Settings.ACTION_WIRELESS_SETTINGS);
+        ((Activity) context).startActivityForResult(intent,0);
+    }
+
+    public static void wifiOn(){
+        WifiManager wifiManager = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
+        wifiManager.setWifiEnabled(true);
+    }
+
+    public static void wifiOff(){
+        WifiManager wifiManager = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
+        wifiManager.setWifiEnabled(false);
+    }
+
+    public static void bluetoothOn(){
+        BluetoothAdapter mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+        mBluetoothAdapter.enable();
+    }
+
+    public static void bluetoothOff(){
+        BluetoothAdapter mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+        mBluetoothAdapter.disable();
     }
 
     public static void getPedometerInfo() {
@@ -508,12 +571,12 @@ public class Utilities  {
         long Gb = Mb * 1024;
 
         if(size < Kb){
-            return onePointTwoDoubleForm(size) + " bytes";
-        }else if(size >= Kb && size < Mb){
+            return onePointTwoDoubleForm(size) + " B";
+        }else if(size >= Kb/10 && size < Mb/10){
             return onePointTwoDoubleForm((double)size/Kb) + " KB";
-        }else if(size >= Mb && size < Gb){
+        }else if(size >= Mb/10 && size < Gb/10){
             return onePointTwoDoubleForm((double)size/Mb) + " MB";
-        }else if(size >= Gb){
+        }else if(size >= Gb/10){
             return onePointTwoDoubleForm((double)size/Gb) + " GB";
         }
 
