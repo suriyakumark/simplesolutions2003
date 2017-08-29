@@ -76,23 +76,38 @@
                     android:text="--"/>
             </LinearLayout>
         </LinearLayout>
-        <LinearLayout android:id="@+id/external_memory" android:orientation="horizontal"
+        <LinearLayout android:id="@+id/battery_info" android:orientation="horizontal"
             style="@style/GridLinearLayout">
-            <ImageButton android:id="@+id/external_memory_img"
-                style="@style/ButtonImage"
-                android:src="@drawable/memorycard" />
-            <LinearLayout android:id="@+id/external_memory_info" android:orientation="vertical"
+            <LinearLayout android:id="@+id/battery_info_inner" android:orientation="vertical"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content">
-                <TextView android:id="@+id/external_memory_total"
-                    style="@style/TextViewSmall"
-                    android:text="--"/>
-                <TextView android:id="@+id/external_memory_used"
-                    style="@style/TextViewSmallRed"
-                    android:text="--"/>
-                <TextView android:id="@+id/external_memory_free"
-                    style="@style/TextViewSmallGreen"
-                    android:text="--"/>
+                <LinearLayout android:id="@+id/battery_info_inner1" android:orientation="horizontal"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+                    <ImageButton android:id="@+id/battery_img"
+                        style="@style/ButtonImage"
+                        android:src="@drawable/battery_90_100" />
+                    <ImageButton android:id="@+id/battery_status"
+                        style="@style/ButtonImage"
+                        android:src="@drawable/charging" />
+                </LinearLayout>
+                <LinearLayout android:id="@+id/battery_info_inner2" android:orientation="vertical"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+                    <TextView android:id="@+id/battery_level"
+                        style="@style/TextViewSmall"
+                        android:paddingStart="2dp"
+                        android:text="---"/>
+                    <TextView android:id="@+id/battery_volt"
+                        style="@style/TextViewSmall"
+                        android:paddingStart="2dp"
+                        android:text="---"/>
+                    <TextView android:id="@+id/battery_temp"
+                        style="@style/TextViewSmall"
+                        android:paddingStart="2dp"
+                        android:text="---"/>
+                </LinearLayout>
             </LinearLayout>
         </LinearLayout>
 
@@ -134,36 +149,26 @@
                     android:text="--"/>
             </LinearLayout>
         </LinearLayout>
-        <LinearLayout android:id="@+id/battery_info" android:orientation="horizontal"
+        <LinearLayout android:id="@+id/external_memory" android:orientation="horizontal"
             style="@style/GridLinearLayout">
-            <LinearLayout android:id="@+id/battery_info_inner1" android:orientation="vertical"
+            <ImageButton android:id="@+id/external_memory_img"
+                style="@style/ButtonImage"
+                android:src="@drawable/memorycard" />
+            <LinearLayout android:id="@+id/external_memory_info" android:orientation="vertical"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content">
-                <ImageButton android:id="@+id/battery_img"
-                    style="@style/ButtonImage"
-                    android:src="@drawable/battery_90_100" />
-                <ImageButton android:id="@+id/battery_status"
-                    style="@style/ButtonImage"
-                    android:layout_marginTop="-4dp"
-                    android:src="@drawable/charging" />
-            </LinearLayout>
-            <LinearLayout android:id="@+id/battery_info_inner2" android:orientation="vertical"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content">
-                <TextView android:id="@+id/battery_level"
+                <TextView android:id="@+id/external_memory_total"
                     style="@style/TextViewSmall"
-                    android:paddingStart="2dp"
-                    android:text="---"/>
-                <TextView android:id="@+id/battery_volt"
-                    style="@style/TextViewSmall"
-                    android:paddingStart="2dp"
-                    android:text="---"/>
-                <TextView android:id="@+id/battery_temp"
-                    style="@style/TextViewSmall"
-                    android:paddingStart="2dp"
-                    android:text="---"/>
+                    android:text="--"/>
+                <TextView android:id="@+id/external_memory_used"
+                    style="@style/TextViewSmallRed"
+                    android:text="--"/>
+                <TextView android:id="@+id/external_memory_free"
+                    style="@style/TextViewSmallGreen"
+                    android:text="--"/>
             </LinearLayout>
         </LinearLayout>
+
         <LinearLayout android:id="@+id/volume_brightness" android:orientation="vertical"
             style="@style/GridLinearLayout">
             <LinearLayout android:id="@+id/volume_brightness_inner" android:orientation="vertical"
@@ -280,6 +285,9 @@
                 android:src="@drawable/compass"
                 />
             <TextView android:id="@+id/compass_direction"
+            style="@style/TextViewSmall"
+            android:text="----"/>
+            <TextView android:id="@+id/compass_alt_direction"
                 style="@style/TextViewSmall"
                 android:text="----"/>
         </LinearLayout>

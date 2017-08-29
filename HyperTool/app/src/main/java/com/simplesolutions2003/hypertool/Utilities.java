@@ -63,6 +63,7 @@ public class Utilities  {
     public static String sDeviceOS;
     public static String sCarrierName;
     public static String sCarrierStrength;
+    public static int iCarrierLevel;
     public static String sStorageInternalTotal;
     public static String sStorageInternalUsed;
     public static String sStorageInternalFree;
@@ -76,6 +77,7 @@ public class Utilities  {
     public static String sRamUsed;
     public static String sRamFree;
     public static String sBatteryLevel;
+    public static int iBatteryLevel;
     public static boolean bBatteryStatus;
     public static String sBatteryVolt;
     public static String sBatteryTemp;
@@ -154,20 +156,20 @@ public class Utilities  {
 
     public static void getCarrierInfo(){
         int dbm = 0;
-        int level = 0;
+        iCarrierLevel = 0;
         TelephonyManager telephonyManager = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
         sCarrierName = telephonyManager.getNetworkOperatorName();
         try {
             for (final CellInfo info : telephonyManager.getAllCellInfo()) {
                 if (info instanceof CellInfoGsm) {
                     dbm = ((CellInfoGsm) info).getCellSignalStrength().getDbm();
-                    level = ((CellInfoGsm) info).getCellSignalStrength().getLevel();
+                    iCarrierLevel = ((CellInfoGsm) info).getCellSignalStrength().getLevel();
                 } else if (info instanceof CellInfoCdma) {
                     dbm = ((CellInfoCdma) info).getCellSignalStrength().getDbm();
-                    level = ((CellInfoCdma) info).getCellSignalStrength().getLevel();
+                    iCarrierLevel = ((CellInfoCdma) info).getCellSignalStrength().getLevel();
                 } else if (info instanceof CellInfoLte) {
                     dbm = ((CellInfoLte) info).getCellSignalStrength().getDbm();
-                    level = ((CellInfoLte) info).getCellSignalStrength().getLevel();
+                    iCarrierLevel = ((CellInfoLte) info).getCellSignalStrength().getLevel();
                 } else {
                     Log.v(LOG_TAG, "Unknown type of cell signal! " + info.toString());
                 }
@@ -175,7 +177,7 @@ public class Utilities  {
         } catch (Exception e) {
             Log.v(LOG_TAG, "unknown error :"+e.getMessage());
         }
-        sCarrierStrength = Integer.toString(dbm) + " dBm : " + Integer.toString(level);
+        sCarrierStrength = Integer.toString(dbm) + " dBm : " + Integer.toString(iCarrierLevel);
     }
 
     public static void getCpuInfo(){
@@ -192,14 +194,14 @@ public class Utilities  {
                 InputStream in = proc.getInputStream();
                 BufferedReader br = new BufferedReader(new InputStreamReader(in));
                 String strArray[] = new String[2];
-                boolean bModdelName = false;
+                boolean bModelName = false;
                 boolean bHardware = false;
                 while ((aLine = br.readLine()) != null) {
-
-                    if(aLine.contains("model name") && !bModdelName){
+                    //Log.v(LOG_TAG,"getCPU >> " + aLine);
+                    if(aLine.contains("Processor") && !bModelName){
                         strArray = aLine.split(":", 2);
                         sCpuType = strArray[1];
-                        bModdelName = true;
+                        bModelName = true;
                     }
                     if(aLine.contains("Hardware") && !bHardware){
                         strArray = aLine.split(":", 2);
@@ -362,14 +364,14 @@ public class Utilities  {
         Intent batteryIntent = context.registerReceiver(null, new IntentFilter(Intent.ACTION_BATTERY_CHANGED));
         int currBattery = batteryIntent.getIntExtra(BatteryManager.EXTRA_LEVEL, -1);
         int maxBattery = batteryIntent.getIntExtra(BatteryManager.EXTRA_SCALE, -1);
-        int currBatteryLevel = (int) ((currBattery * 100.0f) /maxBattery);
+        iBatteryLevel = (int) ((currBattery * 100.0f) /maxBattery);
 
         float currBatteryVolt = batteryIntent.getIntExtra(BatteryManager.EXTRA_VOLTAGE, -1)/1000.0f;
         float currBatteryTemp = batteryIntent.getIntExtra(BatteryManager.EXTRA_TEMPERATURE, -1)/10.0f;
 
-        sBatteryLevel = oneDigitIntForm(currBatteryLevel) + "%";
-        sBatteryVolt = Float.toString(currBatteryVolt) +"v";
-        sBatteryTemp = Float.toString(currBatteryTemp) +"c";
+        sBatteryLevel = oneDigitIntForm(iBatteryLevel) + "%";
+        sBatteryVolt = Float.toString(currBatteryVolt) + "v";
+        sBatteryTemp = Float.toString(currBatteryTemp) + "c";
 
         int status = batteryIntent.getIntExtra(BatteryManager.EXTRA_STATUS, -1);
         bBatteryStatus = status == BatteryManager.BATTERY_STATUS_CHARGING ||
@@ -585,3 +587,4 @@ public class Utilities  {
 
  
 }
+

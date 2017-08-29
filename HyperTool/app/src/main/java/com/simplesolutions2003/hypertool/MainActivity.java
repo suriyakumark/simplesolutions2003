@@ -36,6 +36,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
     public static TextView tvCarrierName;
     public static TextView tvCarrierStrength;
+    public static ImageView ivCarrierLevel;
 
     public static TextView tvStorageInternalTotal;
     public static TextView tvStorageInternalUsed;
@@ -53,6 +54,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     public static TextView tvRamUsed;
     public static TextView tvRamFree;
 
+    public static ImageView ivBatterySwitch;
     public static TextView tvBatteryLevel;
     public static ImageView ivBatteryStatus;
     public static TextView tvBatteryVolt;
@@ -77,7 +79,9 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     public static TextView tvSunSetTime;
 
     public static TextView tvCompassDirection;
+    public static TextView tvCompassAltDirection;
     public static String sCompassReading = new String("");
+    public static String sCompassAltReading = new String("");
     public static ImageView ivCompass;
 
     public static TextView tvDataUsage;
@@ -143,6 +147,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         tvDeviceOS = (TextView) findViewById(R.id.device_os);
         tvCarrierName = (TextView) findViewById(R.id.carrier_name);
         tvCarrierStrength = (TextView) findViewById(R.id.carrier_strength);
+        ivCarrierLevel = (ImageView) findViewById(R.id.carrier_img);
         tvStorageInternalTotal = (TextView) findViewById(R.id.internal_memory_total);
         tvStorageInternalUsed = (TextView) findViewById(R.id.internal_memory_used);
         tvStorageInternalFree = (TextView) findViewById(R.id.internal_memory_free);
@@ -155,6 +160,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         tvRamTotal = (TextView) findViewById(R.id.ram_total);
         tvRamUsed = (TextView) findViewById(R.id.ram_used);
         tvRamFree = (TextView) findViewById(R.id.ram_free);
+        ivBatterySwitch = (ImageView) findViewById(R.id.battery_img);
         tvBatteryLevel = (TextView) findViewById(R.id.battery_level);
         ivBatteryStatus = (ImageView) findViewById(R.id.battery_status);
         tvBatteryVolt = (TextView) findViewById(R.id.battery_volt);
@@ -174,6 +180,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         tvSunRiseTime = (TextView) findViewById(R.id.sun_rise);
         tvSunSetTime = (TextView) findViewById(R.id.sun_set);
         tvCompassDirection = (TextView) findViewById(R.id.compass_direction);
+        tvCompassAltDirection = (TextView) findViewById(R.id.compass_alt_direction);
         ivCompass = (ImageView) findViewById(R.id.compass_img);
         tvDataUsage = (TextView) findViewById(R.id.data_usage);
         ibDataSwitch = (ImageButton) findViewById(R.id.data_img);
@@ -411,6 +418,28 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         Utilities.getCarrierInfo();
         tvCarrierName.setText(Utilities.sCarrierName);
         tvCarrierStrength.setText(Utilities.sCarrierStrength);
+
+        switch(Utilities.iCarrierLevel) {
+            case 0:
+                ivCarrierLevel.setImageResource(R.drawable.signal_0);
+                break;
+            case 1:
+                ivCarrierLevel.setImageResource(R.drawable.signal_1);
+                break;
+            case 2:
+                ivCarrierLevel.setImageResource(R.drawable.signal_3);
+                break;
+            case 3:
+                ivCarrierLevel.setImageResource(R.drawable.signal_4);
+                break;
+            case 4:
+                ivCarrierLevel.setImageResource(R.drawable.signal_5);
+                break;
+            default:
+                ivCarrierLevel.setImageResource(R.drawable.signal_5);
+                break;
+        }
+
     }
 
     public static void updateCpuInfo(){
@@ -446,8 +475,6 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         tvDateDay.setText(Utilities.sDateDay);
         tvDateMonthName.setText(Utilities.sDateMonthName);
         tvDateDayOfWeek.setText(Utilities.sDateDayOfWeek);
-        Log.v(LOG_TAG,"Utilities.sDateYear_cc" + Utilities.sDateYear_cc);
-        Log.v(LOG_TAG,"Utilities.sDateYear_cc" + Utilities.sDateYear_yy);
         tvDateYear_cc.setText(Utilities.sDateYear_cc);
         tvDateYear_yy.setText(Utilities.sDateYear_yy);
         tvDateWeekOfYear.setText(Utilities.sDateWeekOfYear);
@@ -477,6 +504,44 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     public static void updateBatteryInfo(){
         Utilities.getBatteryInfo();
         tvBatteryLevel.setText(Utilities.sBatteryLevel);
+        switch((int) Utilities.iBatteryLevel/10) {
+            case 0:
+                ivBatterySwitch.setImageResource(R.drawable.battery_0_10);
+                break;
+            case 1:
+                ivBatterySwitch.setImageResource(R.drawable.battery_10_20);
+                break;
+            case 2:
+                ivBatterySwitch.setImageResource(R.drawable.battery_20_30);
+                break;
+            case 3:
+                ivBatterySwitch.setImageResource(R.drawable.battery_30_40);
+                break;
+            case 4:
+                ivBatterySwitch.setImageResource(R.drawable.battery_40_50);
+                break;
+            case 5:
+                ivBatterySwitch.setImageResource(R.drawable.battery_50_60);
+                break;
+            case 6:
+                ivBatterySwitch.setImageResource(R.drawable.battery_60_70);
+                break;
+            case 7:
+                ivBatterySwitch.setImageResource(R.drawable.battery_70_80);
+                break;
+            case 8:
+                ivBatterySwitch.setImageResource(R.drawable.battery_80_90);
+                break;
+            case 9:
+            case 10:
+                ivBatterySwitch.setImageResource(R.drawable.battery_90_100);
+                break;
+            default:
+                ivBatterySwitch.setImageResource(R.drawable.battery_90_100);
+                break;
+        }
+
+
         if(Utilities.bBatteryStatus){
             ivBatteryStatus.setAlpha(fSwitchOn);
         }else{
@@ -541,7 +606,28 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                 sCompassReading = String.format("%.1f", 360.0f - azimuthInDegrees) + DEGREE + " NW";
             }
 
-            tvCompassDirection.setText(sCompassReading);
+            if(azimuthInDegrees >= 0 && azimuthInDegrees <= 22.5f ){
+                sCompassAltReading = String.format("%.1f", azimuthInDegrees) + DEGREE + " N";
+            }else if(azimuthInDegrees >= 22.5f && azimuthInDegrees <= 67.5f ){
+                sCompassAltReading = String.format("%.1f", azimuthInDegrees) + DEGREE + " NE";
+            }else if(azimuthInDegrees >= 67.5f && azimuthInDegrees <= 112.5f ){
+                sCompassAltReading = String.format("%.1f", azimuthInDegrees) + DEGREE + " E";
+            }else if(azimuthInDegrees >= 112.5f && azimuthInDegrees <= 157.5f ){
+                sCompassAltReading = String.format("%.1f", azimuthInDegrees) + DEGREE + " SE";
+            }else if(azimuthInDegrees >= 157.5f && azimuthInDegrees <= 202.5f ){
+                sCompassAltReading = String.format("%.1f", azimuthInDegrees) + DEGREE + " S";
+            }else if(azimuthInDegrees >= 202.5f && azimuthInDegrees <= 247.5f ){
+                sCompassAltReading = String.format("%.1f", azimuthInDegrees) + DEGREE + " SW";
+            }else if(azimuthInDegrees >= 247.5f && azimuthInDegrees <= 292.5f ){
+                sCompassAltReading = String.format("%.1f", azimuthInDegrees) + DEGREE + " W";
+            }else if(azimuthInDegrees >= 292.5 && azimuthInDegrees <= 337.5f ){
+                sCompassAltReading = String.format("%.1f", azimuthInDegrees) + DEGREE + " NW";
+            }else if(azimuthInDegrees >= 337.5f && azimuthInDegrees <= 360.0f ){
+                sCompassAltReading = String.format("%.1f", azimuthInDegrees) + DEGREE + " N";
+            }
+
+            tvCompassDirection.setText("Quadrant : " + sCompassReading);
+            tvCompassAltDirection.setText("Azimuth : " + sCompassAltReading);
             RotateAnimation ra = new RotateAnimation(
                     mCurrentDegree,
                     -azimuthInDegrees,
