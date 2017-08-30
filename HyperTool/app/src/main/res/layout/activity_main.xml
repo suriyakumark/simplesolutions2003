@@ -265,16 +265,13 @@
                 </LinearLayout>
             </LinearLayout>
         </LinearLayout>
-        <LinearLayout android:id="@+id/sun" android:orientation="vertical"
+        <LinearLayout android:id="@+id/pedometer" android:orientation="vertical"
             style="@style/GridLinearLayout">
-            <ImageButton android:id="@+id/sun_img"
-                style="@style/ButtonImage"
-                android:src="@drawable/sun"
+            <ImageButton android:id="@+id/pedometer_img"
+                style="@style/ButtonImageBig"
+                android:src="@drawable/walk"
                 />
-            <TextView android:id="@+id/sun_rise"
-                style="@style/TextViewSmall"
-                android:text="----"/>
-            <TextView android:id="@+id/sun_set"
+            <TextView android:id="@+id/pedometer_dtl"
                 style="@style/TextViewSmall"
                 android:text="----"/>
         </LinearLayout>
@@ -362,16 +359,21 @@
                 style="@style/TextViewSmall"
                 android:text="----"/>
         </LinearLayout>
-        <LinearLayout android:id="@+id/pedometer" android:orientation="vertical"
+
+        <LinearLayout android:id="@+id/sun" android:orientation="vertical"
             style="@style/GridLinearLayout">
-            <ImageButton android:id="@+id/pedometer_img"
-                style="@style/ButtonImageBig"
-                android:src="@drawable/walk"
+            <ImageButton android:id="@+id/sun_img"
+                style="@style/ButtonImage"
+                android:src="@drawable/sun"
                 />
-            <TextView android:id="@+id/pedometer_dtl"
+            <TextView android:id="@+id/sun_rise"
+                style="@style/TextViewSmall"
+                android:text="----"/>
+            <TextView android:id="@+id/sun_set"
                 style="@style/TextViewSmall"
                 android:text="----"/>
         </LinearLayout>
+
         <LinearLayout android:id="@+id/airplane_gps" android:orientation="vertical"
             style="@style/GridLinearLayout">
             <ImageButton android:id="@+id/airplane_img"

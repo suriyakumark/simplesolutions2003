@@ -7,6 +7,7 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.hardware.Camera;
 import android.hardware.Sensor;
@@ -23,6 +24,7 @@ import android.os.Environment;
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.StatFs;
+import android.preference.PreferenceManager;
 import android.provider.Settings;
 import android.telephony.PhoneStateListener;
 import android.telephony.TelephonyManager;
@@ -47,8 +49,10 @@ import java.lang.reflect.Method;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 
 import static android.content.Context.BATTERY_SERVICE;
+import static android.content.Context.MODE_PRIVATE;
 
 /**
  * Created by Suriya on 5/4/2016.
@@ -117,6 +121,10 @@ public class Utilities  {
     public static String sWeatherWindKmph;
     public static String sWeatherWindMph;
     public static String sWeatherForecast;
+    public static String sWeatherCity;
+    public static String sWeatherWindDir;
+    public static String sWeatherIcon;
+
     public static boolean bBluetoothSwitch;
     public static boolean bTorchSwitch;
 
@@ -535,18 +543,39 @@ public class Utilities  {
         }
     }
 
-    public static void getSunInfo() {
-
-
-    }
-
-    public static void getMoonInfo() {
-
-
-    }
-
     public static void getWeatherInfo() {
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+        sWeatherCity = prefs.getString("weatherCity", "");
+        sWeatherForecast = prefs.getString("weatherMain", "");
+        sWeatherIcon = prefs.getString("weatherIcon", "");
+        sWeatherTempNowC = prefs.getString("weatherTemp", "");
+        sWeatherTempLoC = prefs.getString("weatherTempMin", "");
+        sWeatherTempHiC = prefs.getString("weatherTempMax", "");
 
+        if(!sWeatherTempNowC.isEmpty()) {
+            sWeatherTempNowF = Float.toString(convertCelciusToFahrenheit(Float.parseFloat(sWeatherTempNowC)));
+        }
+        if(!sWeatherTempLoC.isEmpty()) {
+            sWeatherTempLoF = Float.toString(convertCelciusToFahrenheit(Float.parseFloat(sWeatherTempLoC)));
+        }
+        if(!sWeatherTempHiC.isEmpty()) {
+            sWeatherTempHiF = Float.toString(convertCelciusToFahrenheit(Float.parseFloat(sWeatherTempHiC)));
+        }
+
+        sWeatherWindKmph = prefs.getString("weatherWindSpeed", "");
+        if(!sWeatherWindKmph.isEmpty()) {
+            sWeatherWindMph = onePointTwoDoubleForm(convertKphToMph(Float.parseFloat(sWeatherWindKmph)));
+        }
+
+        sWeatherWindDir = prefs.getString("weatherWindDir", "");
+        sSunRiseTime = prefs.getString("weatherSunrise", "");
+        if(!sSunRiseTime.isEmpty()) {
+            sSunRiseTime = convertUnixtimeToDateFormat(Long.parseLong(sSunRiseTime));
+        }
+        sSunSetTime = prefs.getString("weatherSunset", "");
+        if(!sSunSetTime.isEmpty()) {
+            sSunSetTime = convertUnixtimeToDateFormat(Long.parseLong(sSunSetTime));
+        }
 
     }
 
@@ -585,6 +614,27 @@ public class Utilities  {
         return null;
     }
 
- 
+    // Converts to celcius
+    private static float convertFahrenheitToCelcius(float fahrenheit) {
+        return ((fahrenheit - 32) * 5 / 9);
+    }
+
+    // Converts to fahrenheit
+    private static float convertCelciusToFahrenheit(float celsius) {
+        return ((celsius * 9) / 5) + 32;
+    }
+
+    // Converts to mph
+    private static float convertKphToMph(float Kph) {
+        return (Kph / 1.609f);
+    }
+
+    // Converts to date
+    private static String convertUnixtimeToDateFormat(long unixTime) {
+        SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm:ss");
+        Date date = new Date(unixTime*1000L); // *1000 is to convert seconds to milliseconds
+        return timeFormat.format(date);
+    }
+
 }
 

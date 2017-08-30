@@ -1,7 +1,13 @@
 package com.simplesolutions2003.hypertool;
 
 import android.annotation.TargetApi;
+import android.content.BroadcastReceiver;
+import android.content.ContentResolver;
 import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
+import android.content.SharedPreferences;
+import android.database.ContentObserver;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
@@ -9,6 +15,8 @@ import android.hardware.SensorManager;
 import android.media.Image;
 import android.os.Build;
 import android.os.Handler;
+import android.os.Looper;
+import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.telephony.PhoneStateListener;
@@ -20,12 +28,15 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.view.animation.Animation;
 import android.view.animation.RotateAnimation;
+
+import com.simplesolutions2003.hypertool.sync.WeatherSyncAdapter;
+
 import java.util.Timer;
 import java.util.TimerTask;
 
 public class MainActivity extends AppCompatActivity implements SensorEventListener {
     private static final String LOG_TAG = MainActivity.class.getSimpleName();
-    private final String DEGREE  = "\u00b0";
+    private static final String DEGREE  = "\u00b0";
     private final int SENSOR_DELAY = 2000000;
     private static Context context;
     private SensorManager sensorManager;
@@ -126,14 +137,14 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     public static final float fSwitchOff = 0.3f;
     public static final float fSwitchOn = 1.0f;
 
-    float[] mGravity;
-    float[] mGeomagnetic;
-    float[] mOrientation;
+    static float[] mGravity;
+    static float[] mGeomagnetic;
+    static float[] mOrientation;
 
     private Handler mHandler = new Handler();
     private SettingsContentObserver mSettingsContentObserver;
     private TelephonyManager tManager;
-    private float mCurrentDegree = 0f;
+    private static float mCurrentDegree = 0f;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -141,6 +152,15 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         setContentView(R.layout.activity_main);
 
         context = this;
+
+        SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(context).edit();
+        editor.putString("zip", "Raleigh");
+        editor.putString("country", "US");
+        editor.commit();
+
+        Log.v(LOG_TAG, "initializeSyncAdapter");
+        WeatherSyncAdapter.initializeSyncAdapter(this);
+
 
         tvDeviceBrand = (TextView) findViewById(R.id.device_brand);
         tvDeviceModel = (TextView) findViewById(R.id.device_model);
@@ -214,6 +234,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
     public void onResume(){
         super.onResume();
+        registerReceiver(syncFinishedReceiver, new IntentFilter(WeatherSyncAdapter.ACTION_FINISHED_SYNC));
         setupAll();
         updateAll();
     }
@@ -225,6 +246,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         sensorManager.unregisterListener(this);
         mHandler.removeCallbacks(updateTimeInfo);
         getApplicationContext().getContentResolver().unregisterContentObserver(mSettingsContentObserver);
+        unregisterReceiver(syncFinishedReceiver);
     }
 
     public void setupAll(){
@@ -256,8 +278,6 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         updateBrightnessInfo();
         mHandler.postDelayed(updateTimeInfo,500);
         updateBatteryInfo();
-        updateSunInfo();
-        updateMoonInfo();
         //updateCompassInfo();
         //updatePedometerInfo();
         updateDataInfo();
@@ -407,6 +427,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         tManager.listen(new SignalReceiver(this), PhoneStateListener.LISTEN_SIGNAL_STRENGTHS);
     }
 
+
     public static void updateDeviceInfo(){
         Utilities.getDeviceInfo();
         tvDeviceBrand.setText(Utilities.sDeviceBrand);
@@ -551,20 +572,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         tvBatteryVolt.setText(Utilities.sBatteryVolt);
     }
 
-    public static void updateSunInfo(){
-        Utilities.getSunInfo();
-        tvSunRiseTime.setText(Utilities.sSunRiseTime);
-        tvSunSetTime.setText(Utilities.sSunSetTime);
-    }
-
-    public static void updateMoonInfo(){
-        Utilities.getMoonInfo();
-        tvMoonPhase.setText(Utilities.sMoonPhase);
-        tvMoonRiseTime.setText(Utilities.sMoonRiseTime);
-        tvMoonSetTime.setText(Utilities.sMoonSetTime);
-    }
-
-    public void updateCompassInfo(SensorEvent event){
+    public static void updateCompassInfo(SensorEvent event){
         //Utilities.getCompassInfo();
         //tvCompassDirection.setText(Utilities.sCompassDirection);
         float azimuthInDegrees = 0.0f;
@@ -742,16 +750,31 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
     public static void updateWeatherInfo(){
         Utilities.getWeatherInfo();
-        tvWeatherTempNowC.setText(Utilities.sWeatherTempNowC);
-        tvWeatherTempNowF.setText(Utilities.sWeatherTempNowF);
-        tvWeatherTempHiC.setText(Utilities.sWeatherTempHiC);
-        tvWeatherTempHiF.setText(Utilities.sWeatherTempHiF);
-        tvWeatherTempLoC.setText(Utilities.sWeatherTempLoC);
-        tvWeatherTempLoF.setText(Utilities.sWeatherTempLoF);
-        tvWeatherWindKmph.setText(Utilities.sWeatherWindKmph);
-        tvWeatherWindMph.setText(Utilities.sWeatherWindMph);
+        tvWeatherTempNowC.setText(Utilities.sWeatherTempNowC + DEGREE + "C");
+        tvWeatherTempNowF.setText(Utilities.sWeatherTempNowF + DEGREE + "F");
+        tvWeatherTempHiC.setText(Utilities.sWeatherTempHiC + DEGREE + "C");
+        tvWeatherTempHiF.setText(Utilities.sWeatherTempHiF + DEGREE + "F");
+        tvWeatherTempLoC.setText(Utilities.sWeatherTempLoC + DEGREE + "C");
+        tvWeatherTempLoF.setText(Utilities.sWeatherTempLoF + DEGREE + "F");
+        tvWeatherWindKmph.setText(Utilities.sWeatherWindKmph + "Kmph");
+        tvWeatherWindMph.setText(Utilities.sWeatherWindMph + "mph");
         tvWeatherForecast.setText(Utilities.sWeatherForecast);
+        tvSunRiseTime.setText(Utilities.sSunRiseTime);
+        tvSunSetTime.setText(Utilities.sSunSetTime);
+        tvMoonPhase.setText(Utilities.sMoonPhase);
+        tvMoonRiseTime.setText(Utilities.sMoonRiseTime);
+        tvMoonSetTime.setText(Utilities.sMoonSetTime);
+
     }
+
+    private BroadcastReceiver syncFinishedReceiver = new BroadcastReceiver() {
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            updateWeatherInfo();
+            Log.v(LOG_TAG, "Sync finished, should refresh weather!!");
+        }
+    };
 
 }
 
