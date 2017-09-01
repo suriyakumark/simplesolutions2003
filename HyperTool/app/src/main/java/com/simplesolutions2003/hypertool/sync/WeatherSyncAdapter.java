@@ -36,9 +36,7 @@ import static android.content.Context.MODE_PRIVATE;
  */
 public class WeatherSyncAdapter extends AbstractThreadedSyncAdapter {
     public final static String LOG_TAG = WeatherSyncAdapter.class.getSimpleName();
-    public static final String ACTION_DATA_UPDATED =
-            "com.simplesolutions2003.hypertool.ACTION_DATA_UPDATED";
-    public static final String ACTION_FINISHED_SYNC = "com.simplesolutions2003.hypertool.ACTION_FINISHED_SYNC";
+    public static final String ACTION_DATA_UPDATED_WEATHER = "com.simplesolutions2003.hypertool.ACTION_DATA_UPDATED_WEATHER";
 
     // 60 seconds (1 minute) * 180 = 3 hours
     //public static final int SYNC_INTERVAL = 60 * 180;
@@ -135,7 +133,8 @@ public class WeatherSyncAdapter extends AbstractThreadedSyncAdapter {
             }
         }
 
-        Intent i = new Intent(ACTION_FINISHED_SYNC);
+        Log.v(LOG_TAG,"Send Broadcast for weather sync complete");
+        Intent i = new Intent(ACTION_DATA_UPDATED_WEATHER);
         context.sendBroadcast(i);
 
         return;
@@ -222,10 +221,12 @@ public class WeatherSyncAdapter extends AbstractThreadedSyncAdapter {
             editor.putString("weatherSunset", weatherSunset);
             editor.commit();
 
+            Log.v(LOG_TAG,"getWeatherDataFromJson - weatherCity" + weatherCity);
             Log.d(LOG_TAG, "Sync Complete. ");
 
         } catch (JSONException e) {
             Log.e(LOG_TAG, e.getMessage(), e);
+
             e.printStackTrace();
         }
     }

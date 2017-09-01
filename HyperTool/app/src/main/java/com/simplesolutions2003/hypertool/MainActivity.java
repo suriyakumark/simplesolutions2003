@@ -8,6 +8,9 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.database.ContentObserver;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
@@ -22,6 +25,8 @@ import android.os.Bundle;
 import android.telephony.PhoneStateListener;
 import android.telephony.TelephonyManager;
 import android.util.Log;
+import android.view.GestureDetector;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -34,12 +39,14 @@ import com.simplesolutions2003.hypertool.sync.WeatherSyncAdapter;
 import java.util.Timer;
 import java.util.TimerTask;
 
-public class MainActivity extends AppCompatActivity implements SensorEventListener {
+public class MainActivity extends AppCompatActivity implements SensorEventListener, GestureDetector.OnGestureListener {
     private static final String LOG_TAG = MainActivity.class.getSimpleName();
     private static final String DEGREE  = "\u00b0";
     private final int SENSOR_DELAY = 2000000;
     private static Context context;
     private SensorManager sensorManager;
+    private GestureDetector myGesture;
+
 
     public static TextView tvDeviceBrand;
     public static TextView tvDeviceModel;
@@ -88,6 +95,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
     public static TextView tvSunRiseTime;
     public static TextView tvSunSetTime;
+    public static TextView tvCity;
 
     public static TextView tvCompassDirection;
     public static TextView tvCompassAltDirection;
@@ -128,6 +136,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     public static TextView tvWeatherWindKmph;
     public static TextView tvWeatherWindMph;
     public static TextView tvWeatherForecast;
+    public static ImageView ivWeatherForecast;
 
     public static boolean bBluetoothSwitch;
     public static ImageButton ibBluetoothSwitch;
@@ -146,21 +155,61 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     private TelephonyManager tManager;
     private static float mCurrentDegree = 0f;
 
+
+    private BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            Log.v(LOG_TAG, "Broadcast Receiver - " + intent.getAction().toString());
+            switch (intent.getAction()){
+                case WeatherSyncAdapter.ACTION_DATA_UPDATED_WEATHER:
+                    updateWeatherInfo();
+                    break;
+                case BatteryReceiver.ACTION_DATA_UPDATED_BATTERY:
+                    updateBatteryInfo();
+                    break;
+                case AirplaneReceiver.ACTION_DATA_UPDATED_AIRPLANE:
+                    updateAirplaneInfo();
+                    break;
+                case BluetoothReceiver.ACTION_DATA_UPDATED_BLUETOOTH:
+                    updateBluetoothInfo();
+                    break;
+                case DateReceiver.ACTION_DATA_UPDATED_DATE:
+                    updateDateInfo();
+                    break;
+                case SettingsContentObserver.ACTION_DATA_UPDATED_SETTINGS:
+                    updateVolumeInfo();
+                    updateBluetoothInfo();
+                    updateBrightnessInfo();
+                    break;
+                case SignalReceiver.ACTION_DATA_UPDATED_SIGNAL:
+                    updateCarrierInfo();
+                    break;
+                case WifiReceiver.ACTION_DATA_UPDATED_WIFI:
+                    updateWifiInfo();
+                    break;
+                default:
+                    break;
+            }
+
+        }
+    };
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
         context = this;
+        myGesture = new GestureDetector(getBaseContext(),
+                (GestureDetector.OnGestureListener) this);
 
-        SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(context).edit();
-        editor.putString("zip", "Raleigh");
-        editor.putString("country", "US");
-        editor.commit();
+        PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
 
-        Log.v(LOG_TAG, "initializeSyncAdapter");
-        WeatherSyncAdapter.initializeSyncAdapter(this);
-
+//        SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(context).edit();
+//        editor.putString("zip", "Raleigh");
+//        editor.putString("country", "US");
+//        editor.commit();
 
         tvDeviceBrand = (TextView) findViewById(R.id.device_brand);
         tvDeviceModel = (TextView) findViewById(R.id.device_model);
@@ -199,6 +248,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         tvDateDayOfYear = (TextView) findViewById(R.id.date_day_of_year);
         tvSunRiseTime = (TextView) findViewById(R.id.sun_rise);
         tvSunSetTime = (TextView) findViewById(R.id.sun_set);
+        tvCity = (TextView) findViewById(R.id.city);
         tvCompassDirection = (TextView) findViewById(R.id.compass_direction);
         tvCompassAltDirection = (TextView) findViewById(R.id.compass_alt_direction);
         ivCompass = (ImageView) findViewById(R.id.compass_img);
@@ -208,9 +258,9 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         ibWifiSwitch = (ImageButton) findViewById(R.id.wifi_img);
         tvTimeHHMMSS = (TextView) findViewById(R.id.time_dtl);
         tvTimeAMPM = (TextView) findViewById(R.id.time_am_pm);
-        tvMoonPhase = (TextView) findViewById(R.id.moon_phase);
-        tvMoonRiseTime = (TextView) findViewById(R.id.moon_rise);
-        tvMoonSetTime = (TextView) findViewById(R.id.moon_set);
+        //tvMoonPhase = (TextView) findViewById(R.id.moon_phase);
+        //tvMoonRiseTime = (TextView) findViewById(R.id.moon_rise);
+        //tvMoonSetTime = (TextView) findViewById(R.id.moon_set);
         ivPedometer = (ImageView) findViewById(R.id.pedometer_img);
         tvPedometerCount = (TextView) findViewById(R.id.pedometer_dtl);
         ibAirplaneSwitch = (ImageButton) findViewById(R.id.airplane_img);
@@ -224,29 +274,47 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         tvWeatherWindKmph = (TextView) findViewById(R.id.wind_speed_km);
         tvWeatherWindMph = (TextView) findViewById(R.id.wind_speed_m);
         tvWeatherForecast = (TextView) findViewById(R.id.weather_dtl);
+        ivWeatherForecast = (ImageView) findViewById(R.id.weather_img);
         ibBluetoothSwitch = (ImageButton) findViewById(R.id.bluetooth_img);
         ibTorchSwitch = (ImageButton) findViewById(R.id.torch_img);
 
         Utilities.setContext(this);
-        setupAll();
-        updateAll();
+
+        //setupAll();
+        //updateAll();
+
+        Log.v(LOG_TAG, "initializeSyncAdapter");
+        WeatherSyncAdapter.initializeSyncAdapter(this);
+
     }
 
     public void onResume(){
         super.onResume();
-        registerReceiver(syncFinishedReceiver, new IntentFilter(WeatherSyncAdapter.ACTION_FINISHED_SYNC));
+
+        IntentFilter filter = new IntentFilter();
+        filter.addAction(WeatherSyncAdapter.ACTION_DATA_UPDATED_WEATHER);
+        filter.addAction(BatteryReceiver.ACTION_DATA_UPDATED_BATTERY);
+        filter.addAction(AirplaneReceiver.ACTION_DATA_UPDATED_AIRPLANE);
+        filter.addAction(BluetoothReceiver.ACTION_DATA_UPDATED_BLUETOOTH);
+        filter.addAction(DateReceiver.ACTION_DATA_UPDATED_DATE);
+        filter.addAction(SettingsContentObserver.ACTION_DATA_UPDATED_SETTINGS);
+        filter.addAction(SignalReceiver.ACTION_DATA_UPDATED_SIGNAL);
+        filter.addAction(WifiReceiver.ACTION_DATA_UPDATED_WIFI);
+        registerReceiver(broadcastReceiver, filter);
+
         setupAll();
         updateAll();
     }
 
     @Override
     protected void onPause() {
-        // unregister listener
         super.onPause();
+        // unregister listener
         sensorManager.unregisterListener(this);
         mHandler.removeCallbacks(updateTimeInfo);
         getApplicationContext().getContentResolver().unregisterContentObserver(mSettingsContentObserver);
-        unregisterReceiver(syncFinishedReceiver);
+        unregisterReceiver(broadcastReceiver);
+        tManager.listen(new SignalReceiver(this), PhoneStateListener.LISTEN_NONE);
     }
 
     public void setupAll(){
@@ -328,7 +396,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     }
 
     public void setupVolumeBluetoothInfo(){
-        mSettingsContentObserver = new SettingsContentObserver(new Handler());
+        mSettingsContentObserver = new SettingsContentObserver(new Handler(),getApplicationContext());
         getApplicationContext().getContentResolver().registerContentObserver(android.provider.Settings.System.CONTENT_URI, true, mSettingsContentObserver );
         getApplicationContext().getContentResolver().registerContentObserver(android.provider.Settings.Global.CONTENT_URI, true, mSettingsContentObserver );
 
@@ -750,31 +818,130 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
     public static void updateWeatherInfo(){
         Utilities.getWeatherInfo();
-        tvWeatherTempNowC.setText(Utilities.sWeatherTempNowC + DEGREE + "C");
-        tvWeatherTempNowF.setText(Utilities.sWeatherTempNowF + DEGREE + "F");
-        tvWeatherTempHiC.setText(Utilities.sWeatherTempHiC + DEGREE + "C");
-        tvWeatherTempHiF.setText(Utilities.sWeatherTempHiF + DEGREE + "F");
-        tvWeatherTempLoC.setText(Utilities.sWeatherTempLoC + DEGREE + "C");
-        tvWeatherTempLoF.setText(Utilities.sWeatherTempLoF + DEGREE + "F");
-        tvWeatherWindKmph.setText(Utilities.sWeatherWindKmph + "Kmph");
-        tvWeatherWindMph.setText(Utilities.sWeatherWindMph + "mph");
+        if(!Utilities.sWeatherTempNowC.isEmpty()) {
+            tvWeatherTempNowC.setText(Utilities.sWeatherTempNowC + DEGREE + "C");
+            tvWeatherTempNowF.setText(Utilities.sWeatherTempNowF + DEGREE + "F");
+        }
+        if(!Utilities.sWeatherTempHiC.isEmpty()) {
+            tvWeatherTempHiC.setText(Utilities.sWeatherTempHiC + DEGREE + "C");
+            tvWeatherTempHiF.setText(Utilities.sWeatherTempHiF + DEGREE + "F");
+        }
+        if(!Utilities.sWeatherTempLoC.isEmpty()) {
+            tvWeatherTempLoC.setText(Utilities.sWeatherTempLoC + DEGREE + "C");
+            tvWeatherTempLoF.setText(Utilities.sWeatherTempLoF + DEGREE + "F");
+        }
+        if(!Utilities.sWeatherWindKmph.isEmpty()) {
+            tvWeatherWindKmph.setText(Utilities.sWeatherWindKmph + "Kmph");
+            tvWeatherWindMph.setText(Utilities.sWeatherWindMph + "mph");
+        }
         tvWeatherForecast.setText(Utilities.sWeatherForecast);
         tvSunRiseTime.setText(Utilities.sSunRiseTime);
         tvSunSetTime.setText(Utilities.sSunSetTime);
-        tvMoonPhase.setText(Utilities.sMoonPhase);
-        tvMoonRiseTime.setText(Utilities.sMoonRiseTime);
-        tvMoonSetTime.setText(Utilities.sMoonSetTime);
+        tvCity.setText(Utilities.sWeatherCity);
+        //tvMoonPhase.setText(Utilities.sMoonPhase);
+        //tvMoonRiseTime.setText(Utilities.sMoonRiseTime);
+        //tvMoonSetTime.setText(Utilities.sMoonSetTime);
+
+        switch(Utilities.sWeatherIcon) {
+            case "01d":
+                ivWeatherForecast.setImageResource(R.drawable.w01d);
+                break;
+            case "02d":
+                ivWeatherForecast.setImageResource(R.drawable.w02d);
+                break;
+            case "03d":
+                ivWeatherForecast.setImageResource(R.drawable.w03d);
+                break;
+            case "04d":
+                ivWeatherForecast.setImageResource(R.drawable.w04d);
+                break;
+            case "09d":
+                ivWeatherForecast.setImageResource(R.drawable.w09d);
+                break;
+            case "10d":
+                ivWeatherForecast.setImageResource(R.drawable.w10d);
+                break;
+            case "11d":
+                ivWeatherForecast.setImageResource(R.drawable.w11d);
+                break;
+            case "13d":
+                ivWeatherForecast.setImageResource(R.drawable.w13d);
+                break;
+            case "50d":
+                ivWeatherForecast.setImageResource(R.drawable.w50d);
+                break;
+            case "01n":
+                ivWeatherForecast.setImageResource(R.drawable.w01n);
+                break;
+            case "02n":
+                ivWeatherForecast.setImageResource(R.drawable.w02n);
+                break;
+            case "03n":
+                ivWeatherForecast.setImageResource(R.drawable.w03n);
+                break;
+            case "04n":
+                ivWeatherForecast.setImageResource(R.drawable.w04n);
+                break;
+            case "09n":
+                ivWeatherForecast.setImageResource(R.drawable.w09n);
+                break;
+            case "10n":
+                ivWeatherForecast.setImageResource(R.drawable.w10n);
+                break;
+            case "11n":
+                ivWeatherForecast.setImageResource(R.drawable.w11n);
+                break;
+            case "13n":
+                ivWeatherForecast.setImageResource(R.drawable.w13n);
+                break;
+            case "50n":
+                ivWeatherForecast.setImageResource(R.drawable.w50n);
+                break;
+            default:
+                ivWeatherForecast.setImageResource(android.R.color.transparent);
+                break;
+        }
 
     }
 
-    private BroadcastReceiver syncFinishedReceiver = new BroadcastReceiver() {
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        return myGesture.onTouchEvent(event);
+    }
 
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            updateWeatherInfo();
-            Log.v(LOG_TAG, "Sync finished, should refresh weather!!");
-        }
-    };
+    @Override
+    public boolean onDown(MotionEvent e) {
+        return false;
+    }
+
+    @Override
+    public void onLongPress(MotionEvent e) {
+        Log.v(LOG_TAG, "onLongPress");
+        Intent i = new Intent(this, MyPreferencesActivity.class);
+        startActivity(i);
+    }
+
+    @Override
+    public void onShowPress(MotionEvent e) {
+    }
+
+    @Override
+    public boolean onSingleTapUp(MotionEvent e) {
+        return false;
+    }
+
+    @Override
+    public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX,
+                            float distanceY) {
+        return false;
+    }
+
+    @Override
+    public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX,
+                           float velocityY) {
+        return false;
+
+    }
 
 }
 

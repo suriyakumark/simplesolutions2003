@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <PreferenceCategory
+        android:summary="Weather"
+        android:title="Weather" >
+        <ListPreference
+            android:key="country"
+            android:title="Country" android:summary="Select your Country"
+            android:defaultValue="US" />
+        <EditTextPreference android:title="Zip"
+            android:key="zip"
+            android:defaultValue="27606"
+            android:summary="Enter your Zip Code"></EditTextPreference>
+        <ListPreference android:title="Weather Sync Interval"
+            android:summary="Select the Sync Interval"
+            android:key="weather_sync_interval"
+            android:defaultValue="5"
+            android:entries="@array/syncArray"
+            android:entryValues="@array/syncValues" />
+    </PreferenceCategory>
+    <PreferenceCategory
+        android:summary="Other Settings"
+        android:title="Other Settings" >
+        <Preference android:title="Share " android:key="share"/>
+        <Preference android:title="Rate App" android:key="rate_us"/>
+    </PreferenceCategory>
+</PreferenceScreen>

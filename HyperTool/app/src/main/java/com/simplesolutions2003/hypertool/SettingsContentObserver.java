@@ -1,17 +1,24 @@
 package com.simplesolutions2003.hypertool;
 
 import android.content.Context;
+import android.content.Intent;
 import android.database.ContentObserver;
 import android.media.AudioManager;
 import android.os.Handler;
+import android.util.Log;
 
 /**
  * Created by Suriya on 5/11/2016.
  */
 public class SettingsContentObserver extends ContentObserver {
+    public final static String LOG_TAG = SettingsContentObserver.class.getSimpleName();
+    public static final String ACTION_DATA_UPDATED_SETTINGS = "com.simplesolutions2003.hypertool.ACTION_DATA_UPDATED_SETTINGS";
 
-    public SettingsContentObserver(Handler handler) {
+    private Context context;
+
+    public SettingsContentObserver(Handler handler, Context context) {
         super(handler);
+        this.context = context;
     }
 
     @Override
@@ -22,8 +29,10 @@ public class SettingsContentObserver extends ContentObserver {
     @Override
     public void onChange(boolean selfChange) {
         super.onChange(selfChange);
-        MainActivity.updateVolumeInfo();
-        MainActivity.updateBluetoothInfo();
-        MainActivity.updateBrightnessInfo();
+        Log.v(LOG_TAG,"Send Broadcast for settings changes");
+        Intent i = new Intent(ACTION_DATA_UPDATED_SETTINGS);
+        context.sendBroadcast(i);
+
     }
+
 }

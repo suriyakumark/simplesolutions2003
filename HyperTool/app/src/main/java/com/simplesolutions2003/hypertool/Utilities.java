@@ -50,6 +50,7 @@ import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Map;
 
 import static android.content.Context.BATTERY_SERVICE;
 import static android.content.Context.MODE_PRIVATE;
@@ -544,7 +545,12 @@ public class Utilities  {
     }
 
     public static void getWeatherInfo() {
+        Log.v(LOG_TAG,"getWeatherInfo");
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+        /*Map<String, ?> allEntries = prefs.getAll();
+        for (Map.Entry<String, ?> entry : allEntries.entrySet()) {
+            Log.v(LOG_TAG, entry.getKey() + ": " + entry.getValue().toString());
+        }*/
         sWeatherCity = prefs.getString("weatherCity", "");
         sWeatherForecast = prefs.getString("weatherMain", "");
         sWeatherIcon = prefs.getString("weatherIcon", "");
@@ -552,14 +558,16 @@ public class Utilities  {
         sWeatherTempLoC = prefs.getString("weatherTempMin", "");
         sWeatherTempHiC = prefs.getString("weatherTempMax", "");
 
+        Log.v(LOG_TAG,"getWeatherInfo - sWeatherCity" + sWeatherCity);
+
         if(!sWeatherTempNowC.isEmpty()) {
-            sWeatherTempNowF = Float.toString(convertCelciusToFahrenheit(Float.parseFloat(sWeatherTempNowC)));
+            sWeatherTempNowF = oneDigitDoubleForm(convertCelciusToFahrenheit(Float.parseFloat(sWeatherTempNowC)));
         }
         if(!sWeatherTempLoC.isEmpty()) {
-            sWeatherTempLoF = Float.toString(convertCelciusToFahrenheit(Float.parseFloat(sWeatherTempLoC)));
+            sWeatherTempLoF = oneDigitDoubleForm(convertCelciusToFahrenheit(Float.parseFloat(sWeatherTempLoC)));
         }
         if(!sWeatherTempHiC.isEmpty()) {
-            sWeatherTempHiF = Float.toString(convertCelciusToFahrenheit(Float.parseFloat(sWeatherTempHiC)));
+            sWeatherTempHiF = oneDigitDoubleForm(convertCelciusToFahrenheit(Float.parseFloat(sWeatherTempHiC)));
         }
 
         sWeatherWindKmph = prefs.getString("weatherWindSpeed", "");
@@ -585,7 +593,7 @@ public class Utilities  {
     }
 
     public static String oneDigitDoubleForm(double d){
-        return new DecimalFormat("#").format(d);
+        return new DecimalFormat("#.#").format(d);
     }
 
     public static String oneDigitIntForm(int i){
