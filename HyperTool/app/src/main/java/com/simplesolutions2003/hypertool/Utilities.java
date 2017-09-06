@@ -44,12 +44,14 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.RandomAccessFile;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 
 import static android.content.Context.BATTERY_SERVICE;
@@ -72,20 +74,25 @@ public class Utilities  {
     public static String sStorageInternalTotal;
     public static String sStorageInternalUsed;
     public static String sStorageInternalFree;
+    public static String sStorageInternalPercentage;
     public static String sStorageExternalTotal;
     public static String sStorageExternalUsed;
     public static String sStorageExternalFree;
+    public static String sStorageExternalPercentage;
     public static String sCpuType;
     public static String sCpuInfo;
     public static String sCpuSpeed;
+    public static String sCpuPercentage;
     public static String sRamTotal;
     public static String sRamUsed;
     public static String sRamFree;
+    public static String sRamPercentage;
     public static String sBatteryLevel;
     public static int iBatteryLevel;
     public static boolean bBatteryStatus;
     public static String sBatteryVolt;
     public static String sBatteryTemp;
+    public static String sBatteryCap;
     public static String sVolumeLevel;
     public static String sBrightnessLevel;
     public static String sDateDay;
@@ -164,12 +171,18 @@ public class Utilities  {
 
 
     public static void getCarrierInfo(){
+        Log.v(LOG_TAG,"getCarrierInfo");
         int dbm = 0;
         iCarrierLevel = 0;
         TelephonyManager telephonyManager = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
         sCarrierName = telephonyManager.getNetworkOperatorName();
+        if(sCarrierName.isEmpty() || sCarrierName == null){
+            sCarrierName = "Operator unknown";
+        }
+
         try {
             for (final CellInfo info : telephonyManager.getAllCellInfo()) {
+                //Log.v(LOG_TAG, "info " + info.toString());
                 if (info instanceof CellInfoGsm) {
                     dbm = ((CellInfoGsm) info).getCellSignalStrength().getDbm();
                     iCarrierLevel = ((CellInfoGsm) info).getCellSignalStrength().getLevel();
@@ -184,14 +197,21 @@ public class Utilities  {
                 }
             }
         } catch (Exception e) {
-            Log.v(LOG_TAG, "unknown error :"+e.getMessage());
+            Log.v(LOG_TAG, "unknown error :" + e.getMessage());
         }
-        sCarrierStrength = Integer.toString(dbm) + " dBm : " + Integer.toString(iCarrierLevel);
+        Log.v(LOG_TAG, "dbm :" + dbm + " level :" + iCarrierLevel);
+        if(dbm < 0 ) {
+            sCarrierStrength = Integer.toString(dbm) + " dBm";
+        }else{
+            sCarrierStrength = "";
+            iCarrierLevel = 0;
+        }
     }
 
     public static void getCpuInfo(){
         getCpuType();
         getCpuSpeed();
+        getCpuPercentage();
     }
 
     public static void getCpuType(){
@@ -262,6 +282,37 @@ public class Utilities  {
 
     }
 
+    public static void getCpuPercentage() {
+        try {
+            RandomAccessFile reader = new RandomAccessFile("/proc/stat", "r");
+            String load = reader.readLine();
+            String[] toks = load.split(" ");
+
+            long idle1 = Long.parseLong(toks[5]);
+            long cpu1 = Long.parseLong(toks[2]) + Long.parseLong(toks[3]) + Long.parseLong(toks[4])
+                    + Long.parseLong(toks[6]) + Long.parseLong(toks[7]) + Long.parseLong(toks[8]);
+
+            try {
+                Thread.sleep(360);
+            } catch (Exception e) {}
+
+            reader.seek(0);
+            load = reader.readLine();
+            reader.close();
+
+            toks = load.split(" ");
+
+            long idle2 = Long.parseLong(toks[5]);
+            long cpu2 = Long.parseLong(toks[2]) + Long.parseLong(toks[3]) + Long.parseLong(toks[4])
+                    + Long.parseLong(toks[6]) + Long.parseLong(toks[7]) + Long.parseLong(toks[8]);
+
+            sCpuPercentage = oneDigitIntForm((float) 100.0 * (cpu2 - cpu1) / ((cpu2 + idle2) - (cpu1 + idle1))) +"%";
+
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+
+    }
     public static void getStorageInternalInfo(){
         StatFs statFs = new StatFs(Environment.getRootDirectory().getAbsolutePath());
         long Total = ((long) statFs.getBlockCountLong() * (long) statFs.getBlockSizeLong());
@@ -270,7 +321,7 @@ public class Utilities  {
         sStorageInternalTotal = bytesFormat(Total);
         sStorageInternalUsed = bytesFormat(Used);
         sStorageInternalFree = bytesFormat(Free);
-        
+        sStorageInternalPercentage = oneDigitIntForm(100 * Used / Total) +"%";
     }
 
     public static void getStorageExternalInfo(){
@@ -281,6 +332,7 @@ public class Utilities  {
         sStorageExternalTotal = bytesFormat(Total);
         sStorageExternalUsed = bytesFormat(Used);
         sStorageExternalFree = bytesFormat(Free);
+        sStorageExternalPercentage = oneDigitIntForm(100 * Used / Total) +"%";
     }
 
     public static void getRamInfo(){
@@ -293,6 +345,7 @@ public class Utilities  {
         sRamTotal = bytesFormat(Total);
         sRamUsed = bytesFormat(Used);
         sRamFree = bytesFormat(Free);
+        sRamPercentage = oneDigitIntForm(100 * Used / Total) +"%";
         
     }
 
@@ -314,25 +367,25 @@ public class Utilities  {
 
         switch (day) {
             case Calendar.SUNDAY:
-                sDateDayOfWeek = "Sun";
+                sDateDayOfWeek = "Sunday";
                 break;
             case Calendar.MONDAY:
-                sDateDayOfWeek = "Mon";
+                sDateDayOfWeek = "Monday";
                 break;
             case Calendar.TUESDAY:
-                sDateDayOfWeek = "Tue";
+                sDateDayOfWeek = "Tuesday";
                 break;
             case Calendar.WEDNESDAY:
-                sDateDayOfWeek = "Wed";
+                sDateDayOfWeek = "Wednesday";
                 break;
             case Calendar.THURSDAY:
-                sDateDayOfWeek = "Thu";
+                sDateDayOfWeek = "Thursday";
                 break;
             case Calendar.FRIDAY:
-                sDateDayOfWeek = "Fri";
+                sDateDayOfWeek = "Friday";
                 break;
             case Calendar.SATURDAY:
-                sDateDayOfWeek = "Sat";
+                sDateDayOfWeek = "Saturday";
                 break;
         }
         
@@ -391,6 +444,27 @@ public class Utilities  {
         boolean pluggedUSB = (plugged == BatteryManager.BATTERY_PLUGGED_USB);
 
         bBatteryStatus = pluggedAC || pluggedUSB;
+
+        sBatteryCap = "";
+
+        Object mPowerProfile_ = null;
+        final String POWER_PROFILE_CLASS = "com.android.internal.os.PowerProfile";
+        try {
+            mPowerProfile_ = Class.forName(POWER_PROFILE_CLASS)
+                    .getConstructor(Context.class).newInstance(context);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        try {
+            double batteryCapacity = (double) Class
+                    .forName(POWER_PROFILE_CLASS)
+                    .getMethod("getAveragePower", java.lang.String.class)
+                    .invoke(mPowerProfile_, "battery.capacity");
+            sBatteryCap = oneDigitIntForm(batteryCapacity) + " mAh";
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public static void getCompassInfo() {
@@ -520,7 +594,13 @@ public class Utilities  {
                     PackageManager.FEATURE_CAMERA_FLASH)) {
                 cam = Camera.open();
                 Camera.Parameters p = cam.getParameters();
-                p.setFlashMode(Camera.Parameters.FLASH_MODE_TORCH);
+                List<String> supportedFlashModes = p.getSupportedFlashModes();
+                if(supportedFlashModes.contains(Camera.Parameters.FLASH_MODE_TORCH)) {
+                    p.setFlashMode(Camera.Parameters.FLASH_MODE_TORCH);
+                }else if(supportedFlashModes.contains(Camera.Parameters.FLASH_MODE_ON)) {
+                    p.setFlashMode( Camera.Parameters.FLASH_MODE_ON );
+                }
+                cam.autoFocus(null);
                 cam.setParameters(p);
                 cam.startPreview();
                 bTorchSwitch = true;
@@ -561,12 +641,15 @@ public class Utilities  {
         Log.v(LOG_TAG,"getWeatherInfo - sWeatherCity" + sWeatherCity);
 
         if(!sWeatherTempNowC.isEmpty()) {
+            sWeatherTempNowC = oneDigitDoubleForm(Float.parseFloat(sWeatherTempNowC));
             sWeatherTempNowF = oneDigitDoubleForm(convertCelciusToFahrenheit(Float.parseFloat(sWeatherTempNowC)));
         }
         if(!sWeatherTempLoC.isEmpty()) {
+            sWeatherTempLoC = oneDigitDoubleForm(Float.parseFloat(sWeatherTempLoC));
             sWeatherTempLoF = oneDigitDoubleForm(convertCelciusToFahrenheit(Float.parseFloat(sWeatherTempLoC)));
         }
         if(!sWeatherTempHiC.isEmpty()) {
+            sWeatherTempHiC = oneDigitDoubleForm(Float.parseFloat(sWeatherTempHiC));
             sWeatherTempHiF = oneDigitDoubleForm(convertCelciusToFahrenheit(Float.parseFloat(sWeatherTempHiC)));
         }
 
@@ -594,6 +677,10 @@ public class Utilities  {
 
     public static String oneDigitDoubleForm(double d){
         return new DecimalFormat("#.#").format(d);
+    }
+
+    public static String oneDigitIntForm(double d){
+        return new DecimalFormat("#").format(d);
     }
 
     public static String oneDigitIntForm(int i){

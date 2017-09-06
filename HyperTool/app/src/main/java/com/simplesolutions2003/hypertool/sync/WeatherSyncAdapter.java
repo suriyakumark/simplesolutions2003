@@ -38,12 +38,8 @@ public class WeatherSyncAdapter extends AbstractThreadedSyncAdapter {
     public final static String LOG_TAG = WeatherSyncAdapter.class.getSimpleName();
     public static final String ACTION_DATA_UPDATED_WEATHER = "com.simplesolutions2003.hypertool.ACTION_DATA_UPDATED_WEATHER";
 
-    // 60 seconds (1 minute) * 180 = 3 hours
-    //public static final int SYNC_INTERVAL = 60 * 180;
-    //for testing let us use 5 minutes
-    public static final int SYNC_INTERVAL = 60 * 5;
-    public static final int SYNC_FLEXTIME = SYNC_INTERVAL/3;
-    private static final long DAY_IN_MILLIS = 1000 * 60 * 60 * 24;
+    // 60 seconds (1 minute) * 5 = 5 min
+    public static int SYNC_INTERVAL = 5;
 
     private Context context;
 
@@ -234,9 +230,18 @@ public class WeatherSyncAdapter extends AbstractThreadedSyncAdapter {
     /**
      * Helper method to schedule the sync adapter periodic execution
      */
-    public static void configurePeriodicSync(Context context, int syncInterval, int flexTime) {
+    public static void configurePeriodicSync(Context context) {
+
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+        String sSyncInterval = prefs.getString("weather_sync_interval", Integer.toString(SYNC_INTERVAL));
+        Log.v(LOG_TAG,"sSyncInterval - " + sSyncInterval);
+        int syncInterval = 60 * Integer.parseInt(sSyncInterval);
+        int flexTime = syncInterval/3;
+
         Account account = getSyncAccount(context);
         String authority = context.getString(R.string.content_authority);
+        ContentResolver.cancelSync(account,authority);
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             // we can enable inexact timers in our periodic sync
             SyncRequest request = new SyncRequest.Builder().
@@ -308,7 +313,7 @@ public class WeatherSyncAdapter extends AbstractThreadedSyncAdapter {
         /*
          * Since we've created an account
          */
-        WeatherSyncAdapter.configurePeriodicSync(context, SYNC_INTERVAL, SYNC_FLEXTIME);
+        WeatherSyncAdapter.configurePeriodicSync(context);
 
         /*
          * Without calling setSyncAutomatically, our periodic sync will not be enabled.

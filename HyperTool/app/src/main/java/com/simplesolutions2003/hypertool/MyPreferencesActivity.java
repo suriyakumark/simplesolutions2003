@@ -35,6 +35,8 @@ import java.util.prefs.Preferences;
 public class MyPreferencesActivity extends PreferenceActivity implements
         SharedPreferences.OnSharedPreferenceChangeListener {
     private static final String LOG_TAG = MyPreferencesActivity.class.getSimpleName();
+    private static boolean needSync = false;
+    private static boolean configureSync = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -91,6 +93,8 @@ public class MyPreferencesActivity extends PreferenceActivity implements
         // Set up a listener whenever a key changes
         getPreferenceScreen().getSharedPreferences()
                 .registerOnSharedPreferenceChangeListener(this);
+        needSync = false;
+        configureSync = false;
     }
 
     @Override
@@ -99,12 +103,23 @@ public class MyPreferencesActivity extends PreferenceActivity implements
         // Unregister the listener whenever a key changes
         getPreferenceScreen().getSharedPreferences()
                 .unregisterOnSharedPreferenceChangeListener(this);
-        WeatherSyncAdapter.syncImmediately(this);
+        if(configureSync) {
+            WeatherSyncAdapter.configurePeriodicSync(this);
+        }
+        if(needSync) {
+            WeatherSyncAdapter.syncImmediately(this);
+        }
     }
 
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences,
                                           String key) {
         updatePrefSummary(findPreference(key));
+        if (key.equals("country") || key.equals("zip") || key.equals("weather_sync_interval")){
+            needSync = true;
+        }
+        if (key.equals("weather_sync_interval")){
+            configureSync = true;
+        }
     }
 
     private void initSummary(Preference p) {

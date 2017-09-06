@@ -4,5 +4,6 @@
     <!-- SyncAdapter related -->
     <string name="sync_account_type">hypertool.simplesolutions2003.com</string>
     <string name="content_authority">com.simplesolutions2003.hypertool</string>
+    <string name="coordinates">Coordinates</string>
 
 </resources>

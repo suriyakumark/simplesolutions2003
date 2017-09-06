@@ -4,6 +4,7 @@
 
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
     <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
+    <uses-permission android:name="android.permission.ACCESS_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
     <uses-permission android:name="android.permission.WRITE_SETTINGS"/>
@@ -85,7 +86,12 @@
                 android:name="android.content.SyncAdapter"
                 android:resource="@xml/weather_syncadapter" />
         </service>
-
+        <!-- The Pedometer service -->
+        <service
+            android:name=".PedometerService"
+            android:exported="true"
+            android:enabled="true">
+        </service>
         <!-- SyncAdapter's dummy authentication service -->
         <service android:name=".sync.AppAuthenticatorService">
             <intent-filter>

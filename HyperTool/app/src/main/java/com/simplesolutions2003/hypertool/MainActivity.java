@@ -1,6 +1,7 @@
 package com.simplesolutions2003.hypertool;
 
 import android.annotation.TargetApi;
+import android.app.ActivityManager;
 import android.content.BroadcastReceiver;
 import android.content.ContentResolver;
 import android.content.Context;
@@ -15,10 +16,16 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+import android.location.Address;
+import android.location.Geocoder;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.media.Image;
 import android.os.Build;
 import android.os.Handler;
 import android.os.Looper;
+import android.os.SystemClock;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -28,6 +35,7 @@ import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.animation.DecelerateInterpolator;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -36,13 +44,18 @@ import android.view.animation.RotateAnimation;
 
 import com.simplesolutions2003.hypertool.sync.WeatherSyncAdapter;
 
+import java.io.IOException;
+import java.lang.reflect.Array;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Locale;
 import java.util.Timer;
 import java.util.TimerTask;
 
 public class MainActivity extends AppCompatActivity implements SensorEventListener, GestureDetector.OnGestureListener {
     private static final String LOG_TAG = MainActivity.class.getSimpleName();
     private static final String DEGREE  = "\u00b0";
-    private final int SENSOR_DELAY = 2000000;
+    private final int SENSOR_DELAY = 4000000;
     private static Context context;
     private SensorManager sensorManager;
     private GestureDetector myGesture;
@@ -59,24 +72,29 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     public static TextView tvStorageInternalTotal;
     public static TextView tvStorageInternalUsed;
     public static TextView tvStorageInternalFree;
+    public static TextView tvStorageInternalPercentage;
 
     public static TextView tvStorageExternalTotal;
     public static TextView tvStorageExternalUsed;
     public static TextView tvStorageExternalFree;
+    public static TextView tvStorageExternalPercentage;
 
     public static TextView tvCpuType;
     public static TextView tvCpuInfo;
     public static TextView tvCpuSpeed;
+    public static TextView tvCpuPercentage;
 
     public static TextView tvRamTotal;
     public static TextView tvRamUsed;
     public static TextView tvRamFree;
+    public static TextView tvRamPercentage;
 
     public static ImageView ivBatterySwitch;
     public static TextView tvBatteryLevel;
     public static ImageView ivBatteryStatus;
     public static TextView tvBatteryVolt;
     public static TextView tvBatteryTemp;
+    public static TextView tvBatteryCap;
 
     public static TextView tvVolumeLevel;
     public static ImageButton ibSoundSwitch;
@@ -114,6 +132,12 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     public static TextView tvTimeHHMMSS;
     public static TextView tvTimeAMPM;
 
+    public static TextView tvStopwatch;
+    public static ImageButton ibStopwatch;
+    public static int iStopwatch = 0;
+    public static long MillisecondTime, StartTime, TimeBuff, UpdateTime = 0L ;
+    public static int Seconds, Minutes, MilliSeconds ;
+
     public static TextView tvMoonPhase;
     public static TextView tvMoonRiseTime;
     public static TextView tvMoonSetTime;
@@ -126,6 +150,11 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     public static ImageButton ibAirplaneSwitch;
     public static boolean bGpsSwitch;
     public static ImageButton ibGpsSwitch;
+    public static String sLongitude;
+    public static String sLatitude;
+    public static TextView tvLongitude;
+    public static TextView tvLatitude;
+    public static TextView tvCityLoc;
 
     public static TextView tvWeatherTempNowC;
     public static TextView tvWeatherTempNowF;
@@ -150,11 +179,16 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     static float[] mGeomagnetic;
     static float[] mOrientation;
 
+    private PedometerService mPedometerService;
     private Handler mHandler = new Handler();
+    private static Handler mStopwatchHandler = new Handler();
+
     private SettingsContentObserver mSettingsContentObserver;
     private TelephonyManager tManager;
     private static float mCurrentDegree = 0f;
-
+    private LocationListener locationListener;
+    private LocationManager locationManager;
+    private static final float ALPHA = 0.1f;
 
     private BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
 
@@ -188,6 +222,15 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                 case WifiReceiver.ACTION_DATA_UPDATED_WIFI:
                     updateWifiInfo();
                     break;
+                case PedometerService.ACTION_DATA_UPDATED_PEDOMETER:
+                    updatePedometerInfo();
+                    break;
+                case MyLocationListener.ACTION_DATA_UPDATED_LOCATION:
+                    updateLocation();
+                    break;
+                case MyLocationListener.ACTION_DATA_UPDATED_GPS:
+                    updateGpsInfo();
+                    break;
                 default:
                     break;
             }
@@ -220,20 +263,25 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         tvStorageInternalTotal = (TextView) findViewById(R.id.internal_memory_total);
         tvStorageInternalUsed = (TextView) findViewById(R.id.internal_memory_used);
         tvStorageInternalFree = (TextView) findViewById(R.id.internal_memory_free);
+        tvStorageInternalPercentage = (TextView) findViewById(R.id.internal_memory_percentage);
         tvStorageExternalTotal = (TextView) findViewById(R.id.external_memory_total);
         tvStorageExternalUsed = (TextView) findViewById(R.id.external_memory_used);
         tvStorageExternalFree = (TextView) findViewById(R.id.external_memory_free);
+        tvStorageExternalPercentage = (TextView) findViewById(R.id.external_memory_percentage);
         tvCpuType = (TextView) findViewById(R.id.cpu_type);
         tvCpuInfo = (TextView) findViewById(R.id.cpu_info);
         tvCpuSpeed = (TextView) findViewById(R.id.cpu_speed);
+        tvCpuPercentage = (TextView) findViewById(R.id.cpu_percentage);
         tvRamTotal = (TextView) findViewById(R.id.ram_total);
         tvRamUsed = (TextView) findViewById(R.id.ram_used);
         tvRamFree = (TextView) findViewById(R.id.ram_free);
+        tvRamPercentage = (TextView) findViewById(R.id.ram_percentage);
         ivBatterySwitch = (ImageView) findViewById(R.id.battery_img);
         tvBatteryLevel = (TextView) findViewById(R.id.battery_level);
         ivBatteryStatus = (ImageView) findViewById(R.id.battery_status);
         tvBatteryVolt = (TextView) findViewById(R.id.battery_volt);
         tvBatteryTemp = (TextView) findViewById(R.id.battery_temp);
+        tvBatteryCap = (TextView) findViewById(R.id.battery_cap);
         tvVolumeLevel = (TextView) findViewById(R.id.volume_level);
         ibSoundSwitch = (ImageButton) findViewById(R.id.volume_img);
         tvBrightnessLevel = (TextView) findViewById(R.id.brightness_level);
@@ -258,6 +306,8 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         ibWifiSwitch = (ImageButton) findViewById(R.id.wifi_img);
         tvTimeHHMMSS = (TextView) findViewById(R.id.time_dtl);
         tvTimeAMPM = (TextView) findViewById(R.id.time_am_pm);
+        tvStopwatch = (TextView) findViewById(R.id.stopwatch);
+        ibStopwatch = (ImageButton) findViewById(R.id.stopwatch_img);
         //tvMoonPhase = (TextView) findViewById(R.id.moon_phase);
         //tvMoonRiseTime = (TextView) findViewById(R.id.moon_rise);
         //tvMoonSetTime = (TextView) findViewById(R.id.moon_set);
@@ -265,6 +315,8 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         tvPedometerCount = (TextView) findViewById(R.id.pedometer_dtl);
         ibAirplaneSwitch = (ImageButton) findViewById(R.id.airplane_img);
         ibGpsSwitch = (ImageButton) findViewById(R.id.gps_img);
+        tvLongitude = (TextView) findViewById(R.id.longitude);
+        tvLatitude = (TextView) findViewById(R.id.latitude);
         tvWeatherTempNowC = (TextView) findViewById(R.id.temperature_c);
         tvWeatherTempNowF = (TextView) findViewById(R.id.temperature_f);
         tvWeatherTempHiC = (TextView) findViewById(R.id.forecast_hi_c);
@@ -300,6 +352,9 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         filter.addAction(SettingsContentObserver.ACTION_DATA_UPDATED_SETTINGS);
         filter.addAction(SignalReceiver.ACTION_DATA_UPDATED_SIGNAL);
         filter.addAction(WifiReceiver.ACTION_DATA_UPDATED_WIFI);
+        filter.addAction(PedometerService.ACTION_DATA_UPDATED_PEDOMETER);
+        filter.addAction(MyLocationListener.ACTION_DATA_UPDATED_LOCATION);
+        filter.addAction(MyLocationListener.ACTION_DATA_UPDATED_GPS);
         registerReceiver(broadcastReceiver, filter);
 
         setupAll();
@@ -315,6 +370,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         getApplicationContext().getContentResolver().unregisterContentObserver(mSettingsContentObserver);
         unregisterReceiver(broadcastReceiver);
         tManager.listen(new SignalReceiver(this), PhoneStateListener.LISTEN_NONE);
+        locationManager.removeUpdates(locationListener);
     }
 
     public void setupAll(){
@@ -331,6 +387,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         setupWifi();
         setupBluetooth();
         setupTorch();
+        setupStopwatch();
     }
 
     public void updateAll(){
@@ -352,6 +409,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         updateWifiInfo();
         updateAirplaneInfo();
         updateGpsInfo();
+        updateLocation();
         updateBluetoothInfo();
         updateTorchInfo();
         updateWeatherInfo();
@@ -371,23 +429,22 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
             sensorManager.registerListener(this, accelerometerSensor, SENSOR_DELAY, SENSOR_DELAY);
         }else{
             Sensor orientationSensor = sensorManager.getDefaultSensor(Sensor.TYPE_ORIENTATION);
-            sensorManager.registerListener(this, orientationSensor, SensorManager.SENSOR_DELAY_NORMAL);
+            sensorManager.registerListener(this, orientationSensor, SENSOR_DELAY);
         }
-
     }
 
     public void setupPedometerInfo() {
-        Sensor countSensor = null;
         bPedometerSwitch = false;
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            countSensor = sensorManager.getDefaultSensor(Sensor.TYPE_STEP_COUNTER);
-            if (countSensor != null) {
-                sensorManager.registerListener(this, countSensor, SENSOR_DELAY, SENSOR_DELAY );
+            if (sensorManager.getDefaultSensor(Sensor.TYPE_STEP_COUNTER) != null) {
                 bPedometerSwitch = true;
+                mPedometerService = new PedometerService(context);
+                if (!isMyServiceRunning(mPedometerService.getClass())) {
+                    startService(new Intent(context, mPedometerService.getClass()));
+                }
             }
         }
 
-        //tvPedometerCount.setText(sPedometerCount);
         if(bPedometerSwitch){
             ivPedometer.setAlpha(fSwitchOn);
         }else{
@@ -407,6 +464,29 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
             @Override
             public void onClick(View v) {
                 Utilities.airplaneOnOff();
+            }
+        });
+    }
+
+
+    public void setupStopwatch(){
+        resetStopwatch();
+        ibStopwatch.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v) {
+                switch (iStopwatch) {
+                    case 0:
+                        startStopwatch();
+                        break;
+                    case 1:
+                        stopStopwatch();
+                        break;
+                    case 2:
+                        resetStopwatch();
+                        break;
+                    default:
+                        break;
+                }
             }
         });
     }
@@ -446,6 +526,29 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                 updateGpsInfo();
             }
         });
+
+        locationManager = (LocationManager)
+                getSystemService(Context.LOCATION_SERVICE);
+
+        locationListener = new MyLocationListener(context);
+        if(locationManager.isProviderEnabled( LocationManager.GPS_PROVIDER )) {
+            try {
+                locationManager.requestLocationUpdates(
+                        LocationManager.GPS_PROVIDER, 5000, 0, locationListener);
+                Location loc = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+                if(loc != null) {
+                    String longitude = Double.toString(loc.getLongitude());
+                    String latitude = Double.toString(loc.getLatitude());
+
+                    SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(context).edit();
+                    editor.putString("longitude", longitude);
+                    editor.putString("latitude", latitude);
+                    editor.commit();
+                }
+            } catch (SecurityException e) {
+                e.getStackTrace();
+            }
+        }
     }
 
     public void setupWifi(){
@@ -536,6 +639,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         tvCpuType.setText(Utilities.sCpuType);
         tvCpuInfo.setText(Utilities.sCpuInfo);
         tvCpuSpeed.setText(Utilities.sCpuSpeed);
+        tvCpuPercentage.setText(Utilities.sCpuPercentage);
     }
 
     public static void updateStorageInternalInfo(){
@@ -543,6 +647,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         tvStorageInternalTotal.setText(Utilities.sStorageInternalTotal);
         tvStorageInternalUsed.setText(Utilities.sStorageInternalUsed);
         tvStorageInternalFree.setText(Utilities.sStorageInternalFree);
+        tvStorageInternalPercentage.setText(Utilities.sStorageInternalPercentage);
     }
 
     public static void updateStorageExternalInfo(){
@@ -550,6 +655,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         tvStorageExternalTotal.setText(Utilities.sStorageExternalTotal);
         tvStorageExternalUsed.setText(Utilities.sStorageExternalUsed);
         tvStorageExternalFree.setText(Utilities.sStorageExternalFree);
+        tvStorageExternalPercentage.setText(Utilities.sStorageExternalPercentage);
     }
 
     public static void updateRamInfo(){
@@ -557,6 +663,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         tvRamTotal.setText(Utilities.sRamTotal);
         tvRamUsed.setText(Utilities.sRamUsed);
         tvRamFree.setText(Utilities.sRamFree);
+        tvRamPercentage.setText(Utilities.sRamPercentage);
     }
 
     public static void updateDateInfo(){
@@ -582,12 +689,59 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     }
 
     public Runnable updateTimeInfo = new Runnable(){
-            public void run() {
-                Utilities.getTimeInfo();
-                tvTimeHHMMSS.setText(Utilities.sTimeHHMMSS);
-                tvTimeAMPM.setText(Utilities.sTimeAMPM);
-                mHandler.postDelayed(updateTimeInfo,500);
-            }
+        public void run() {
+            Utilities.getTimeInfo();
+            tvTimeHHMMSS.setText(Utilities.sTimeHHMMSS);
+            tvTimeAMPM.setText(Utilities.sTimeAMPM);
+            mHandler.postDelayed(updateTimeInfo,500);
+        }
+    };
+
+    public static void resetStopwatch(){
+        Log.v(LOG_TAG,"resetStopwatch");
+        mStopwatchHandler.removeCallbacks(updateStopwatch);
+        iStopwatch = 0;
+        MillisecondTime = 0L ;
+        StartTime = 0L ;
+        TimeBuff = 0L ;
+        UpdateTime = 0L ;
+        Seconds = 0 ;
+        Minutes = 0 ;
+        MilliSeconds = 0 ;
+        tvStopwatch.setText("00:00:00");
+        ibStopwatch.setImageResource(R.drawable.stopwatch_off);
+    }
+    public static void startStopwatch(){
+        Log.v(LOG_TAG,"startStopwatch");
+        iStopwatch = 1;
+        ibStopwatch.setImageResource(R.drawable.stopwatch_on);
+        StartTime = SystemClock.uptimeMillis();
+        mStopwatchHandler.postDelayed(updateStopwatch, 0);
+    }
+
+    public static void stopStopwatch(){
+        Log.v(LOG_TAG,"stopStopwatch");
+        iStopwatch = 2;
+        TimeBuff += MillisecondTime;
+        mStopwatchHandler.removeCallbacks(updateStopwatch);
+        ibStopwatch.setImageResource(R.drawable.stopwatch_reset);
+    }
+
+    public static Runnable updateStopwatch = new Runnable() {
+        public void run() {
+            MillisecondTime = SystemClock.uptimeMillis() - StartTime;
+            UpdateTime = TimeBuff + MillisecondTime;
+            Seconds = (int) (UpdateTime / 1000);
+            Minutes = Seconds / 60;
+            Seconds = Seconds % 60;
+            MilliSeconds = (int) (UpdateTime % 1000);
+            tvStopwatch.setText("" + String.format("%02d", Minutes) + ":"
+                    + String.format("%02d", Seconds) + ":"
+                    + String.format("%03d", MilliSeconds));
+
+            mStopwatchHandler.postDelayed(updateStopwatch, 0);
+        }
+
     };
 
     public static void updateBatteryInfo(){
@@ -638,9 +792,10 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         }
         tvBatteryTemp.setText(Utilities.sBatteryTemp);
         tvBatteryVolt.setText(Utilities.sBatteryVolt);
+        tvBatteryCap.setText(Utilities.sBatteryCap);
     }
 
-    public static void updateCompassInfo(SensorEvent event){
+    public static void updateCompassInfo(){
         //Utilities.getCompassInfo();
         //tvCompassDirection.setText(Utilities.sCompassDirection);
         float azimuthInDegrees = 0.0f;
@@ -711,7 +866,8 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                     Animation.RELATIVE_TO_SELF,
                     0.5f);
 
-            ra.setDuration(250);
+            ra.setInterpolator(new DecelerateInterpolator());
+            ra.setDuration(400);
             ra.setFillAfter(true);
             ivCompass.startAnimation(ra);
             mCurrentDegree = -azimuthInDegrees;
@@ -719,11 +875,16 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
     }
 
-    public void updatePedometerInfo(SensorEvent event){
-        //Utilities.getPedometerInfo();
-        //tvPedometerCount.setText(Utilities.sPedometerCount);
-        //bPedometerSwitch = Utilities.bPedometerSwitch;
-        tvPedometerCount.setText(Float.toString(event.values[0]));
+    public void updatePedometerInfo(){
+        Float initial_step_count = 0F;
+        Float step_count = 0F;
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+        initial_step_count = prefs.getFloat("initial_step_count", 0F);
+        step_count = prefs.getFloat("step_count", 0F);
+        if (initial_step_count < step_count){
+            step_count = step_count - initial_step_count;
+        }
+        tvPedometerCount.setText(Float.toString(step_count));
     }
 
     @Override
@@ -734,20 +895,20 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     @Override
     public void onSensorChanged(SensorEvent event) {
         switch(event.sensor.getType()){
-            case Sensor.TYPE_STEP_COUNTER:
-                updatePedometerInfo(event);
-                break;
             case Sensor.TYPE_ACCELEROMETER:
-                mGravity = event.values;
-                updateCompassInfo(event);
+                //mGravity = event.values;
+                mGravity = lowPass( event.values, mGravity );
+                updateCompassInfo();
                 break;
             case Sensor.TYPE_MAGNETIC_FIELD:
-                mGeomagnetic = event.values;
-                updateCompassInfo(event);
+                //mGeomagnetic = event.values;
+                mGeomagnetic = lowPass( event.values, mGeomagnetic );
+                updateCompassInfo();
                 break;
             case Sensor.TYPE_ORIENTATION:
-                mOrientation = event.values;
-                updateCompassInfo(event);
+                //mOrientation = event.values;
+                mOrientation = lowPass( event.values, mOrientation );
+                updateCompassInfo();
                 break;
             default:
                 break;
@@ -794,6 +955,38 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         }else{
             ibGpsSwitch.setAlpha(fSwitchOff);
         }
+    }
+
+    public static void updateLocation(){
+
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+        sLongitude = prefs.getString("longitude", "");
+        sLatitude = prefs.getString("latitude", "");
+
+        if(!sLongitude.isEmpty() && !sLongitude.isEmpty()) {
+            tvLongitude.setText("Longitude : " + sLongitude);
+            tvLatitude.setText("Latitude : " + sLatitude);
+
+        /*    Double longitude = Double.parseDouble(sLongitude);
+            Double latitude = Double.parseDouble(sLatitude);
+
+            Geocoder gcd = new Geocoder(context, Locale.getDefault());
+            List<Address> addresses;
+            try {
+                addresses = gcd.getFromLocation(longitude,
+                        longitude, 1);
+                if (addresses.size() > 0 && addresses.get(0).getLocality() != null) {
+                    tvCityLoc.setText("City: " + addresses.get(0).getLocality());
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        */
+        }else{
+            tvLongitude.setText("Longitude : N/A");
+            tvLatitude.setText("Latitude : N/A");
+        }
+
     }
 
     public static void updateBluetoothInfo(){
@@ -943,5 +1136,27 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
     }
 
+    private boolean isMyServiceRunning(Class<?> serviceClass) {
+        ActivityManager manager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
+        for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
+            if (serviceClass.getName().equals(service.service.getClassName())) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private float[] lowPass( float[] input, float[] output ) {
+        if ( output == null ) return input;
+
+        for ( int i=0; i<input.length; i++ ) {
+            output[i] = output[i] + ALPHA * (input[i] - output[i]);
+        }
+        return output;
+    }
+
 }
+
+
+
 

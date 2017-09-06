@@ -1,73 +1,68 @@
 <?xml version="1.0" encoding="utf-8"?>
-
-<!--ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v7.widget.GridLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:grid="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:background="@color/colorPrimary"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
-    android:id="@+id/scrollView"
-    android:background="@color/colorPrimaryDark"
-    tools:context="com.simplesolutions2003.hypertool.MainActivity"-->
-    <android.support.v7.widget.GridLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:grid="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
-        android:background="@color/colorPrimary"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_centerHorizontal="true"
-        grid:alignmentMode="alignBounds"
-        grid:columnCount="5"
-        android:id="@+id/gridLayout"
-        tools:context="com.simplesolutions2003.hypertool.MainActivity">
+    android:layout_centerHorizontal="true"
+    grid:alignmentMode="alignBounds"
+    grid:columnCount="5"
+    android:id="@+id/gridLayout"
+    tools:context="com.simplesolutions2003.hypertool.MainActivity">
 
-        <LinearLayout android:id="@+id/device" android:orientation="horizontal"
-            style="@style/GridLinearLayout2">
-            <ImageButton android:id="@+id/device_img"
-                style="@style/ButtonImage"
-                android:src="@drawable/phone" />
-            <LinearLayout android:id="@+id/device_info" android:orientation="vertical"
+    <!-- Row 1 -->
+    <LinearLayout android:id="@+id/device" android:orientation="horizontal"
+        style="@style/GridLinearLayout2">
+        <ImageButton android:id="@+id/device_img"
+            style="@style/ButtonImage"
+            android:src="@drawable/phone" />
+        <LinearLayout android:id="@+id/device_info" android:orientation="vertical"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+            <TextView android:id="@+id/device_brand"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content">
-                <TextView android:id="@+id/device_brand"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    style="@style/TextViewSmall" />
-                <TextView android:id="@+id/device_model"
-                    style="@style/TextViewSmall" />
-                <TextView android:id="@+id/device_os"
-                    style="@style/TextViewSmall" />
-            </LinearLayout>
-        </LinearLayout>
-        <LinearLayout android:id="@+id/carrier" android:orientation="vertical"
-            style="@style/GridLinearLayout">
-            <ImageButton android:id="@+id/carrier_img"
-                style="@style/ButtonImage"
-                android:src="@drawable/signal_0" />
-            <TextView android:id="@+id/carrier_name"
+                android:layout_height="wrap_content"
                 style="@style/TextViewSmall" />
-            <TextView android:id="@+id/carrier_strength"
+            <TextView android:id="@+id/device_model"
+                style="@style/TextViewSmall" />
+            <TextView android:id="@+id/device_os"
                 style="@style/TextViewSmall" />
         </LinearLayout>
-        <LinearLayout android:id="@+id/internal_memory" android:orientation="horizontal"
-            style="@style/GridLinearLayout">
+    </LinearLayout>
+    <LinearLayout android:id="@+id/carrier" android:orientation="vertical"
+        style="@style/GridLinearLayout">
+        <ImageButton android:id="@+id/carrier_img"
+            style="@style/ButtonImage"
+            android:src="@drawable/signal_0" />
+        <TextView android:id="@+id/carrier_name"
+            style="@style/TextViewSmall" />
+        <TextView android:id="@+id/carrier_strength"
+            style="@style/TextViewSmall" />
+    </LinearLayout>
+    <LinearLayout android:id="@+id/internal_memory" android:orientation="vertical"
+        style="@style/GridLinearLayout">
+        <LinearLayout android:id="@+id/internal_memory_info1" android:orientation="horizontal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
             <ImageButton android:id="@+id/internal_memory_img"
                 style="@style/ButtonImage"
                 android:src="@drawable/storage" />
-            <LinearLayout android:id="@+id/internal_memory_info" android:orientation="vertical"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content">
-                <TextView android:id="@+id/internal_memory_total"
-                    style="@style/TextViewSmall" />
-                <TextView android:id="@+id/internal_memory_used"
-                    style="@style/TextViewSmallRed" />
-                <TextView android:id="@+id/internal_memory_free"
-                    style="@style/TextViewSmallGreen" />
-            </LinearLayout>
+            <TextView android:id="@+id/internal_memory_percentage"
+                style="@style/TextViewSmall" />
         </LinearLayout>
+        <LinearLayout android:id="@+id/internal_memory_info2" android:orientation="vertical"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+            <TextView android:id="@+id/internal_memory_total"
+                style="@style/TextViewSmall" />
+            <TextView android:id="@+id/internal_memory_used"
+                style="@style/TextViewSmallRed" />
+            <TextView android:id="@+id/internal_memory_free"
+                style="@style/TextViewSmallGreen" />
+        </LinearLayout>
+    </LinearLayout>
     <LinearLayout android:id="@+id/volume_brightness" android:orientation="vertical"
         style="@style/GridLinearLayout">
         <LinearLayout android:id="@+id/volume_brightness_inner" android:orientation="vertical"
@@ -102,54 +97,74 @@
         </LinearLayout>
     </LinearLayout>
 
-        <LinearLayout android:id="@+id/cpu" android:orientation="horizontal"
-            style="@style/GridLinearLayout2">
-            <ImageButton android:id="@+id/cpu_img"
-                style="@style/ButtonImage"
-                android:src="@drawable/cpu" />
-            <LinearLayout android:id="@+id/cpu_dtl" android:orientation="vertical"
+    <!-- Row 2 -->
+    <LinearLayout android:id="@+id/cpu" android:orientation="horizontal"
+        style="@style/GridLinearLayout2">
+        <ImageButton android:id="@+id/cpu_img"
+            style="@style/ButtonImage"
+            android:src="@drawable/cpu" />
+        <LinearLayout android:id="@+id/cpu_dtl" android:orientation="vertical"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+            <LinearLayout android:id="@+id/cpu_info1" android:orientation="horizontal"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content">
-                <TextView android:id="@+id/cpu_type"
-                    style="@style/TextViewSmall" />
-                <TextView android:id="@+id/cpu_info"
+                <TextView android:id="@+id/cpu_percentage"
                     style="@style/TextViewSmall" />
                 <TextView android:id="@+id/cpu_speed"
+                    android:paddingStart="4dp"
                     style="@style/TextViewSmall" />
             </LinearLayout>
+            <TextView android:id="@+id/cpu_type"
+                style="@style/TextViewSmall" />
+            <TextView android:id="@+id/cpu_info"
+                style="@style/TextViewSmall" />
         </LinearLayout>
-        <LinearLayout android:id="@+id/ram" android:orientation="horizontal"
-            style="@style/GridLinearLayout">
+    </LinearLayout>
+    <LinearLayout android:id="@+id/ram" android:orientation="vertical"
+        style="@style/GridLinearLayout">
+        <LinearLayout android:id="@+id/ram_info1" android:orientation="horizontal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
             <ImageButton android:id="@+id/ram_img"
                 style="@style/ButtonImage"
                 android:src="@drawable/ram" />
-            <LinearLayout android:id="@+id/ram_info" android:orientation="vertical"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content">
-                <TextView android:id="@+id/ram_total"
-                    style="@style/TextViewSmall" />
-                <TextView android:id="@+id/ram_used"
-                    style="@style/TextViewSmallRed" />
-                <TextView android:id="@+id/ram_free"
-                    style="@style/TextViewSmallGreen" />
-            </LinearLayout>
+            <TextView android:id="@+id/ram_percentage"
+                style="@style/TextViewSmall" />
         </LinearLayout>
-        <LinearLayout android:id="@+id/external_memory" android:orientation="horizontal"
-            style="@style/GridLinearLayout">
+        <LinearLayout android:id="@+id/ram_info2" android:orientation="vertical"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+            <TextView android:id="@+id/ram_total"
+                style="@style/TextViewSmall" />
+            <TextView android:id="@+id/ram_used"
+                style="@style/TextViewSmallRed" />
+            <TextView android:id="@+id/ram_free"
+                style="@style/TextViewSmallGreen" />
+        </LinearLayout>
+    </LinearLayout>
+    <LinearLayout android:id="@+id/external_memory" android:orientation="vertical"
+        style="@style/GridLinearLayout">
+        <LinearLayout android:id="@+id/external_memory_info1" android:orientation="horizontal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
             <ImageButton android:id="@+id/external_memory_img"
                 style="@style/ButtonImage"
                 android:src="@drawable/memorycard" />
-            <LinearLayout android:id="@+id/external_memory_info" android:orientation="vertical"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content">
-                <TextView android:id="@+id/external_memory_total"
-                    style="@style/TextViewSmall" />
-                <TextView android:id="@+id/external_memory_used"
-                    style="@style/TextViewSmallRed" />
-                <TextView android:id="@+id/external_memory_free"
-                    style="@style/TextViewSmallGreen" />
-            </LinearLayout>
+            <TextView android:id="@+id/external_memory_percentage"
+                style="@style/TextViewSmall" />
         </LinearLayout>
+        <LinearLayout android:id="@+id/external_memory_info2" android:orientation="vertical"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+            <TextView android:id="@+id/external_memory_total"
+                style="@style/TextViewSmall" />
+            <TextView android:id="@+id/external_memory_used"
+                style="@style/TextViewSmallRed" />
+            <TextView android:id="@+id/external_memory_free"
+                style="@style/TextViewSmallGreen" />
+        </LinearLayout>
+    </LinearLayout>
     <LinearLayout android:id="@+id/data_wifi" android:orientation="vertical"
         style="@style/GridLinearLayout">
         <LinearLayout android:id="@+id/data_wifi_inner" android:orientation="vertical"
@@ -184,56 +199,56 @@
         </LinearLayout>
     </LinearLayout>
 
-
-        <LinearLayout android:id="@+id/date" android:orientation="horizontal"
-            style="@style/GridLinearLayout2">
-            <ImageButton android:id="@+id/date_img"
-                style="@style/ButtonImage"
-                android:src="@drawable/calendar" />
-            <LinearLayout android:id="@+id/date_info" android:orientation="vertical"
+    <!-- Row 3 -->
+    <LinearLayout android:id="@+id/date" android:orientation="horizontal"
+        style="@style/GridLinearLayout2">
+        <ImageButton android:id="@+id/date_img"
+            style="@style/ButtonImage"
+            android:src="@drawable/calendar" />
+        <LinearLayout android:id="@+id/date_info" android:orientation="vertical"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+            <LinearLayout android:id="@+id/date_day_month" android:orientation="horizontal"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content">
-                <LinearLayout android:id="@+id/date_day_month" android:orientation="horizontal"
+                <LinearLayout android:id="@+id/date_dayofweek_year" android:orientation="vertical"
+                    android:layout_gravity="center_vertical"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content">
-                    <LinearLayout android:id="@+id/date_dayofweek_year" android:orientation="vertical"
-                        android:layout_gravity="center_vertical"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content">
-                        <TextView android:id="@+id/date_month"
-                            android:paddingBottom="2dp"
-                            style="@style/TextViewSmall" />
-                        <TextView android:id="@+id/date_day_of_week"
-                            style="@style/TextViewSmall"
-                            android:layout_gravity="center_horizontal" />
-                    </LinearLayout>
-                    <TextView android:id="@+id/date_day"
-                        style="@style/TextViewBigger"
-                        android:paddingRight="2dp" />
-                    <LinearLayout android:id="@+id/date_year" android:orientation="vertical"
-                        android:paddingStart="2dp"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content">
-                        <TextView android:id="@+id/date_year_cc"
-                            style="@style/TextViewMid" />
-                        <TextView android:id="@+id/date_year_yy"
-                            style="@style/TextViewMid" />
-                    </LinearLayout>
-                </LinearLayout>
-                <LinearLayout android:id="@+id/date_week_month_day_of_year" android:orientation="horizontal"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content">
-                    <TextView android:id="@+id/date_week_of_year"
-                        style="@style/TextViewSmall"
-                        android:paddingRight="4dp" />
-                    <TextView android:id="@+id/date_month_of_year"
-                        style="@style/TextViewSmall"
-                        android:paddingRight="4dp" />
-                    <TextView android:id="@+id/date_day_of_year"
+                    <TextView android:id="@+id/date_month"
+                        android:paddingBottom="2dp"
                         style="@style/TextViewSmall" />
+                    <TextView android:id="@+id/date_day_of_week"
+                        style="@style/TextViewSmall"
+                        android:layout_gravity="center_horizontal" />
+                </LinearLayout>
+                <TextView android:id="@+id/date_day"
+                    style="@style/TextViewBigger"
+                    android:paddingRight="2dp" />
+                <LinearLayout android:id="@+id/date_year" android:orientation="vertical"
+                    android:paddingStart="2dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+                    <TextView android:id="@+id/date_year_cc"
+                        style="@style/TextViewMid" />
+                    <TextView android:id="@+id/date_year_yy"
+                        style="@style/TextViewMid" />
                 </LinearLayout>
             </LinearLayout>
+            <LinearLayout android:id="@+id/date_week_month_day_of_year" android:orientation="horizontal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+                <TextView android:id="@+id/date_week_of_year"
+                    style="@style/TextViewSmall"
+                    android:paddingRight="4dp" />
+                <TextView android:id="@+id/date_month_of_year"
+                    style="@style/TextViewSmall"
+                    android:paddingRight="4dp" />
+                <TextView android:id="@+id/date_day_of_year"
+                    style="@style/TextViewSmall" />
+            </LinearLayout>
         </LinearLayout>
+    </LinearLayout>
     <LinearLayout android:id="@+id/battery_info" android:orientation="horizontal"
         style="@style/GridLinearLayout">
         <LinearLayout android:id="@+id/battery_info_inner" android:orientation="vertical"
@@ -262,11 +277,23 @@
                 <TextView android:id="@+id/battery_temp"
                     style="@style/TextViewSmall"
                     android:paddingStart="2dp" />
+                <TextView android:id="@+id/battery_cap"
+                    style="@style/TextViewSmall"
+                    android:paddingStart="2dp" />
             </LinearLayout>
         </LinearLayout>
     </LinearLayout>
-    <LinearLayout android:id="@+id/moon" android:orientation="vertical"
+    <LinearLayout android:id="@+id/coordinates_info" android:orientation="vertical"
         style="@style/GridLinearLayout">
+        <ImageButton android:id="@+id/location"
+            style="@style/ButtonImage"
+            android:src="@drawable/location" />
+        <TextView android:id="@+id/longitude"
+            style="@style/TextViewSmaller" />
+        <TextView android:id="@+id/latitude"
+            style="@style/TextViewSmaller" />
+        <TextView android:id="@+id/city_loc"
+            style="@style/TextViewSmaller" />
     </LinearLayout>
 
     <LinearLayout android:id="@+id/airplane_gps" android:orientation="vertical"
@@ -277,16 +304,24 @@
             android:gravity="center"
             android:src="@drawable/airplane"
             />
-        <ImageButton android:id="@+id/gps_img"
-            style="@style/ButtonImageSwitch"
-            android:layout_gravity="center"
-            android:gravity="center"
-            android:src="@drawable/gps"
-            />
+        <LinearLayout android:id="@+id/gps_info" android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center">
+            <ImageButton android:id="@+id/gps_img"
+                style="@style/ButtonImageSwitch"
+                android:layout_gravity="center"
+                android:src="@drawable/gps" />
+
+        </LinearLayout>
     </LinearLayout>
 
-        <LinearLayout android:id="@+id/time" android:orientation="horizontal"
-            style="@style/GridLinearLayout2">
+    <!-- Row 4 -->
+    <LinearLayout android:id="@+id/time" android:orientation="vertical"
+        style="@style/GridLinearLayout2">
+        <LinearLayout android:id="@+id/time_info1" android:orientation="horizontal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
             <ImageButton android:id="@+id/time_img"
                 style="@style/ButtonImage"
                 android:src="@drawable/time" />
@@ -299,6 +334,21 @@
                     style="@style/TextViewSmall" />
             </LinearLayout>
         </LinearLayout>
+        <LinearLayout android:id="@+id/time_info2" android:orientation="horizontal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+            <ImageButton android:id="@+id/stopwatch_img"
+                style="@style/ButtonImage"
+                android:src="@drawable/stopwatch_off" />
+            <LinearLayout android:id="@+id/stopwatch_info" android:orientation="vertical"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+                <TextView android:id="@+id/stopwatch"
+                    style="@style/TextViewBig"
+                    android:text="00:00:00"/>
+            </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
     <LinearLayout android:id="@+id/pedometer" android:orientation="vertical"
         style="@style/GridLinearLayout">
         <ImageButton android:id="@+id/pedometer_img"
@@ -332,52 +382,68 @@
             />
     </LinearLayout>
 
-
-
-        <LinearLayout android:id="@+id/temperature" android:orientation="horizontal"
-            style="@style/GridLinearLayout">
+    <!-- Row 5 -->
+    <LinearLayout android:id="@+id/temperature" android:orientation="vertical"
+        style="@style/GridLinearLayout2">
+        <LinearLayout android:id="@+id/temperature_info1" android:orientation="horizontal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
             <ImageButton android:id="@+id/temperature_img"
                 style="@style/ButtonImage"
                 android:src="@drawable/temperature"
                 />
-            <LinearLayout android:id="@+id/temperature_info" android:orientation="vertical"
+            <TextView android:id="@+id/city"
+                style="@style/TextViewSmall" />
+        </LinearLayout>
+        <LinearLayout android:id="@+id/temperature_info2" android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <LinearLayout android:id="@+id/temperature_current" android:orientation="vertical"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:paddingEnd="4dp">
                 <TextView android:id="@+id/temperature_c"
                     style="@style/TextViewSmall" />
                 <TextView android:id="@+id/temperature_f"
                     style="@style/TextViewSmall" />
             </LinearLayout>
+            <LinearLayout android:id="@+id/temperature_hi" android:orientation="vertical"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingEnd="4dp">
+                <TextView android:id="@+id/forecast_hi_c"
+                    style="@style/TextViewSmallRed" />
+                <TextView android:id="@+id/forecast_hi_f"
+                    style="@style/TextViewSmallRed" />
+            </LinearLayout>
+            <LinearLayout android:id="@+id/temperature_lo" android:orientation="vertical"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+                <TextView android:id="@+id/forecast_lo_c"
+                    style="@style/TextViewSmallGreen" />
+                <TextView android:id="@+id/forecast_lo_f"
+                    style="@style/TextViewSmallGreen" />
+            </LinearLayout>
         </LinearLayout>
-        <LinearLayout android:id="@+id/forecast" android:orientation="vertical"
-            style="@style/GridLinearLayout">
-            <TextView android:id="@+id/forecast_hi_c"
-                style="@style/TextViewSmallRed" />
-            <TextView android:id="@+id/forecast_hi_f"
-                style="@style/TextViewSmallRed" />
-            <TextView android:id="@+id/forecast_lo_c"
-                style="@style/TextViewSmallGreen" />
-            <TextView android:id="@+id/forecast_lo_f"
-                style="@style/TextViewSmallGreen" />
-        </LinearLayout>
-        <LinearLayout android:id="@+id/wind" android:orientation="vertical"
-            style="@style/GridLinearLayout">
-            <ImageButton android:id="@+id/wind_img"
-                style="@style/ButtonImage"
-                android:src="@drawable/wind" />
-            <TextView android:id="@+id/wind_speed_km"
-                style="@style/TextViewSmall" />
-            <TextView android:id="@+id/wind_speed_m"
-                style="@style/TextViewSmall" />
-        </LinearLayout>
-        <LinearLayout android:id="@+id/weather" android:orientation="vertical"
-            style="@style/GridLinearLayout">
-            <ImageButton android:id="@+id/weather_img"
-                style="@style/ButtonImageBig"
-                android:src="@drawable/weather_rain" />
-            <TextView android:id="@+id/weather_dtl"
-                style="@style/TextViewSmall" />
-        </LinearLayout>
+    </LinearLayout>
+    <LinearLayout android:id="@+id/wind" android:orientation="vertical"
+        style="@style/GridLinearLayout">
+        <ImageButton android:id="@+id/wind_img"
+            style="@style/ButtonImage"
+            android:src="@drawable/wind" />
+        <TextView android:id="@+id/wind_speed_km"
+            style="@style/TextViewSmall" />
+        <TextView android:id="@+id/wind_speed_m"
+            style="@style/TextViewSmall" />
+    </LinearLayout>
+    <LinearLayout android:id="@+id/weather" android:orientation="vertical"
+        style="@style/GridLinearLayout">
+        <ImageButton android:id="@+id/weather_img"
+            style="@style/ButtonImageBig"
+            android:src="@drawable/weather_rain" />
+        <TextView android:id="@+id/weather_dtl"
+            style="@style/TextViewSmall" />
+    </LinearLayout>
     <LinearLayout android:id="@+id/sun" android:orientation="vertical"
         style="@style/GridLinearLayout">
         <ImageButton android:id="@+id/sun_img"
@@ -387,9 +453,5 @@
             style="@style/TextViewSmall" />
         <TextView android:id="@+id/sun_set"
             style="@style/TextViewSmall" />
-        <TextView android:id="@+id/city"
-            style="@style/TextViewSmall" />
     </LinearLayout>
-
-    </android.support.v7.widget.GridLayout>
-<!--/ScrollView-->
+</android.support.v7.widget.GridLayout>
