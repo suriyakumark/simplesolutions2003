@@ -29,12 +29,14 @@ public class PedometerService extends Service implements SensorEventListener{
 
     public PedometerService(Context context) {
         this.context = context;
-        sensorManager = (SensorManager) context.getSystemService(Context.SENSOR_SERVICE);
+        Log.v(LOG_TAG,"context - " + context);
     }
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
+        Log.v(LOG_TAG,"context - " + context);
         super.onStartCommand(intent, flags, startId);
+        sensorManager = (SensorManager) this.getSystemService(Context.SENSOR_SERVICE);
         Sensor countSensor = null;
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             countSensor = sensorManager.getDefaultSensor(Sensor.TYPE_STEP_COUNTER);
@@ -58,14 +60,15 @@ public class PedometerService extends Service implements SensorEventListener{
 
     @Override
     public void onSensorChanged(SensorEvent event) {
+        Log.v(LOG_TAG,"context - " + context);
         switch(event.sensor.getType()){
             case Sensor.TYPE_STEP_COUNTER:
-                SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(context).edit();
+                SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(this).edit();
                 editor.putFloat("step_count", event.values[0]);
                 editor.commit();
                 Log.v(LOG_TAG,"Send Broadcast for step changes");
                 Intent i = new Intent(ACTION_DATA_UPDATED_PEDOMETER);
-                context.sendBroadcast(i);
+                this.sendBroadcast(i);
                 break;
             default:
                 break;

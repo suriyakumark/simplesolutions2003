@@ -14,14 +14,15 @@
         <ListPreference android:title="Weather Sync Interval"
             android:summary="Select the Sync Interval"
             android:key="weather_sync_interval"
-            android:defaultValue="5"
+            android:defaultValue="10"
             android:entries="@array/syncArray"
             android:entryValues="@array/syncValues" />
     </PreferenceCategory>
     <PreferenceCategory
         android:summary="Other Settings"
         android:title="Other Settings" >
-        <Preference android:title="Share " android:key="share"/>
+        <Preference android:title="Share Location" android:key="share_loc"/>
+        <Preference android:title="Share App" android:key="share_app"/>
         <Preference android:title="Rate App" android:key="rate_us"/>
     </PreferenceCategory>
 </PreferenceScreen>

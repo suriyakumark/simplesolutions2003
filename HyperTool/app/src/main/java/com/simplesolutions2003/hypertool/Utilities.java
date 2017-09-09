@@ -41,6 +41,7 @@ import android.view.View;
 import android.widget.Toast;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -314,7 +315,8 @@ public class Utilities  {
 
     }
     public static void getStorageInternalInfo(){
-        StatFs statFs = new StatFs(Environment.getRootDirectory().getAbsolutePath());
+        //StatFs statFs = new StatFs(Environment.getRootDirectory().getAbsolutePath());
+        StatFs statFs = new StatFs(Environment.getExternalStorageDirectory().getPath());
         long Total = ((long) statFs.getBlockCountLong() * (long) statFs.getBlockSizeLong());
         long Free =  ((long) statFs.getAvailableBlocksLong() * (long) statFs.getBlockSizeLong());
         long Used = Total - Free;
@@ -325,14 +327,23 @@ public class Utilities  {
     }
 
     public static void getStorageExternalInfo(){
-        StatFs statFs = new StatFs(Environment.getExternalStorageDirectory().getPath());
-        long Total = ((long) statFs.getBlockCountLong() * (long) statFs.getBlockSizeLong());
-        long Free =  ((long) statFs.getAvailableBlocksLong() * (long) statFs.getBlockSizeLong());
-        long Used = Total - Free;
-        sStorageExternalTotal = bytesFormat(Total);
-        sStorageExternalUsed = bytesFormat(Used);
-        sStorageExternalFree = bytesFormat(Free);
-        sStorageExternalPercentage = oneDigitIntForm(100 * Used / Total) +"%";
+        //StatFs statFs = new StatFs(Environment.getExternalStorageDirectory().getPath());
+        Map<String, File> externalLocations = ExternalStorage.getAllStorageLocations();
+        Log.v(LOG_TAG,"externalLocations - " + externalLocations.toString());
+        File externalSdCard = externalLocations.get(ExternalStorage.EXTERNAL_SD_CARD);
+        if(externalSdCard != null) {
+            StatFs statFs = new StatFs(externalSdCard.getPath());
+            long Total = ((long) statFs.getBlockCountLong() * (long) statFs.getBlockSizeLong());
+            long Free = ((long) statFs.getAvailableBlocksLong() * (long) statFs.getBlockSizeLong());
+            long Used = Total - Free;
+            sStorageExternalTotal = bytesFormat(Total);
+            sStorageExternalUsed = bytesFormat(Used);
+            sStorageExternalFree = bytesFormat(Free);
+            sStorageExternalPercentage = oneDigitIntForm(100 * Used / Total) + "%";
+        }else{
+            sStorageExternalTotal = "NA";
+        }
+
     }
 
     public static void getRamInfo(){
@@ -512,7 +523,6 @@ public class Utilities  {
         ((Activity) context).startActivityForResult(intent,0);
     }
 
-
     public static void soundOnOff(){
         Intent intent = new Intent(Settings.ACTION_SOUND_SETTINGS);
         ((Activity) context).startActivityForResult(intent,0);
@@ -592,9 +602,12 @@ public class Utilities  {
         try {
             if (context.getPackageManager().hasSystemFeature(
                     PackageManager.FEATURE_CAMERA_FLASH)) {
+
                 cam = Camera.open();
                 Camera.Parameters p = cam.getParameters();
+                Log.v(LOG_TAG,"getParameters " + p.toString());
                 List<String> supportedFlashModes = p.getSupportedFlashModes();
+                Log.v(LOG_TAG,"getSupportedFlashModes " + supportedFlashModes.toString());
                 if(supportedFlashModes.contains(Camera.Parameters.FLASH_MODE_TORCH)) {
                     p.setFlashMode(Camera.Parameters.FLASH_MODE_TORCH);
                 }else if(supportedFlashModes.contains(Camera.Parameters.FLASH_MODE_ON)) {
@@ -730,6 +743,7 @@ public class Utilities  {
         Date date = new Date(unixTime*1000L); // *1000 is to convert seconds to milliseconds
         return timeFormat.format(date);
     }
+
 
 }
 

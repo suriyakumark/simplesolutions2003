@@ -10,6 +10,9 @@ import android.os.Build;
 import android.preference.PreferenceManager;
 import android.util.Log;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 import static android.app.Service.START_STICKY;
 
 /**
@@ -23,15 +26,24 @@ public class DateReceiver  extends BroadcastReceiver {
     public void onReceive(Context context, Intent intent) {
 
         Log.v(LOG_TAG,"Send Broadcast for date changes");
-        Intent i = new Intent(ACTION_DATA_UPDATED_DATE);
-        context.sendBroadcast(i);
 
-        Float step_count = 0F;
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
-        step_count = prefs.getFloat("step_count", 0F);
+        String previous_date = prefs.getString("previous_date", "");
+        Float step_count = prefs.getFloat("step_count", 0F);
 
+        String current_date = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
         SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(context).edit();
-        editor.putFloat("initial_step_count", step_count);
+        editor.putString("current_date", current_date);
+
+        if(previous_date.isEmpty()){
+            editor.putString("previous_date", current_date);
+        }else if(!current_date.equals(previous_date)){
+            editor.putString("previous_date", current_date);
+            Intent i = new Intent(ACTION_DATA_UPDATED_DATE);
+            context.sendBroadcast(i);
+            editor.putFloat("initial_step_count", step_count);
+        }
+
         editor.commit();
     }
 

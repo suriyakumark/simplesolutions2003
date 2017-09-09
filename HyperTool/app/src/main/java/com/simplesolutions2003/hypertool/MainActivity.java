@@ -1,13 +1,16 @@
 package com.simplesolutions2003.hypertool;
 
+import android.Manifest;
 import android.annotation.TargetApi;
 import android.app.ActivityManager;
+import android.app.Dialog;
 import android.content.BroadcastReceiver;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.database.ContentObserver;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -21,26 +24,35 @@ import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.media.AudioManager;
 import android.media.Image;
 import android.os.Build;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.SystemClock;
 import android.preference.PreferenceManager;
+import android.provider.Settings;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.telephony.PhoneStateListener;
 import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.view.GestureDetector;
+import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.SeekBar;
 import android.widget.TextView;
 import android.view.animation.Animation;
 import android.view.animation.RotateAnimation;
+import android.widget.Toast;
 
 import com.simplesolutions2003.hypertool.sync.WeatherSyncAdapter;
 
@@ -55,7 +67,7 @@ import java.util.TimerTask;
 public class MainActivity extends AppCompatActivity implements SensorEventListener, GestureDetector.OnGestureListener {
     private static final String LOG_TAG = MainActivity.class.getSimpleName();
     private static final String DEGREE  = "\u00b0";
-    private final int SENSOR_DELAY = 4000000;
+    private final int SENSOR_DELAY = 2000000;
     private static Context context;
     private SensorManager sensorManager;
     private GestureDetector myGesture;
@@ -230,11 +242,12 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                     break;
                 case MyLocationListener.ACTION_DATA_UPDATED_GPS:
                     updateGpsInfo();
+                    setupLocation();
+                    getLocation();
                     break;
                 default:
                     break;
             }
-
         }
     };
 
@@ -244,8 +257,10 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         setContentView(R.layout.activity_main);
 
         context = this;
+        checkPermission();
         myGesture = new GestureDetector(getBaseContext(),
                 (GestureDetector.OnGestureListener) this);
+
 
         PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
 
@@ -338,6 +353,8 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         Log.v(LOG_TAG, "initializeSyncAdapter");
         WeatherSyncAdapter.initializeSyncAdapter(this);
 
+        Toast.makeText(this, "Long press to change preferences",
+                Toast.LENGTH_LONG).show();
     }
 
     public void onResume(){
@@ -359,6 +376,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
         setupAll();
         updateAll();
+
     }
 
     @Override
@@ -380,6 +398,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         setupVolumeBluetoothInfo();
         setupCarrierInfo();
         setupGps();
+        setupLocation();
         setupAirplane();
         setupSound();
         setupDisplay();
@@ -437,6 +456,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         bPedometerSwitch = false;
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             if (sensorManager.getDefaultSensor(Sensor.TYPE_STEP_COUNTER) != null) {
+                updatePedometerInfo();
                 bPedometerSwitch = true;
                 mPedometerService = new PedometerService(context);
                 if (!isMyServiceRunning(mPedometerService.getClass())) {
@@ -495,7 +515,71 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         ibSoundSwitch.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
-                Utilities.soundOnOff();
+                final Dialog volumeDialog = new Dialog(context);
+                LayoutInflater inflater = (LayoutInflater) context.getSystemService(LAYOUT_INFLATER_SERVICE);
+                View layout = inflater.inflate(R.layout.volume, (ViewGroup) findViewById(R.id.volume_layout));
+                volumeDialog.setContentView(layout);
+                volumeDialog.setTitle("Adjust volume");
+                SeekBar musicSeekBar = (SeekBar) layout.findViewById(R.id.volume_music);
+                SeekBar ringSeekBar = (SeekBar) layout.findViewById(R.id.volume_ring);
+                SeekBar callSeekBar = (SeekBar) layout.findViewById(R.id.volume_call);
+                SeekBar systemSeekBar = (SeekBar) layout.findViewById(R.id.volume_system);
+                SeekBar alarmSeekBar = (SeekBar) layout.findViewById(R.id.volume_alarm);
+
+                final AudioManager audioManager = (AudioManager)getSystemService(Context.AUDIO_SERVICE);
+                musicSeekBar.setMax(audioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC));
+                ringSeekBar.setMax(audioManager.getStreamMaxVolume(AudioManager.STREAM_RING));
+                callSeekBar.setMax(audioManager.getStreamMaxVolume(AudioManager.STREAM_VOICE_CALL));
+                systemSeekBar.setMax(audioManager.getStreamMaxVolume(AudioManager.STREAM_SYSTEM));
+                alarmSeekBar.setMax(audioManager.getStreamMaxVolume(AudioManager.STREAM_ALARM));
+
+                musicSeekBar.setProgress(audioManager.getStreamVolume(AudioManager.STREAM_MUSIC));
+                ringSeekBar.setProgress(audioManager.getStreamVolume(AudioManager.STREAM_RING));
+                callSeekBar.setProgress(audioManager.getStreamVolume(AudioManager.STREAM_VOICE_CALL));
+                systemSeekBar.setProgress(audioManager.getStreamVolume(AudioManager.STREAM_SYSTEM));
+                alarmSeekBar.setProgress(audioManager.getStreamVolume(AudioManager.STREAM_ALARM));
+
+                SeekBar.OnSeekBarChangeListener volumeSeekBarListener = new SeekBar.OnSeekBarChangeListener() {
+                    @Override
+                    public void onStopTrackingTouch(SeekBar seekBar) {
+
+                    }
+
+                    @Override
+                    public void onStartTrackingTouch(SeekBar seekBar) {
+                        //add code here
+                    }
+
+                    @Override
+                    public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                        switch (seekBar.getId()) {
+                            case R.id.volume_music:
+                                audioManager.setStreamVolume(AudioManager.STREAM_MUSIC, progress, 0);
+                                break;
+                            case R.id.volume_ring:
+                                audioManager.setStreamVolume(AudioManager.STREAM_RING, progress, 0);
+                                break;
+                            case R.id.volume_call:
+                                audioManager.setStreamVolume(AudioManager.STREAM_VOICE_CALL, progress, 0);
+                                break;
+                            case R.id.volume_system:
+                                audioManager.setStreamVolume(AudioManager.STREAM_SYSTEM, progress, 0);
+                                break;
+                            case R.id.volume_alarm:
+                                audioManager.setStreamVolume(AudioManager.STREAM_ALARM, progress, 0);
+                                break;
+                            default:
+                                break;
+                        }
+                    }
+                };
+                musicSeekBar.setOnSeekBarChangeListener(volumeSeekBarListener);
+                ringSeekBar.setOnSeekBarChangeListener(volumeSeekBarListener);
+                callSeekBar.setOnSeekBarChangeListener(volumeSeekBarListener);
+                systemSeekBar.setOnSeekBarChangeListener(volumeSeekBarListener);
+                alarmSeekBar.setOnSeekBarChangeListener(volumeSeekBarListener);
+                volumeDialog.show();
+
             }
         });
     }
@@ -504,7 +588,39 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         ibDisplaySwitch.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
-                Utilities.displayOnOff();
+
+                final Dialog brightnessDialog = new Dialog(context);
+                LayoutInflater inflater = (LayoutInflater) context.getSystemService(LAYOUT_INFLATER_SERVICE);
+                View layout = inflater.inflate(R.layout.brightness, (ViewGroup) findViewById(R.id.brightness_layout));
+                brightnessDialog.setContentView(layout);
+                brightnessDialog.setTitle("Adjust screen brightness");
+                SeekBar brightnessSeekBar = (SeekBar) layout.findViewById(R.id.brightness_seekbar);
+                brightnessSeekBar.setMax(255);
+                try {
+                    brightnessSeekBar.setProgress(Settings.System.getInt(getContentResolver(),
+                            Settings.System.SCREEN_BRIGHTNESS));
+                    Log.v(LOG_TAG,"brightnessSeekBar - " + brightnessSeekBar.getProgress());
+                }catch (Settings.SettingNotFoundException e) {
+                    e.printStackTrace();
+                }
+                SeekBar.OnSeekBarChangeListener brightnessSeekBarListener = new SeekBar.OnSeekBarChangeListener() {
+                    @Override
+                    public void onStopTrackingTouch(SeekBar seekBar) {
+                        brightnessDialog.dismiss();
+                    }
+
+                    @Override
+                    public void onStartTrackingTouch(SeekBar seekBar) {
+                        //add code here
+                    }
+
+                    @Override
+                    public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                        Settings.System.putInt(getContentResolver(), Settings.System.SCREEN_BRIGHTNESS, progress);
+                    }
+                };
+                brightnessSeekBar.setOnSeekBarChangeListener(brightnessSeekBarListener);
+                brightnessDialog.show();
             }
         });
     }
@@ -526,7 +642,9 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                 updateGpsInfo();
             }
         });
+    }
 
+    public void setupLocation(){
         locationManager = (LocationManager)
                 getSystemService(Context.LOCATION_SERVICE);
 
@@ -535,21 +653,31 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
             try {
                 locationManager.requestLocationUpdates(
                         LocationManager.GPS_PROVIDER, 5000, 0, locationListener);
-                Location loc = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-                if(loc != null) {
-                    String longitude = Double.toString(loc.getLongitude());
-                    String latitude = Double.toString(loc.getLatitude());
 
-                    SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(context).edit();
-                    editor.putString("longitude", longitude);
-                    editor.putString("latitude", latitude);
-                    editor.commit();
-                }
             } catch (SecurityException e) {
                 e.getStackTrace();
             }
         }
     }
+
+    public void getLocation(){
+        Log.v(LOG_TAG,"getLocation");
+        try {
+            Location loc = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+            if(loc != null) {
+                String longitude = Double.toString(loc.getLongitude());
+                String latitude = Double.toString(loc.getLatitude());
+
+                SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(context).edit();
+                editor.putString("longitude", longitude);
+                editor.putString("latitude", latitude);
+                editor.commit();
+            }
+        } catch (SecurityException e) {
+
+        }
+    }
+
 
     public void setupWifi(){
         ibWifiSwitch.setOnClickListener(new View.OnClickListener(){
@@ -872,7 +1000,6 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
             ivCompass.startAnimation(ra);
             mCurrentDegree = -azimuthInDegrees;
         }
-
     }
 
     public void updatePedometerInfo(){
@@ -881,10 +1008,10 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
         initial_step_count = prefs.getFloat("initial_step_count", 0F);
         step_count = prefs.getFloat("step_count", 0F);
-        if (initial_step_count < step_count){
+        if (initial_step_count > step_count){
             step_count = step_count - initial_step_count;
         }
-        tvPedometerCount.setText(Float.toString(step_count));
+        tvPedometerCount.setText(Utilities.oneDigitIntForm(step_count));
     }
 
     @Override
@@ -1154,6 +1281,44 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         }
         return output;
     }
+
+    @TargetApi(23)
+    private void checkPermission() {
+
+        if ( Build.VERSION.SDK_INT >= 23){
+            int PERMISSION_ALL = 1;
+            String[] PERMISSIONS = {Manifest.permission.ACCESS_NETWORK_STATE,
+                    Manifest.permission.READ_PHONE_STATE,
+                    Manifest.permission.ACCESS_COARSE_LOCATION,
+                    Manifest.permission.ACCESS_FINE_LOCATION,
+                    Manifest.permission.WRITE_SETTINGS,
+                    Manifest.permission.BLUETOOTH,
+                    Manifest.permission.BLUETOOTH_ADMIN,
+                    Manifest.permission.CAMERA,
+                    Manifest.permission.READ_CALENDAR,
+                    Manifest.permission.INTERNET,
+                    Manifest.permission.ACCESS_WIFI_STATE,
+                    Manifest.permission.CHANGE_WIFI_STATE,
+                    Manifest.permission.READ_SYNC_SETTINGS,
+                    Manifest.permission.WRITE_SYNC_SETTINGS};
+
+            if(!hasPermissions(this, PERMISSIONS)){
+                ActivityCompat.requestPermissions(this, PERMISSIONS, PERMISSION_ALL);
+            }
+        }
+    }
+
+    public static boolean hasPermissions(Context context, String... permissions) {
+        if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && context != null && permissions != null) {
+            for (String permission : permissions) {
+                if (ActivityCompat.checkSelfPermission(context, permission) != PackageManager.PERMISSION_GRANTED) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
 
 }
 

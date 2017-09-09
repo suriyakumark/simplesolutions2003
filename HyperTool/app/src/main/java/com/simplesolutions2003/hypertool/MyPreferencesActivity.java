@@ -4,7 +4,9 @@ package com.simplesolutions2003.hypertool;
  * Created by simpl on 8/31/2017.
  */
 
+import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Bundle;
 import android.preference.EditTextPreference;
 import android.preference.ListPreference;
@@ -85,6 +87,50 @@ public class MyPreferencesActivity extends PreferenceActivity implements
         }
 
         initSummary(getPreferenceScreen());
+
+        Preference prefShareLoc = (Preference) findPreference("share_loc");
+        prefShareLoc.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+            public boolean onPreferenceClick(Preference preference) {
+                SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(MyPreferencesActivity.this);
+                String sLongitude = prefs.getString("longitude", "");
+                String sLatitude = prefs.getString("latitude", "");
+                String lf = System.getProperty("line.separator");
+                if(!sLongitude.isEmpty() && !sLongitude.isEmpty()) {
+                    Intent sendIntent = new Intent();
+                    sendIntent.setAction(Intent.ACTION_SEND);
+                    sendIntent.putExtra(Intent.EXTRA_TEXT,
+                            "My location : " + lf + "Longitude : " + sLongitude + lf + "Latitude : " + sLatitude);
+                    sendIntent.setType("text/plain");
+                    startActivity(sendIntent);
+                }
+                return false;
+            }
+        });
+
+        Preference prefShareApp = (Preference) findPreference("share_app");
+        prefShareApp.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+            public boolean onPreferenceClick(Preference preference) {
+                Intent sendIntent = new Intent();
+                sendIntent.setAction(Intent.ACTION_SEND);
+                sendIntent.putExtra(Intent.EXTRA_TEXT,
+                        "Hey check out this cool app at: https://play.google.com/store/apps/details?id=" + getPackageName());
+                sendIntent.setType("text/plain");
+                startActivity(sendIntent);
+                return false;
+            }
+        });
+
+        Preference prefRate = (Preference) findPreference("rate_us");
+        prefRate.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+            public boolean onPreferenceClick(Preference preference) {
+                try {
+                    startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + getPackageName())));
+                } catch (android.content.ActivityNotFoundException anfe) {
+                    startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=" + getPackageName())));
+                }
+                return false;
+            }
+        });
 
     }
 

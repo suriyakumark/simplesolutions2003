@@ -19,5 +19,5 @@
     android:accountType="@string/sync_account_type"
     android:userVisible="true"
     android:supportsUploading="false"
-    android:allowParallelSyncs="true"
+    android:allowParallelSyncs="false"
     android:isAlwaysSyncable="true" />
