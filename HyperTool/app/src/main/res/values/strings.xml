@@ -4,6 +4,110 @@
     <!-- SyncAdapter related -->
     <string name="sync_account_type">hypertool.simplesolutions2003.com</string>
     <string name="content_authority">com.simplesolutions2003.hypertool</string>
-    <string name="coordinates">Coordinates</string>
+    <string name="appId">24b37b69d5d87b8c92a65e23bc145ccc</string>
+
+    <!-- Main screen -->
+    <string name="label_longitude">Longitude:\u0020</string>
+    <string name="label_latitude">Latitude:\u0020</string>
+    <string name="label_coordinates">Coordinates</string>
+    <string name="label_quadrant">Quadrant:\u0020</string>
+    <string name="label_azimuth">Azimuth:\u0020</string>
+    <string name="stopwatch_default">00:00:000</string>
+    <string name="operator_unknown">Operator unknown</string>
+    <string name="label_sdk">SDK\u0020</string>
+    <string name="label_week">W:</string>
+    <string name="label_day">D:</string>
+    <string name="label_month">M:</string>
+
+    <!-- Months -->
+    <string name="month_january">January</string>
+    <string name="month_february">February</string>
+    <string name="month_march">March</string>
+    <string name="month_april">April</string>
+    <string name="month_may">May</string>
+    <string name="month_june">June</string>
+    <string name="month_july">July</string>
+    <string name="month_august">August</string>
+    <string name="month_september">September</string>
+    <string name="month_october">October</string>
+    <string name="month_november">November</string>
+    <string name="month_december">December</string>
+
+    <!-- Week days -->
+    <string name="weekday_monday">Monday</string>
+    <string name="weekday_tuesday">Tuesday</string>
+    <string name="weekday_wednesday">Wednesday</string>
+    <string name="weekday_thursday">Thursday</string>
+    <string name="weekday_friday">Friday</string>
+    <string name="weekday_saturday">Saturday</string>
+    <string name="weekday_sunday">Sunday</string>
+
+    <!-- Preferences screen -->
+    <string name="pref_country">Country</string>
+    <string name="pref_zip">Zip</string>
+    <string name="pref_sync_interval">Sync Interval</string>
+    <string name="Pref_Share_app">Share App</string>
+    <string name="pref_share_loc">Share your Location</string>
+    <string name="pref_rate_app">Rate Me</string>
+    <string name="dialog_volume">Adjust Volume</string>
+    <string name="dialog_volume_music">Music</string>
+    <string name="dialog_volume_ring">Ring</string>
+    <string name="dialog_volume_call">Call</string>
+    <string name="dialog_volume_system">System</string>
+    <string name="dialog_volume_alarm">Alarm</string>
+    <string name="dialog_brightness">Adjust Brightness</string>
+
+    <!-- Misc -->
+    <string name="not_applicable">NA</string>
+    <string name="not_available">NA</string>
+
+    <!-- Units -->
+    <string name="unit_celcius">°C</string>
+    <string name="unit_fahrenheit">°F</string>
+    <string name="unit_milliAmps">mAh</string>
+    <string name="unit_kmph">Kmph</string>
+    <string name="unit_mph">mph</string>
+    <string name="unit_volts">V</string>
+    <string name="unit_mhz">Mhz</string>
+    <string name="unit_percentage">%</string>
+    <string name="unit_dbm">dBm</string>
+    <string name="unit_north">° N</string>
+    <string name="unit_northeast">° NE</string>
+    <string name="unit_east">° E</string>
+    <string name="unit_southeast">° SE</string>
+    <string name="unit_south">° S</string>
+    <string name="unit_southwest">° SW</string>
+    <string name="unit_west">° W</string>
+    <string name="unit_northwest">° NW</string>
+
+    <!-- Messages -->
+    <string name="msg_pref_press">Long press to change preferences</string>
+    <string name="msg_share_app">Hey check out this cool app at: </string>
+
+
+    <!-- Preferences Keys -->
+    <string name="pref_key_country">country</string>
+    <string name="pref_key_zip">zip</string>
+    <string name="pref_key_sync_interval">"weather_sync_interval"</string>
+    <string name="pref_key_longitude">longitude</string>
+    <string name="pref_key_latitude">latitude</string>
+    <string name="pref_key_weatherCity">weatherCity</string>
+    <string name="pref_key_weatherForecast">weatherMain</string>
+    <string name="pref_key_weatherIcon">weatherIcon</string>
+    <string name="pref_key_weatherTemp">weatherTemp</string>
+    <string name="pref_key_weatherTempMax">weatherTempMax</string>
+    <string name="pref_key_weatherTempMin">weatherTempMin</string>
+    <string name="pref_key_weatherWindSpeed">weatherWindSpeed</string>
+    <string name="pref_key_weatherWindDir">weatherWindDir</string>
+    <string name="pref_key_weatherSunrise">weatherSunrise</string>
+    <string name="pref_key_weatherSunset">weatherSunset</string>
+    <string name="pref_key_initial_step_count">initial_step_count</string>
+    <string name="pref_key_step_count">step_count</string>
+    <string name="pref_key_previous_date">previous_date</string>
+    <string name="pref_key_current_date">current_date</string>
+    <string name="pref_key_data_cycle">date_cycle</string>
+    <string name="pref_key_data">data</string>
+    <string name="pref_key_wifi">wifi</string>
+
 
 </resources>

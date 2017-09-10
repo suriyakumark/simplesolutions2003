@@ -22,20 +22,18 @@ public class PedometerService extends Service implements SensorEventListener{
     public static final String ACTION_DATA_UPDATED_PEDOMETER = "com.simplesolutions2003.hypertool.ACTION_DATA_UPDATED_PEDOMETER";
     private Context context;
     private SensorManager sensorManager;
-    //private final int SENSOR_DELAY = 2000000;
 
     public PedometerService() {
     }
 
     public PedometerService(Context context) {
         this.context = context;
-        Log.v(LOG_TAG,"context - " + context);
     }
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        Log.v(LOG_TAG,"context - " + context);
         super.onStartCommand(intent, flags, startId);
+
         sensorManager = (SensorManager) this.getSystemService(Context.SENSOR_SERVICE);
         Sensor countSensor = null;
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
@@ -63,9 +61,17 @@ public class PedometerService extends Service implements SensorEventListener{
         Log.v(LOG_TAG,"context - " + context);
         switch(event.sensor.getType()){
             case Sensor.TYPE_STEP_COUNTER:
+
+                SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+                Float initial_step_count = prefs.getFloat(context.getString(R.string.pref_key_initial_step_count), 0F);
+
                 SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(this).edit();
-                editor.putFloat("step_count", event.values[0]);
+                editor.putFloat(context.getString(R.string.pref_key_step_count), event.values[0]);
+                if(initial_step_count > event.values[0]){
+                    editor.putFloat(context.getString(R.string.pref_key_initial_step_count), 0F);
+                }
                 editor.commit();
+
                 Log.v(LOG_TAG,"Send Broadcast for step changes");
                 Intent i = new Intent(ACTION_DATA_UPDATED_PEDOMETER);
                 this.sendBroadcast(i);

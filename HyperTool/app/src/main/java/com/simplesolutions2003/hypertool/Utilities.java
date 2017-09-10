@@ -36,6 +36,7 @@ import android.telephony.CellSignalStrengthCdma;
 import android.telephony.CellSignalStrengthGsm;
 import android.telephony.CellSignalStrengthLte;
 import android.telephony.TelephonyManager;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
@@ -50,10 +51,14 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import static android.content.Context.BATTERY_SERVICE;
 import static android.content.Context.MODE_PRIVATE;
@@ -64,8 +69,10 @@ import static android.content.Context.MODE_PRIVATE;
 public class Utilities  {
 
     private final static String LOG_TAG = Utilities.class.getSimpleName();
-    private final static String ENTER_CHAR ="\000A";
+
     public static Context context;
+    public static final String LINE_FEED = System.getProperty("line.separator");
+
     public static String sDeviceBrand;
     public static String sDeviceModel;
     public static String sDeviceOS;
@@ -105,34 +112,15 @@ public class Utilities  {
     public static String sDateWeekOfYear;
     public static String sDateMonthOfYear;
     public static String sDateDayOfYear;
-    public static String sSunRiseTime;
-    public static String sSunSetTime;
-    public static String sCompassDirection;
     public static String sDataUsage;
     public static boolean bDataSwitch;
     public static String sWifiUsage;
     public static boolean bWifiSwitch;
     public static String sTimeHHMMSS;
     public static String sTimeAMPM;
-    public static String sMoonPhase;
-    public static String sMoonRiseTime;
-    public static String sMoonSetTime;
-    public static String sPedometerCount;
-    public static boolean bPedometerSwitch;
     public static boolean bAirplaneSwitch;
     public static boolean bGpsSwitch;
-    public static String sWeatherTempNowC;
-    public static String sWeatherTempNowF;
-    public static String sWeatherTempHiC;
-    public static String sWeatherTempHiF;
-    public static String sWeatherTempLoC;
-    public static String sWeatherTempLoF;
-    public static String sWeatherWindKmph;
-    public static String sWeatherWindMph;
-    public static String sWeatherForecast;
-    public static String sWeatherCity;
-    public static String sWeatherWindDir;
-    public static String sWeatherIcon;
+
 
     public static boolean bBluetoothSwitch;
     public static boolean bTorchSwitch;
@@ -144,6 +132,7 @@ public class Utilities  {
     }
 
     public static void getDeviceInfo(){
+        Log.v(LOG_TAG,"getDeviceInfo");
         sDeviceBrand = Build.BRAND;
         sDeviceModel = Build.MODEL;
         StringBuilder builder = new StringBuilder();
@@ -164,12 +153,12 @@ public class Utilities  {
             }
 
             if (fieldValue == Build.VERSION.SDK_INT) {
-                builder.append(fieldName).append(" ").append(Build.VERSION.RELEASE).append(" sdk ").append(fieldValue);
+                builder.append(fieldName).append(" ").append(Build.VERSION.RELEASE).append(LINE_FEED)
+                        .append(context.getString(R.string.label_sdk)).append(fieldValue);
             }
         }
         sDeviceOS = builder.toString();
     }
-
 
     public static void getCarrierInfo(){
         Log.v(LOG_TAG,"getCarrierInfo");
@@ -178,7 +167,7 @@ public class Utilities  {
         TelephonyManager telephonyManager = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
         sCarrierName = telephonyManager.getNetworkOperatorName();
         if(sCarrierName.isEmpty() || sCarrierName == null){
-            sCarrierName = "Operator unknown";
+            sCarrierName = context.getString(R.string.operator_unknown);
         }
 
         try {
@@ -198,11 +187,11 @@ public class Utilities  {
                 }
             }
         } catch (Exception e) {
-            Log.v(LOG_TAG, "unknown error :" + e.getMessage());
+            e.printStackTrace();
         }
-        Log.v(LOG_TAG, "dbm :" + dbm + " level :" + iCarrierLevel);
+        //Log.v(LOG_TAG, "dbm :" + dbm + " level :" + iCarrierLevel);
         if(dbm < 0 ) {
-            sCarrierStrength = Integer.toString(dbm) + " dBm";
+            sCarrierStrength = Integer.toString(dbm) + context.getString(R.string.unit_dbm);
         }else{
             sCarrierStrength = "";
             iCarrierLevel = 0;
@@ -210,17 +199,19 @@ public class Utilities  {
     }
 
     public static void getCpuInfo(){
+        Log.v(LOG_TAG,"getCpuInfo");
         getCpuType();
         getCpuSpeed();
         getCpuPercentage();
     }
 
     public static void getCpuType(){
+        Log.v(LOG_TAG,"getCpuType");
         Process proc;
         try {
             proc = Runtime.getRuntime().exec("cat /proc/cpuinfo");
             try{
-                String aLine = new String("");
+                String aLine = "";
                 InputStream in = proc.getInputStream();
                 BufferedReader br = new BufferedReader(new InputStreamReader(in));
                 String strArray[] = new String[2];
@@ -254,9 +245,9 @@ public class Utilities  {
     }
 
     public static void getCpuSpeed(){
+        Log.v(LOG_TAG,"getCpuSpeed");
         Process proc;
-        String result = new String("");
-        DecimalFormat df = new DecimalFormat("0.00");
+        String result = "";
         try {
             proc = Runtime.getRuntime().exec("cat /sys/devices/system/cpu/cpu0/cpufreq/scaling_cur_freq");
             try{
@@ -268,8 +259,7 @@ public class Utilities  {
                 in.close();
                 try {
                     int cpuSpeedHz = Integer.parseInt(result.trim());
-                    float cpuSpeedMhz = (float) cpuSpeedHz/1000000.0f;
-                    sCpuSpeed = df.format(cpuSpeedMhz)+" Mhz";
+                    sCpuSpeed = Formats.onePointTwoDoubleForm(UnitConversions.convertHzToMhz(cpuSpeedHz))+ context.getString(R.string.unit_mhz);
                 }catch (NumberFormatException e){
                     Log.v(LOG_TAG, e.getMessage());
                 }
@@ -284,6 +274,7 @@ public class Utilities  {
     }
 
     public static void getCpuPercentage() {
+        Log.v(LOG_TAG,"getCpuPercentage");
         try {
             RandomAccessFile reader = new RandomAccessFile("/proc/stat", "r");
             String load = reader.readLine();
@@ -307,7 +298,7 @@ public class Utilities  {
             long cpu2 = Long.parseLong(toks[2]) + Long.parseLong(toks[3]) + Long.parseLong(toks[4])
                     + Long.parseLong(toks[6]) + Long.parseLong(toks[7]) + Long.parseLong(toks[8]);
 
-            sCpuPercentage = oneDigitIntForm((float) 100.0 * (cpu2 - cpu1) / ((cpu2 + idle2) - (cpu1 + idle1))) +"%";
+            sCpuPercentage = Formats.oneDigitIntForm((float) 100.0 * (cpu2 - cpu1) / ((cpu2 + idle2) - (cpu1 + idle1))) + context.getString(R.string.unit_percentage);
 
         } catch (IOException ex) {
             ex.printStackTrace();
@@ -315,53 +306,61 @@ public class Utilities  {
 
     }
     public static void getStorageInternalInfo(){
+        Log.v(LOG_TAG,"getStorageInternalInfo");
         //StatFs statFs = new StatFs(Environment.getRootDirectory().getAbsolutePath());
         StatFs statFs = new StatFs(Environment.getExternalStorageDirectory().getPath());
         long Total = ((long) statFs.getBlockCountLong() * (long) statFs.getBlockSizeLong());
         long Free =  ((long) statFs.getAvailableBlocksLong() * (long) statFs.getBlockSizeLong());
         long Used = Total - Free;
-        sStorageInternalTotal = bytesFormat(Total);
-        sStorageInternalUsed = bytesFormat(Used);
-        sStorageInternalFree = bytesFormat(Free);
-        sStorageInternalPercentage = oneDigitIntForm(100 * Used / Total) +"%";
+        sStorageInternalTotal = Formats.bytesFormat(Total);
+        sStorageInternalUsed = Formats.bytesFormat(Used);
+        sStorageInternalFree = Formats.bytesFormat(Free);
+        sStorageInternalPercentage = Formats.oneDigitIntForm(100 * Used / Total) + context.getString(R.string.unit_percentage);
     }
 
     public static void getStorageExternalInfo(){
-        //StatFs statFs = new StatFs(Environment.getExternalStorageDirectory().getPath());
-        Map<String, File> externalLocations = ExternalStorage.getAllStorageLocations();
-        Log.v(LOG_TAG,"externalLocations - " + externalLocations.toString());
-        File externalSdCard = externalLocations.get(ExternalStorage.EXTERNAL_SD_CARD);
+        Log.v(LOG_TAG,"getStorageExternalInfo");
+        File externalSdCard = null;
+        String externalSdCardPath = getStorageDirectories();
+        if(externalSdCardPath != null) {
+            externalSdCard = new File(externalSdCardPath);
+        }
         if(externalSdCard != null) {
             StatFs statFs = new StatFs(externalSdCard.getPath());
             long Total = ((long) statFs.getBlockCountLong() * (long) statFs.getBlockSizeLong());
             long Free = ((long) statFs.getAvailableBlocksLong() * (long) statFs.getBlockSizeLong());
             long Used = Total - Free;
-            sStorageExternalTotal = bytesFormat(Total);
-            sStorageExternalUsed = bytesFormat(Used);
-            sStorageExternalFree = bytesFormat(Free);
-            sStorageExternalPercentage = oneDigitIntForm(100 * Used / Total) + "%";
+            sStorageExternalTotal = Formats.bytesFormat(Total);
+            if(Total > 0) {
+                sStorageExternalUsed = Formats.bytesFormat(Used);
+                sStorageExternalFree = Formats.bytesFormat(Free);
+                sStorageExternalPercentage = Formats.oneDigitIntForm(100 * Used / Total) + context.getString(R.string.unit_percentage);
+            }else {
+                sStorageExternalTotal = context.getString(R.string.not_available);
+            }
         }else{
-            sStorageExternalTotal = "NA";
+            sStorageExternalTotal = context.getString(R.string.not_available);
         }
 
     }
 
     public static void getRamInfo(){
+        Log.v(LOG_TAG,"getRamInfo");
         ActivityManager actManager = (ActivityManager) context.getSystemService(MainActivity.ACTIVITY_SERVICE);
         ActivityManager.MemoryInfo memInfo = new ActivityManager.MemoryInfo();
         actManager.getMemoryInfo(memInfo);
         long Total = memInfo.totalMem;
         long Free = memInfo.availMem;
         long Used = Total - Free;
-        sRamTotal = bytesFormat(Total);
-        sRamUsed = bytesFormat(Used);
-        sRamFree = bytesFormat(Free);
-        sRamPercentage = oneDigitIntForm(100 * Used / Total) +"%";
+        sRamTotal = Formats.bytesFormat(Total);
+        sRamUsed = Formats.bytesFormat(Used);
+        sRamFree = Formats.bytesFormat(Free);
+        sRamPercentage = Formats.oneDigitIntForm(100 * Used / Total) + context.getString(R.string.unit_percentage);
         
     }
 
     public static void getDateInfo(){
-
+        Log.v(LOG_TAG,"getDateInfo");
         Calendar calendar = Calendar.getInstance();
         SimpleDateFormat month_date = new SimpleDateFormat("MMMM");
 
@@ -370,59 +369,37 @@ public class Utilities  {
         sDateYear = Integer.toString(calendar.get(Calendar.YEAR));
         sDateYear_cc = Integer.toString(calendar.get(Calendar.YEAR)).substring(0,2);
         sDateYear_yy = Integer.toString(calendar.get(Calendar.YEAR)).substring(2,4);
-        sDateWeekOfYear = "W:"+Integer.toString(calendar.get(Calendar.WEEK_OF_YEAR));
-        sDateDayOfYear = "D:"+Integer.toString(calendar.get(Calendar.DAY_OF_YEAR));
-        sDateMonthOfYear = "M:"+Integer.toString(calendar.get(Calendar.MONTH)+1);
+        sDateWeekOfYear = context.getString(R.string.label_week) + Integer.toString(calendar.get(Calendar.WEEK_OF_YEAR));
+        sDateDayOfYear = context.getString(R.string.label_day) + Integer.toString(calendar.get(Calendar.DAY_OF_YEAR));
+        sDateMonthOfYear = context.getString(R.string.label_month) + Integer.toString(calendar.get(Calendar.MONTH)+1);
+        sDateDayOfWeek = UnitConversions.getWeekDay(calendar.get(Calendar.DAY_OF_WEEK),context);
 
-        int day = calendar.get(Calendar.DAY_OF_WEEK);
-
-        switch (day) {
-            case Calendar.SUNDAY:
-                sDateDayOfWeek = "Sunday";
-                break;
-            case Calendar.MONDAY:
-                sDateDayOfWeek = "Monday";
-                break;
-            case Calendar.TUESDAY:
-                sDateDayOfWeek = "Tuesday";
-                break;
-            case Calendar.WEDNESDAY:
-                sDateDayOfWeek = "Wednesday";
-                break;
-            case Calendar.THURSDAY:
-                sDateDayOfWeek = "Thursday";
-                break;
-            case Calendar.FRIDAY:
-                sDateDayOfWeek = "Friday";
-                break;
-            case Calendar.SATURDAY:
-                sDateDayOfWeek = "Saturday";
-                break;
-        }
         
     }
 
     public static void getVolumeInfo(){
+        Log.v(LOG_TAG,"getVolumeInfo");
         AudioManager audioManager = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
         int currVolume = audioManager.getStreamVolume(AudioManager.STREAM_RING);
         int maxVolume = audioManager.getStreamMaxVolume(AudioManager.STREAM_RING);
         int currVolumeLevel = (int) ((currVolume * 100.0f) /maxVolume);
-        sVolumeLevel = oneDigitIntForm(currVolumeLevel)+"%";
+        sVolumeLevel = Formats.oneDigitIntForm(currVolumeLevel)+ context.getString(R.string.unit_percentage);
     }
 
     public static void getBrightnessInfo(){
+        Log.v(LOG_TAG,"getBrightnessInfo");
         try {
             float currBrightness = android.provider.Settings.System.getInt(context.getContentResolver(), Settings.System.SCREEN_BRIGHTNESS);
             int maxBrightness = 255;
             int currBrightnessLevel = (int) ((currBrightness * 100.0f) /maxBrightness);
-            sBrightnessLevel = oneDigitIntForm(currBrightnessLevel)+"%";
+            sBrightnessLevel = Formats.oneDigitIntForm(currBrightnessLevel)+ context.getString(R.string.unit_percentage);
         }catch (Settings.SettingNotFoundException e){
             Log.v(LOG_TAG, e.getMessage());
         }
     }
 
     public static void getTimeInfo() {
-
+        Log.v(LOG_TAG,"getTimeInfo");
         Calendar calendar = Calendar.getInstance();
         SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm:ss");
         SimpleDateFormat ampmFormat = new SimpleDateFormat("aaa z");
@@ -433,7 +410,7 @@ public class Utilities  {
     }
 
     public static void getBatteryInfo() {
-
+        Log.v(LOG_TAG,"getBatteryInfo");
         Intent batteryIntent = context.registerReceiver(null, new IntentFilter(Intent.ACTION_BATTERY_CHANGED));
         int currBattery = batteryIntent.getIntExtra(BatteryManager.EXTRA_LEVEL, -1);
         int maxBattery = batteryIntent.getIntExtra(BatteryManager.EXTRA_SCALE, -1);
@@ -442,9 +419,9 @@ public class Utilities  {
         float currBatteryVolt = batteryIntent.getIntExtra(BatteryManager.EXTRA_VOLTAGE, -1)/1000.0f;
         float currBatteryTemp = batteryIntent.getIntExtra(BatteryManager.EXTRA_TEMPERATURE, -1)/10.0f;
 
-        sBatteryLevel = oneDigitIntForm(iBatteryLevel) + "%";
-        sBatteryVolt = Float.toString(currBatteryVolt) + "v";
-        sBatteryTemp = Float.toString(currBatteryTemp) + "c";
+        sBatteryLevel = Formats.oneDigitIntForm(iBatteryLevel) + context.getString(R.string.unit_percentage);
+        sBatteryVolt = Float.toString(currBatteryVolt) + context.getString(R.string.unit_volts);
+        sBatteryTemp = Float.toString(currBatteryTemp) + context.getString(R.string.unit_celcius);
 
         int status = batteryIntent.getIntExtra(BatteryManager.EXTRA_STATUS, -1);
         bBatteryStatus = status == BatteryManager.BATTERY_STATUS_CHARGING ||
@@ -472,7 +449,7 @@ public class Utilities  {
                     .forName(POWER_PROFILE_CLASS)
                     .getMethod("getAveragePower", java.lang.String.class)
                     .invoke(mPowerProfile_, "battery.capacity");
-            sBatteryCap = oneDigitIntForm(batteryCapacity) + " mAh";
+            sBatteryCap = Formats.oneDigitIntForm(batteryCapacity) + context.getString(R.string.unit_milliAmps);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -484,6 +461,7 @@ public class Utilities  {
     }
 
     public static void getDataInfo() {
+        Log.v(LOG_TAG,"getDataInfo");
         bDataSwitch = false;
         ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         try {
@@ -497,20 +475,22 @@ public class Utilities  {
         }
         long mobileTx = TrafficStats.getMobileTxBytes();
         long mobileRx = TrafficStats.getMobileRxBytes();
-        sDataUsage = bytesFormat(mobileTx + mobileRx);
+        sDataUsage = Formats.bytesFormat(mobileTx + mobileRx);
     }
 
     public static void getWifiInfo() {
+        Log.v(LOG_TAG,"getWifiInfo");
         WifiManager wifiManager = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
         bWifiSwitch = wifiManager.isWifiEnabled();
         long mobileTx = TrafficStats.getMobileTxBytes();
         long mobileRx = TrafficStats.getMobileRxBytes();
         long wifiTx = TrafficStats.getTotalTxBytes() - mobileTx;
         long wifiRx = TrafficStats.getTotalRxBytes() - mobileRx;
-        sWifiUsage = bytesFormat(wifiTx + wifiRx);
+        sWifiUsage = Formats.bytesFormat(wifiTx + wifiRx);
     }
 
     public static void dataOnOff(){
+        Log.v(LOG_TAG,"dataOnOff");
         Intent intent = new Intent(Intent.ACTION_MAIN);
         intent.setComponent(new ComponentName("com.android.settings",
                 "com.android.settings.Settings$DataUsageSummaryActivity"));
@@ -519,43 +499,51 @@ public class Utilities  {
     }
 
     public static void gpsOnOff(){
+        Log.v(LOG_TAG,"gpsOnOff");
         Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
         ((Activity) context).startActivityForResult(intent,0);
     }
 
     public static void soundOnOff(){
+        Log.v(LOG_TAG,"soundOnOff");
         Intent intent = new Intent(Settings.ACTION_SOUND_SETTINGS);
         ((Activity) context).startActivityForResult(intent,0);
     }
 
 
     public static void displayOnOff(){
+        Log.v(LOG_TAG,"displayOnOff");
         Intent intent = new Intent(Settings.ACTION_DISPLAY_SETTINGS);
         ((Activity) context).startActivityForResult(intent,0);
     }
 
 
     public static void airplaneOnOff(){
+        Log.v(LOG_TAG,"airplaneOnOff");
         Intent intent = new Intent(Settings.ACTION_WIRELESS_SETTINGS);
         ((Activity) context).startActivityForResult(intent,0);
     }
 
     public static void wifiOn(){
+        Log.v(LOG_TAG,"wifiOn");
         WifiManager wifiManager = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
         wifiManager.setWifiEnabled(true);
     }
 
     public static void wifiOff(){
+        Log.v(LOG_TAG,"wifiOff");
         WifiManager wifiManager = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
         wifiManager.setWifiEnabled(false);
     }
 
     public static void bluetoothOn(){
+        Log.v(LOG_TAG,"bluetoothOn");
         BluetoothAdapter mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
         mBluetoothAdapter.enable();
     }
 
     public static void bluetoothOff(){
+        Log.v(LOG_TAG,"bluetoothOff");
         BluetoothAdapter mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
         mBluetoothAdapter.disable();
     }
@@ -566,6 +554,7 @@ public class Utilities  {
     }
 
     public static void getAirplaneInfo() {
+        Log.v(LOG_TAG,"getAirplaneInfo");
         try{
             bAirplaneSwitch = android.provider.Settings.Global.getInt(context.getContentResolver(), Settings.Global.AIRPLANE_MODE_ON) != 0;
         }catch (Settings.SettingNotFoundException e){
@@ -574,6 +563,7 @@ public class Utilities  {
     }
 
     public static void getGpsInfo() {
+        Log.v(LOG_TAG,"getGpsInfo");
         final LocationManager locationManager = (LocationManager) context.getSystemService( Context.LOCATION_SERVICE );
 
         if ( !locationManager.isProviderEnabled( LocationManager.GPS_PROVIDER ) ) {
@@ -585,6 +575,7 @@ public class Utilities  {
     }
 
     public static void getBluetoothInfo() {
+        Log.v(LOG_TAG,"getBluetoothInfo");
         try{
             bBluetoothSwitch = android.provider.Settings.Global.getInt(context.getContentResolver(), Settings.Global.BLUETOOTH_ON) != 0;
         }catch (Settings.SettingNotFoundException e){
@@ -593,12 +584,8 @@ public class Utilities  {
 
     }
 
-    public static void getTorchInfo() {
-        //camera is exclusive, so we cannot open and check if its ON
-    }
-
     public static void torchOn() {
-
+        Log.v(LOG_TAG,"torchOn");
         try {
             if (context.getPackageManager().hasSystemFeature(
                     PackageManager.FEATURE_CAMERA_FLASH)) {
@@ -624,6 +611,7 @@ public class Utilities  {
     }
 
     public static void torchOff() {
+        Log.v(LOG_TAG,"torchOff");
         try {
             if (context.getPackageManager().hasSystemFeature(
                     PackageManager.FEATURE_CAMERA_FLASH)) {
@@ -637,113 +625,39 @@ public class Utilities  {
         }
     }
 
-    public static void getWeatherInfo() {
-        Log.v(LOG_TAG,"getWeatherInfo");
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
-        /*Map<String, ?> allEntries = prefs.getAll();
-        for (Map.Entry<String, ?> entry : allEntries.entrySet()) {
-            Log.v(LOG_TAG, entry.getKey() + ": " + entry.getValue().toString());
-        }*/
-        sWeatherCity = prefs.getString("weatherCity", "");
-        sWeatherForecast = prefs.getString("weatherMain", "");
-        sWeatherIcon = prefs.getString("weatherIcon", "");
-        sWeatherTempNowC = prefs.getString("weatherTemp", "");
-        sWeatherTempLoC = prefs.getString("weatherTempMin", "");
-        sWeatherTempHiC = prefs.getString("weatherTempMax", "");
 
-        Log.v(LOG_TAG,"getWeatherInfo - sWeatherCity" + sWeatherCity);
+    public static String getStorageDirectories() {
+        Log.v(LOG_TAG,"getStorageDirectories");
+        String [] storageDirectories;
+        String rawSecondaryStoragesStr = System.getenv("SECONDARY_STORAGE");
 
-        if(!sWeatherTempNowC.isEmpty()) {
-            sWeatherTempNowC = oneDigitDoubleForm(Float.parseFloat(sWeatherTempNowC));
-            sWeatherTempNowF = oneDigitDoubleForm(convertCelciusToFahrenheit(Float.parseFloat(sWeatherTempNowC)));
-        }
-        if(!sWeatherTempLoC.isEmpty()) {
-            sWeatherTempLoC = oneDigitDoubleForm(Float.parseFloat(sWeatherTempLoC));
-            sWeatherTempLoF = oneDigitDoubleForm(convertCelciusToFahrenheit(Float.parseFloat(sWeatherTempLoC)));
-        }
-        if(!sWeatherTempHiC.isEmpty()) {
-            sWeatherTempHiC = oneDigitDoubleForm(Float.parseFloat(sWeatherTempHiC));
-            sWeatherTempHiF = oneDigitDoubleForm(convertCelciusToFahrenheit(Float.parseFloat(sWeatherTempHiC)));
-        }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            List<String> results = new ArrayList<String>();
+            File[] externalDirs = context.getExternalFilesDirs(null);
+            for (File file : externalDirs) {
+                String path = file.getPath().split("/Android")[0];
+                if((Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP && Environment.isExternalStorageRemovable(file))
+                        || rawSecondaryStoragesStr != null && rawSecondaryStoragesStr.contains(path)){
+                    results.add(path);
+                }
+            }
+            storageDirectories = results.toArray(new String[0]);
+        }else{
+            final Set<String> rv = new HashSet<String>();
 
-        sWeatherWindKmph = prefs.getString("weatherWindSpeed", "");
-        if(!sWeatherWindKmph.isEmpty()) {
-            sWeatherWindMph = onePointTwoDoubleForm(convertKphToMph(Float.parseFloat(sWeatherWindKmph)));
+            if (!TextUtils.isEmpty(rawSecondaryStoragesStr)) {
+                final String[] rawSecondaryStorages = rawSecondaryStoragesStr.split(File.pathSeparator);
+                Collections.addAll(rv, rawSecondaryStorages);
+            }
+            storageDirectories = rv.toArray(new String[rv.size()]);
         }
-
-        sWeatherWindDir = prefs.getString("weatherWindDir", "");
-        sSunRiseTime = prefs.getString("weatherSunrise", "");
-        if(!sSunRiseTime.isEmpty()) {
-            sSunRiseTime = convertUnixtimeToDateFormat(Long.parseLong(sSunRiseTime));
-        }
-        sSunSetTime = prefs.getString("weatherSunset", "");
-        if(!sSunSetTime.isEmpty()) {
-            sSunSetTime = convertUnixtimeToDateFormat(Long.parseLong(sSunSetTime));
+        if(storageDirectories.length > 0) {
+            Log.v(LOG_TAG, "storageDirectories - " + storageDirectories[0]);
+            return storageDirectories[0];
+        }else{
+            return null;
         }
 
     }
-
-
-    public static String onePointTwoDoubleForm(double d){
-        return new DecimalFormat("#.##").format(d);
-    }
-
-    public static String oneDigitDoubleForm(double d){
-        return new DecimalFormat("#.#").format(d);
-    }
-
-    public static String oneDigitIntForm(double d){
-        return new DecimalFormat("#").format(d);
-    }
-
-    public static String oneDigitIntForm(int i){
-        return new DecimalFormat("#").format(i);
-    }
-
-    public static String twoDigitIntForm(int i){
-        return new DecimalFormat("##").format(i);
-    }
-
-    public static String bytesFormat(long size){
-        long Kb = 1 * 1024;
-        long Mb = Kb * 1024;
-        long Gb = Mb * 1024;
-
-        if(size < Kb){
-            return onePointTwoDoubleForm(size) + " B";
-        }else if(size >= Kb/10 && size < Mb/10){
-            return onePointTwoDoubleForm((double)size/Kb) + " KB";
-        }else if(size >= Mb/10 && size < Gb/10){
-            return onePointTwoDoubleForm((double)size/Mb) + " MB";
-        }else if(size >= Gb/10){
-            return onePointTwoDoubleForm((double)size/Gb) + " GB";
-        }
-
-        return null;
-    }
-
-    // Converts to celcius
-    private static float convertFahrenheitToCelcius(float fahrenheit) {
-        return ((fahrenheit - 32) * 5 / 9);
-    }
-
-    // Converts to fahrenheit
-    private static float convertCelciusToFahrenheit(float celsius) {
-        return ((celsius * 9) / 5) + 32;
-    }
-
-    // Converts to mph
-    private static float convertKphToMph(float Kph) {
-        return (Kph / 1.609f);
-    }
-
-    // Converts to date
-    private static String convertUnixtimeToDateFormat(long unixTime) {
-        SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm:ss");
-        Date date = new Date(unixTime*1000L); // *1000 is to convert seconds to milliseconds
-        return timeFormat.format(date);
-    }
-
-
 }
 

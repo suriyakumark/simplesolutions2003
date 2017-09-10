@@ -11,16 +11,17 @@
         android:orientation="horizontal"
         android:layout_gravity="center_vertical"
         android:gravity="center_vertical"
+        android:paddingTop="8dp"
         android:paddingBottom="8dp">
         <TextView
             android:layout_weight="1"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:paddingStart="8dp"
-            android:text="Music"/>
+            android:text="@string/dialog_volume_music"/>
         <SeekBar
             android:id="@+id/volume_music"
-            android:layout_weight="4"
+            android:layout_weight="3"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:padding="4dp"
@@ -40,10 +41,10 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:paddingStart="8dp"
-            android:text="Ring"/>
+            android:text="@string/dialog_volume_ring"/>
         <SeekBar
             android:id="@+id/volume_ring"
-            android:layout_weight="4"
+            android:layout_weight="3"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:padding="4dp"
@@ -63,10 +64,10 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:paddingStart="8dp"
-            android:text="Call"/>
+            android:text="@string/dialog_volume_call"/>
         <SeekBar
             android:id="@+id/volume_call"
-            android:layout_weight="4"
+            android:layout_weight="3"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:padding="4dp"
@@ -86,10 +87,10 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:paddingStart="8dp"
-            android:text="System"/>
+            android:text="@string/dialog_volume_system"/>
         <SeekBar
             android:id="@+id/volume_system"
-            android:layout_weight="4"
+            android:layout_weight="3"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:padding="4dp"
@@ -109,10 +110,10 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:paddingStart="8dp"
-            android:text="Alarm"/>
+            android:text="@string/dialog_volume_alarm"/>
         <SeekBar
             android:id="@+id/volume_alarm"
-            android:layout_weight="4"
+            android:layout_weight="3"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:padding="4dp"

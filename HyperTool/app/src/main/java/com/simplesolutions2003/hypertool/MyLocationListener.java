@@ -37,8 +37,8 @@ public class MyLocationListener implements LocationListener {
         String latitude = Double.toString(loc.getLatitude());
 
         SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(context).edit();
-        editor.putString("longitude", longitude);
-        editor.putString("latitude", latitude);
+        editor.putString(context.getString(R.string.pref_key_longitude), longitude);
+        editor.putString(context.getString(R.string.pref_key_latitude), latitude);
         editor.commit();
 
         Log.v(LOG_TAG,"Send Broadcast for location changes");

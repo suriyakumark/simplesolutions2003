@@ -61,8 +61,8 @@ public class WeatherSyncAdapter extends AbstractThreadedSyncAdapter {
         String weatherJsonStr = null;
 
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
-        String query_name = prefs.getString("zip", "");
-        String query_country = prefs.getString("country", "");
+        String query_name = prefs.getString(context.getString(R.string.pref_key_zip), "");
+        String query_country = prefs.getString(context.getString(R.string.pref_key_country), "");
         Log.v(LOG_TAG,"query_name - " + query_name);
         Log.v(LOG_TAG,"query_country - " + query_country);
 
@@ -73,7 +73,7 @@ public class WeatherSyncAdapter extends AbstractThreadedSyncAdapter {
             final String MODE_PARAM = "mode";
             final String APPID_PARAM = "APPID";
             final String UNIT_PARAM = "units";
-            String app_id = "24b37b69d5d87b8c92a65e23bc145ccc";
+            String app_id = context.getString(R.string.appId);
 
             Uri builtUri = Uri.parse(FORECAST_BASE_URL).buildUpon()
                     .appendQueryParameter(QUERY_PARAM, query_name + "," + query_country)
@@ -205,16 +205,16 @@ public class WeatherSyncAdapter extends AbstractThreadedSyncAdapter {
             String weatherSunset = sunObj.getString(OWM_WEATHER_SUNSET);
 
             SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(context).edit();
-            editor.putString("weatherCity", weatherCity);
-            editor.putString("weatherMain", weatherMain);
-            editor.putString("weatherIcon", weatherIcon);
-            editor.putString("weatherTemp", weatherTemp);
-            editor.putString("weatherTempMin", weatherTempMin);
-            editor.putString("weatherTempMax", weatherTempMax);
-            editor.putString("weatherWindSpeed", weatherWindSpeed);
-            editor.putString("weatherWindDir", weatherWindDir);
-            editor.putString("weatherSunrise", weatherSunrise);
-            editor.putString("weatherSunset", weatherSunset);
+            editor.putString(context.getString(R.string.pref_key_weatherCity), weatherCity);
+            editor.putString(context.getString(R.string.pref_key_weatherForecast), weatherMain);
+            editor.putString(context.getString(R.string.pref_key_weatherIcon), weatherIcon);
+            editor.putString(context.getString(R.string.pref_key_weatherTemp), weatherTemp);
+            editor.putString(context.getString(R.string.pref_key_weatherTempMin), weatherTempMin);
+            editor.putString(context.getString(R.string.pref_key_weatherTempMax), weatherTempMax);
+            editor.putString(context.getString(R.string.pref_key_weatherWindSpeed), weatherWindSpeed);
+            editor.putString(context.getString(R.string.pref_key_weatherWindDir), weatherWindDir);
+            editor.putString(context.getString(R.string.pref_key_weatherSunrise), weatherSunrise);
+            editor.putString(context.getString(R.string.pref_key_weatherSunset), weatherSunset);
             editor.commit();
 
             Log.v(LOG_TAG,"getWeatherDataFromJson - weatherCity" + weatherCity);
@@ -233,7 +233,7 @@ public class WeatherSyncAdapter extends AbstractThreadedSyncAdapter {
     public static void configurePeriodicSync(Context context) {
 
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
-        String sSyncInterval = prefs.getString("weather_sync_interval", Integer.toString(SYNC_INTERVAL));
+        String sSyncInterval = prefs.getString(context.getString(R.string.pref_key_sync_interval), Integer.toString(SYNC_INTERVAL));
         Log.v(LOG_TAG,"sSyncInterval - " + sSyncInterval);
         int syncInterval = 60 * Integer.parseInt(sSyncInterval);
         int flexTime = syncInterval/3;

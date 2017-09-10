@@ -39,6 +39,7 @@ public class MyPreferencesActivity extends PreferenceActivity implements
     private static final String LOG_TAG = MyPreferencesActivity.class.getSimpleName();
     private static boolean needSync = false;
     private static boolean configureSync = false;
+    public static final String LINE_FEED = System.getProperty("line.separator");
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,7 +47,7 @@ public class MyPreferencesActivity extends PreferenceActivity implements
         super.onCreate(savedInstanceState);
         addPreferencesFromResource(R.xml.preferences);
 
-        ListPreference listPreference = (ListPreference) findPreference("country");
+        ListPreference listPreference = (ListPreference) findPreference(MyPreferencesActivity.this.getString(R.string.pref_key_country));
         if (listPreference != null) {
             ArrayList<String> entries = new ArrayList<>();
             ArrayList<String> entryValues = new ArrayList<>();
@@ -62,9 +63,9 @@ public class MyPreferencesActivity extends PreferenceActivity implements
                 }
                 is.close();
             }catch (UnsupportedEncodingException e){
-                e.getStackTrace();
+                e.printStackTrace();
             }catch (IOException e){
-                e.getStackTrace();
+                e.printStackTrace();
             }
 
             String jsonString = writer.toString();
@@ -78,7 +79,7 @@ public class MyPreferencesActivity extends PreferenceActivity implements
                     entries.add(countryObject.getString("Name"));
                 }
             } catch (JSONException e) {
-                Log.v(LOG_TAG ,"Improper JSON string");
+                e.printStackTrace();
             }
 
             listPreference.setEntries(entries.toArray(new String[entries.size()]));
@@ -92,14 +93,15 @@ public class MyPreferencesActivity extends PreferenceActivity implements
         prefShareLoc.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             public boolean onPreferenceClick(Preference preference) {
                 SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(MyPreferencesActivity.this);
-                String sLongitude = prefs.getString("longitude", "");
-                String sLatitude = prefs.getString("latitude", "");
-                String lf = System.getProperty("line.separator");
+                String sLongitude = prefs.getString(MyPreferencesActivity.this.getString(R.string.pref_key_longitude), "");
+                String sLatitude = prefs.getString(MyPreferencesActivity.this.getString(R.string.pref_key_latitude), "");
                 if(!sLongitude.isEmpty() && !sLongitude.isEmpty()) {
                     Intent sendIntent = new Intent();
                     sendIntent.setAction(Intent.ACTION_SEND);
                     sendIntent.putExtra(Intent.EXTRA_TEXT,
-                            "My location : " + lf + "Longitude : " + sLongitude + lf + "Latitude : " + sLatitude);
+                            MyPreferencesActivity.this.getString(R.string.label_coordinates) + " : " + LINE_FEED
+                                    + MyPreferencesActivity.this.getString(R.string.label_longitude) + sLongitude + LINE_FEED
+                                    + MyPreferencesActivity.this.getString(R.string.label_latitude) + sLatitude);
                     sendIntent.setType("text/plain");
                     startActivity(sendIntent);
                 }
@@ -113,7 +115,8 @@ public class MyPreferencesActivity extends PreferenceActivity implements
                 Intent sendIntent = new Intent();
                 sendIntent.setAction(Intent.ACTION_SEND);
                 sendIntent.putExtra(Intent.EXTRA_TEXT,
-                        "Hey check out this cool app at: https://play.google.com/store/apps/details?id=" + getPackageName());
+                        MyPreferencesActivity.this.getString(R.string.msg_share_app) +
+                                "https://play.google.com/store/apps/details?id=" + getPackageName());
                 sendIntent.setType("text/plain");
                 startActivity(sendIntent);
                 return false;
@@ -160,10 +163,12 @@ public class MyPreferencesActivity extends PreferenceActivity implements
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences,
                                           String key) {
         updatePrefSummary(findPreference(key));
-        if (key.equals("country") || key.equals("zip") || key.equals("weather_sync_interval")){
+        if (key.equals(MyPreferencesActivity.this.getString(R.string.pref_key_country)) ||
+                key.equals(MyPreferencesActivity.this.getString(R.string.pref_key_zip)) ||
+                key.equals(MyPreferencesActivity.this.getString(R.string.pref_key_sync_interval))){
             needSync = true;
         }
-        if (key.equals("weather_sync_interval")){
+        if (key.equals(MyPreferencesActivity.this.getString(R.string.pref_key_sync_interval))){
             configureSync = true;
         }
     }
