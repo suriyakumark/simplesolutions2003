@@ -172,7 +172,7 @@ public class Utilities  {
 
         try {
             for (final CellInfo info : telephonyManager.getAllCellInfo()) {
-                //Log.v(LOG_TAG, "info " + info.toString());
+                Log.v(LOG_TAG, "info " + info.toString());
                 if (info instanceof CellInfoGsm) {
                     dbm = ((CellInfoGsm) info).getCellSignalStrength().getDbm();
                     iCarrierLevel = ((CellInfoGsm) info).getCellSignalStrength().getLevel();
@@ -190,7 +190,7 @@ public class Utilities  {
             e.printStackTrace();
         }
         //Log.v(LOG_TAG, "dbm :" + dbm + " level :" + iCarrierLevel);
-        if(dbm < 0 ) {
+        if(dbm <= 0 ) {
             sCarrierStrength = Integer.toString(dbm) + context.getString(R.string.unit_dbm);
         }else{
             sCarrierStrength = "";
@@ -399,7 +399,7 @@ public class Utilities  {
     }
 
     public static void getTimeInfo() {
-        Log.v(LOG_TAG,"getTimeInfo");
+        //Log.v(LOG_TAG,"getTimeInfo");
         Calendar calendar = Calendar.getInstance();
         SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm:ss");
         SimpleDateFormat ampmFormat = new SimpleDateFormat("aaa z");
@@ -546,11 +546,6 @@ public class Utilities  {
         Log.v(LOG_TAG,"bluetoothOff");
         BluetoothAdapter mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
         mBluetoothAdapter.disable();
-    }
-
-    public static void getPedometerInfo() {
-
-
     }
 
     public static void getAirplaneInfo() {

@@ -153,9 +153,11 @@ public class MyPreferencesActivity extends PreferenceActivity implements
         getPreferenceScreen().getSharedPreferences()
                 .unregisterOnSharedPreferenceChangeListener(this);
         if(configureSync) {
+            Log.v(LOG_TAG,"configureSync");
             WeatherSyncAdapter.configurePeriodicSync(this);
         }
         if(needSync) {
+            Log.v(LOG_TAG,"needSync");
             WeatherSyncAdapter.syncImmediately(this);
         }
     }

@@ -61,7 +61,7 @@ public class DateChangeNotifyService  extends Service {
                 SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(context).edit();
                 editor.putString(context.getString(R.string.pref_key_current_date), current_date);
 
-                if(previous_date.isEmpty()){
+                if(previous_date.isEmpty() || previous_date.equals("")){
                     editor.putString(context.getString(R.string.pref_key_previous_date), current_date);
                 }else if(!current_date.equals(previous_date)){
                     editor.putString(context.getString(R.string.pref_key_previous_date), current_date);

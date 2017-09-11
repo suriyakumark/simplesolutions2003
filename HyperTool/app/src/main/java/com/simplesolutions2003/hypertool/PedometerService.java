@@ -20,14 +20,9 @@ public class PedometerService extends Service implements SensorEventListener{
 
     public final static String LOG_TAG = PedometerService.class.getSimpleName();
     public static final String ACTION_DATA_UPDATED_PEDOMETER = "com.simplesolutions2003.hypertool.ACTION_DATA_UPDATED_PEDOMETER";
-    private Context context;
     private SensorManager sensorManager;
 
     public PedometerService() {
-    }
-
-    public PedometerService(Context context) {
-        this.context = context;
     }
 
     @Override
@@ -37,7 +32,8 @@ public class PedometerService extends Service implements SensorEventListener{
         sensorManager = (SensorManager) this.getSystemService(Context.SENSOR_SERVICE);
         Sensor countSensor = null;
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            countSensor = sensorManager.getDefaultSensor(Sensor.TYPE_STEP_COUNTER);
+            //#Testing#countSensor = sensorManager.getDefaultSensor(Sensor.TYPE_STEP_COUNTER);
+            countSensor = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
             if (countSensor != null) {
                 sensorManager.registerListener(this, countSensor, SensorManager.SENSOR_DELAY_NORMAL, SensorManager.SENSOR_DELAY_NORMAL );
             }
@@ -58,21 +54,27 @@ public class PedometerService extends Service implements SensorEventListener{
 
     @Override
     public void onSensorChanged(SensorEvent event) {
-        Log.v(LOG_TAG,"context - " + context);
         switch(event.sensor.getType()){
             case Sensor.TYPE_STEP_COUNTER:
+                //#Testing#case Sensor.TYPE_ACCELEROMETER:
 
-                SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
-                Float initial_step_count = prefs.getFloat(context.getString(R.string.pref_key_initial_step_count), 0F);
+                SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+                Float initial_step_count = prefs.getFloat(this.getString(R.string.pref_key_initial_step_count), 0F);
+                Float step_count = prefs.getFloat(this.getString(R.string.pref_key_step_count), 0F);
+                Float eventValue = event.values[0];
+
+                //#Testing#
+                //#Testing#eventValue = step_count + 0.01F;
 
                 SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(this).edit();
-                editor.putFloat(context.getString(R.string.pref_key_step_count), event.values[0]);
-                if(initial_step_count > event.values[0]){
-                    editor.putFloat(context.getString(R.string.pref_key_initial_step_count), 0F);
+                editor.putFloat(this.getString(R.string.pref_key_step_count), eventValue);
+                if(initial_step_count > eventValue){
+                    editor.putFloat(this.getString(R.string.pref_key_initial_step_count), 0F);
+                    Log.v(LOG_TAG,"initial_step_count reset");
                 }
                 editor.commit();
 
-                Log.v(LOG_TAG,"Send Broadcast for step changes");
+                //Log.v(LOG_TAG,"Send Broadcast for step changes");
                 Intent i = new Intent(ACTION_DATA_UPDATED_PEDOMETER);
                 this.sendBroadcast(i);
                 break;

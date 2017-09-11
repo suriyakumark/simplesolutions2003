@@ -187,7 +187,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
         @Override
         public void onReceive(Context context, Intent intent) {
-            Log.v(LOG_TAG, "Broadcast Receiver - " + intent.getAction().toString());
+            //Log.v(LOG_TAG, "Broadcast Receiver - " + intent.getAction().toString());
             switch (intent.getAction()){
                 case WeatherSyncAdapter.ACTION_DATA_UPDATED_WEATHER:
                     updateWeatherInfo();
@@ -493,13 +493,15 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         Log.v(LOG_TAG,"setupPedometerInfo");
         bPedometerSwitch = false;
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            //testing
             if (sensorManager.getDefaultSensor(Sensor.TYPE_STEP_COUNTER) != null) {
                 updatePedometerInfo();
                 bPedometerSwitch = true;
-                mPedometerService = new PedometerService(context);
+                mPedometerService = new PedometerService();
                 if (!isMyServiceRunning(mPedometerService.getClass())) {
                     startService(new Intent(context, mPedometerService.getClass()));
                 }
+                //testing
             }
         }
 
@@ -986,7 +988,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     }
 
     public static void updateCompassInfo(){
-        Log.v(LOG_TAG,"updateCompassInfo");
+        //Log.v(LOG_TAG,"updateCompassInfo");
         //Utilities.getCompassInfo();
         //tvCompassDirection.setText(Utilities.sCompassDirection);
         float azimuthInDegrees = 0.0f;
@@ -1066,13 +1068,13 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     }
 
     public void updatePedometerInfo(){
-        Log.v(LOG_TAG,"updatePedometerInfo");
+        //Log.v(LOG_TAG,"updatePedometerInfo");
         Float initial_step_count = 0F;
         Float step_count = 0F;
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
         initial_step_count = prefs.getFloat("initial_step_count", 0F);
         step_count = prefs.getFloat("step_count", 0F);
-        if (initial_step_count > step_count){
+        if (initial_step_count < step_count){
             step_count = step_count - initial_step_count;
         }
         tvPedometerCount.setText(Formats.oneDigitIntForm(step_count));

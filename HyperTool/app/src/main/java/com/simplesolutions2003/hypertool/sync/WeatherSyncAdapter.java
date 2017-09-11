@@ -231,7 +231,7 @@ public class WeatherSyncAdapter extends AbstractThreadedSyncAdapter {
      * Helper method to schedule the sync adapter periodic execution
      */
     public static void configurePeriodicSync(Context context) {
-
+        Log.v(LOG_TAG,"configurePeriodicSync");
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
         String sSyncInterval = prefs.getString(context.getString(R.string.pref_key_sync_interval), Integer.toString(SYNC_INTERVAL));
         Log.v(LOG_TAG,"sSyncInterval - " + sSyncInterval);
@@ -260,6 +260,7 @@ public class WeatherSyncAdapter extends AbstractThreadedSyncAdapter {
      * @param context The context used to access the account service
      */
     public static void syncImmediately(Context context) {
+        Log.v(LOG_TAG,"syncImmediately");
         Bundle bundle = new Bundle();
         bundle.putBoolean(ContentResolver.SYNC_EXTRAS_EXPEDITED, true);
         bundle.putBoolean(ContentResolver.SYNC_EXTRAS_MANUAL, true);
