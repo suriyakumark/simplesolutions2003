@@ -32,8 +32,8 @@ public class PedometerService extends Service implements SensorEventListener{
         sensorManager = (SensorManager) this.getSystemService(Context.SENSOR_SERVICE);
         Sensor countSensor = null;
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            //#Testing#countSensor = sensorManager.getDefaultSensor(Sensor.TYPE_STEP_COUNTER);
-            countSensor = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+            countSensor = sensorManager.getDefaultSensor(Sensor.TYPE_STEP_COUNTER);
+            //#Testing#countSensor = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
             if (countSensor != null) {
                 sensorManager.registerListener(this, countSensor, SensorManager.SENSOR_DELAY_NORMAL, SensorManager.SENSOR_DELAY_NORMAL );
             }

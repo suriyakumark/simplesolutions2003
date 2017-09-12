@@ -11,6 +11,8 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.SurfaceTexture;
 import android.hardware.Camera;
+import android.hardware.camera2.CameraManager;
+import android.hardware.camera2.CameraAccessException;
 import android.hardware.Sensor;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
@@ -127,6 +129,8 @@ public class Utilities  {
     public static boolean bTorchSwitch;
 
     private static Camera cam;
+    private static CameraManager cam2;
+    private static String cam2Id;
 
     public static void setContext(Context c){
         context = c;
@@ -586,20 +590,29 @@ public class Utilities  {
             if (context.getPackageManager().hasSystemFeature(
                     PackageManager.FEATURE_CAMERA_FLASH)) {
 
-                cam = Camera.open();
-                Camera.Parameters p = cam.getParameters();
-                Log.v(LOG_TAG,"getParameters " + p.toString());
-                List<String> supportedFlashModes = p.getSupportedFlashModes();
-                Log.v(LOG_TAG,"getSupportedFlashModes " + supportedFlashModes.toString());
-                if(supportedFlashModes.contains(Camera.Parameters.FLASH_MODE_TORCH)) {
-                    p.setFlashMode(Camera.Parameters.FLASH_MODE_TORCH);
-                }else if(supportedFlashModes.contains(Camera.Parameters.FLASH_MODE_ON)) {
-                    p.setFlashMode( Camera.Parameters.FLASH_MODE_ON );
+                if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
+                    cam2 = (CameraManager) context.getSystemService(Context.CAMERA_SERVICE);
+                    try {
+                        cam2.setTorchMode(cam2.getCameraIdList()[0], true);
+                    } catch (CameraAccessException e) {
+                        e.printStackTrace();
+                    }
+                }else {
+                    cam = Camera.open();
+                    Camera.Parameters p = cam.getParameters();
+                    Log.v(LOG_TAG, "getParameters " + p.toString());
+                    List<String> supportedFlashModes = p.getSupportedFlashModes();
+                    Log.v(LOG_TAG, "getSupportedFlashModes " + supportedFlashModes.toString());
+                    if (supportedFlashModes.contains(Camera.Parameters.FLASH_MODE_TORCH)) {
+                        p.setFlashMode(Camera.Parameters.FLASH_MODE_TORCH);
+                    } else if (supportedFlashModes.contains(Camera.Parameters.FLASH_MODE_ON)) {
+                        p.setFlashMode(Camera.Parameters.FLASH_MODE_ON);
+                    }
+                    cam.autoFocus(null);
+                    cam.setParameters(p);
+                    cam.setPreviewTexture(new SurfaceTexture(0));
+                    cam.startPreview();
                 }
-                cam.autoFocus(null);
-                cam.setParameters(p);
-                cam.setPreviewTexture(new SurfaceTexture(0));
-                cam.startPreview();
                 bTorchSwitch = true;
             }
         } catch (Exception e) {
@@ -612,9 +625,18 @@ public class Utilities  {
         try {
             if (context.getPackageManager().hasSystemFeature(
                     PackageManager.FEATURE_CAMERA_FLASH)) {
-                cam.stopPreview();
-                cam.release();
-                cam = null;
+                if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
+                    cam2 = (CameraManager) context.getSystemService(Context.CAMERA_SERVICE);
+                    try {
+                        cam2.setTorchMode(cam2.getCameraIdList()[0], false);
+                    } catch (CameraAccessException e) {
+                        e.printStackTrace();
+                    }
+                }else {
+                    cam.stopPreview();
+                    cam.release();
+                    cam = null;
+                }
                 bTorchSwitch = false;
             }
         } catch (Exception e) {
