@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.graphics.SurfaceTexture;
 import android.hardware.Camera;
 import android.hardware.Sensor;
 import android.hardware.SensorEventListener;
@@ -597,6 +598,7 @@ public class Utilities  {
                 }
                 cam.autoFocus(null);
                 cam.setParameters(p);
+                cam.setPreviewTexture(new SurfaceTexture(0));
                 cam.startPreview();
                 bTorchSwitch = true;
             }
