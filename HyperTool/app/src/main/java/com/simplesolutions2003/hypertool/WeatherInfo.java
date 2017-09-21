@@ -67,7 +67,11 @@ public class WeatherInfo {
         }
 
         if(!sWeatherWindKmph.isEmpty()) {
-            sWeatherWindMph = Formats.onePointTwoDoubleForm(UnitConversions.convertKphToMph(Float.parseFloat(sWeatherWindKmph)));
+            sWeatherWindMph = Formats.onePointTwoDoubleForm(UnitConversions.convertKToM(Float.parseFloat(sWeatherWindKmph)));
+        }
+
+        if(!sWeatherWindDir.isEmpty()) {
+            sWeatherWindDir = Formats.directionFormat(context, Float.parseFloat(sWeatherWindDir));
         }
 
         if(!sSunRiseTime.isEmpty()) {

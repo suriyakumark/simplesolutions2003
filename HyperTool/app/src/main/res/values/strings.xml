@@ -108,6 +108,10 @@
     <string name="pref_key_data_cycle">date_cycle</string>
     <string name="pref_key_data">data</string>
     <string name="pref_key_wifi">wifi</string>
-
+    <string name="pref_key_prev_data">prev_data</string>
+    <string name="pref_key_prev_wifi">prev_wifi</string>
+    <string name="pref_key_pedometer_units">pedometer_units</string>
+    <string name="pref_key_pedometer_height">pedometer_height</string>
+    <string name="pref_key_pedometer_weight">pedometer_weight</string>
 
 </resources>

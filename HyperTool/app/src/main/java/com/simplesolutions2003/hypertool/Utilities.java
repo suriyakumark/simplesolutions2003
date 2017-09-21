@@ -76,6 +76,8 @@ public class Utilities  {
     public static Context context;
     public static final String LINE_FEED = System.getProperty("line.separator");
 
+    final static double WALKING_FACTOR = 0.57;
+
     public static String sDeviceBrand;
     public static String sDeviceModel;
     public static String sDeviceOS;
@@ -476,22 +478,25 @@ public class Utilities  {
             // get the setting for "mobile data"
             bDataSwitch = (Boolean)method.invoke(cm);
         } catch (Exception e) {
-            Log.v(LOG_TAG, e.getMessage());
+            e.printStackTrace();
         }
-        long mobileTx = TrafficStats.getMobileTxBytes();
+        /*long mobileTx = TrafficStats.getMobileTxBytes();
         long mobileRx = TrafficStats.getMobileRxBytes();
         sDataUsage = Formats.bytesFormat(mobileTx + mobileRx);
+        */
     }
 
     public static void getWifiInfo() {
         Log.v(LOG_TAG,"getWifiInfo");
         WifiManager wifiManager = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
         bWifiSwitch = wifiManager.isWifiEnabled();
+        /*
         long mobileTx = TrafficStats.getMobileTxBytes();
         long mobileRx = TrafficStats.getMobileRxBytes();
         long wifiTx = TrafficStats.getTotalTxBytes() - mobileTx;
         long wifiRx = TrafficStats.getTotalRxBytes() - mobileRx;
         sWifiUsage = Formats.bytesFormat(wifiTx + wifiRx);
+        */
     }
 
     public static void dataOnOff(){
@@ -525,7 +530,7 @@ public class Utilities  {
 
     public static void airplaneOnOff(){
         Log.v(LOG_TAG,"airplaneOnOff");
-        Intent intent = new Intent(Settings.ACTION_WIRELESS_SETTINGS);
+        Intent intent = new Intent(Settings.ACTION_AIRPLANE_MODE_SETTINGS);
         ((Activity) context).startActivityForResult(intent,0);
     }
 
@@ -647,20 +652,24 @@ public class Utilities  {
 
     public static String getStorageDirectories() {
         Log.v(LOG_TAG,"getStorageDirectories");
-        String [] storageDirectories;
+        String [] storageDirectories = null;
         String rawSecondaryStoragesStr = System.getenv("SECONDARY_STORAGE");
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             List<String> results = new ArrayList<String>();
-            File[] externalDirs = context.getExternalFilesDirs(null);
-            for (File file : externalDirs) {
-                String path = file.getPath().split("/Android")[0];
-                if((Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP && Environment.isExternalStorageRemovable(file))
-                        || rawSecondaryStoragesStr != null && rawSecondaryStoragesStr.contains(path)){
-                    results.add(path);
+            try {
+                File[] externalDirs = context.getExternalFilesDirs(null);
+                for (File file : externalDirs) {
+                    String path = file.getPath().split("/Android")[0];
+                    if ((Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP && Environment.isExternalStorageRemovable(file))
+                            || rawSecondaryStoragesStr != null && rawSecondaryStoragesStr.contains(path)) {
+                        results.add(path);
+                    }
                 }
+                storageDirectories = results.toArray(new String[0]);
+            }catch (NullPointerException e){
+                e.printStackTrace();
             }
-            storageDirectories = results.toArray(new String[0]);
         }else{
             final Set<String> rv = new HashSet<String>();
 
@@ -670,13 +679,55 @@ public class Utilities  {
             }
             storageDirectories = rv.toArray(new String[rv.size()]);
         }
-        if(storageDirectories.length > 0) {
-            Log.v(LOG_TAG, "storageDirectories - " + storageDirectories[0]);
-            return storageDirectories[0];
-        }else{
-            return null;
+        if(storageDirectories != null){
+            if(storageDirectories.length > 0){
+                Log.v(LOG_TAG, "storageDirectories - " + storageDirectories[0]);
+                return storageDirectories[0];
+            }
         }
+        return null;
+
 
     }
+
+    public static String CalorieBurnedCalculator(float stepsCount, float height, float weight) {
+        // weight kg and height cm
+
+        double CaloriesBurnedPerMile;
+        double strip;
+        double stepCountMile; // step/mile
+        double conversationFactor;
+        double CaloriesBurned;
+
+        CaloriesBurnedPerMile = WALKING_FACTOR * (weight * 2.2);
+        strip = height * 0.415;
+        stepCountMile = 160934.4 / strip;
+        conversationFactor = CaloriesBurnedPerMile / stepCountMile;
+        CaloriesBurned = stepsCount * conversationFactor; //cal
+
+        return Formats.oneDigitIntForm(CaloriesBurned);
+    }
+
+    public static Float DistanceCalculator(float stepsCount, float height) {
+        //heigh in cm
+
+        float strip;
+        float distance;
+
+        strip = height * 0.415f;
+        distance =  (stepsCount * strip) / 100000.0f; //km
+
+        return distance;
+
+    }
+
+    public static String DistanceKmCalculator(float stepsCount, float height) {
+        return Formats.onePointTwoDoubleForm(DistanceCalculator(stepsCount,height));
+    }
+
+    public static String DistanceMiCalculator(float stepsCount, float height) {
+        return Formats.onePointTwoDoubleForm(UnitConversions.convertKToM(DistanceCalculator(stepsCount,height)));
+    }
+
 }
 

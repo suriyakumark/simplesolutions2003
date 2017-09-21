@@ -1,5 +1,7 @@
 package com.simplesolutions2003.hypertool;
 
+import android.content.Context;
+
 import java.text.DecimalFormat;
 
 /**
@@ -46,4 +48,29 @@ public class Formats {
         return null;
     }
 
+    public static String directionFormat(Context context, Float azimuthInDegrees){
+        if (azimuthInDegrees < 0.0f) {
+            azimuthInDegrees += 360.0f;
+        }
+        if(azimuthInDegrees == 0){
+            return String.format("%.1f", azimuthInDegrees) + context.getString(R.string.unit_north);
+        }else if(azimuthInDegrees > 0 && azimuthInDegrees < 90 ){
+            return String.format("%.1f", azimuthInDegrees) + context.getString(R.string.unit_northeast);
+        }else if(azimuthInDegrees == 90 ){
+            return String.format("%.1f", azimuthInDegrees) + context.getString(R.string.unit_east);
+        }else if(azimuthInDegrees > 90 && azimuthInDegrees < 180 ){
+            return String.format("%.1f", 180.0f - azimuthInDegrees) + context.getString(R.string.unit_southeast);
+        }else if(azimuthInDegrees == 180 ){
+            return String.format("%.1f", azimuthInDegrees) + context.getString(R.string.unit_south);
+        }else if(azimuthInDegrees > 180 && azimuthInDegrees < 270 ){
+            return String.format("%.1f", azimuthInDegrees - 180.0f) + context.getString(R.string.unit_southwest);
+        }else if(azimuthInDegrees == 270 ){
+            return String.format("%.1f", azimuthInDegrees) + context.getString(R.string.unit_west);
+        }else if(azimuthInDegrees > 270 && azimuthInDegrees < 360 ){
+            return String.format("%.1f", 360.0f - azimuthInDegrees) + context.getString(R.string.unit_northwest);
+        }else{
+            return null;
+        }
+
+    }
 }

@@ -32,8 +32,8 @@ public class PedometerService extends Service implements SensorEventListener{
         sensorManager = (SensorManager) this.getSystemService(Context.SENSOR_SERVICE);
         Sensor countSensor = null;
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            countSensor = sensorManager.getDefaultSensor(Sensor.TYPE_STEP_COUNTER);
-            //#Testing#countSensor = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+            //#Testing#countSensor = sensorManager.getDefaultSensor(Sensor.TYPE_STEP_COUNTER);
+            countSensor = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
             if (countSensor != null) {
                 sensorManager.registerListener(this, countSensor, SensorManager.SENSOR_DELAY_NORMAL, SensorManager.SENSOR_DELAY_NORMAL );
             }
@@ -55,8 +55,8 @@ public class PedometerService extends Service implements SensorEventListener{
     @Override
     public void onSensorChanged(SensorEvent event) {
         switch(event.sensor.getType()){
-            case Sensor.TYPE_STEP_COUNTER:
-                //#Testing#case Sensor.TYPE_ACCELEROMETER:
+            //#Testing#case Sensor.TYPE_STEP_COUNTER:
+            case Sensor.TYPE_ACCELEROMETER:
 
                 SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
                 Float initial_step_count = prefs.getFloat(this.getString(R.string.pref_key_initial_step_count), 0F);
@@ -64,7 +64,7 @@ public class PedometerService extends Service implements SensorEventListener{
                 Float eventValue = event.values[0];
 
                 //#Testing#
-                //#Testing#eventValue = step_count + 0.01F;
+                eventValue = step_count + 0.5F;
 
                 SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(this).edit();
                 editor.putFloat(this.getString(R.string.pref_key_step_count), eventValue);

@@ -17,6 +17,14 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+    productFlavors{
+        free {
+            applicationId "com.simplesolutions2003.hypertool.free"
+        }
+        paid {
+            applicationId "com.simplesolutions2003.hypertool.paid"
+        }
+    }
 }
 
 dependencies {

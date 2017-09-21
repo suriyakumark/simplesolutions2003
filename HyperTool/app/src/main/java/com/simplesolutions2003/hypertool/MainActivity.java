@@ -116,12 +116,13 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     public static String sCompassQuadrant = "";
     public static String sCompassAzimuth = "";
     public static ImageView ivCompass;
+    public static boolean bCompass;
 
-    //public static TextView tvDataUsage;
+    public static TextView tvDataUsage;
     public static ImageButton ibDataSwitch;
     public static boolean bDataSwitch;
 
-    //public static TextView tvWifiUsage;
+    public static TextView tvWifiUsage;
     public static ImageButton ibWifiSwitch;
     public static boolean bWifiSwitch;
 
@@ -136,6 +137,8 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
     public static ImageView ivPedometer;
     public static TextView tvPedometerCount;
+    public static TextView tvPedometerCalorie;
+    public static TextView tvPedometerDistance;
     public static boolean bPedometerSwitch;
 
     public static boolean bAirplaneSwitch;
@@ -156,6 +159,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     public static TextView tvWeatherTempLoF;
     public static TextView tvWeatherWindKmph;
     public static TextView tvWeatherWindMph;
+    public static TextView tvWeatherWindDir;
     public static TextView tvWeatherForecast;
     public static ImageView ivWeatherForecast;
 
@@ -187,7 +191,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
         @Override
         public void onReceive(Context context, Intent intent) {
-            //Log.v(LOG_TAG, "Broadcast Receiver - " + intent.getAction().toString());
+            Log.v(LOG_TAG, "Broadcast Receiver - " + intent.getAction().toString());
             switch (intent.getAction()){
                 case WeatherSyncAdapter.ACTION_DATA_UPDATED_WEATHER:
                     updateWeatherInfo();
@@ -214,6 +218,12 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                     break;
                 case WifiReceiver.ACTION_DATA_UPDATED_WIFI:
                     updateWifiInfo();
+                    break;
+                case DateChangeNotifyService.ACTION_DATA_UPDATED_DATA_USAGE:
+                    updateDataUsage();
+                    break;
+                case DateChangeNotifyService.ACTION_DATA_UPDATED_WIFI_USAGE:
+                    updateWifiUsage();
                     break;
                 case PedometerService.ACTION_DATA_UPDATED_PEDOMETER:
                     updatePedometerInfo();
@@ -297,16 +307,18 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         tvCompassDirection = (TextView) findViewById(R.id.compass_direction);
         tvCompassAltDirection = (TextView) findViewById(R.id.compass_alt_direction);
         ivCompass = (ImageView) findViewById(R.id.compass_img);
-        //tvDataUsage = (TextView) findViewById(R.id.data_usage);
+        tvDataUsage = (TextView) findViewById(R.id.data_usage);
         ibDataSwitch = (ImageButton) findViewById(R.id.data_img);
-        //tvWifiUsage = (TextView) findViewById(R.id.wifi_usage);
+        tvWifiUsage = (TextView) findViewById(R.id.wifi_usage);
         ibWifiSwitch = (ImageButton) findViewById(R.id.wifi_img);
         tvTimeHHMMSS = (TextView) findViewById(R.id.time_dtl);
         tvTimeAMPM = (TextView) findViewById(R.id.time_am_pm);
         tvStopwatch = (TextView) findViewById(R.id.stopwatch);
         ibStopwatch = (ImageButton) findViewById(R.id.stopwatch_img);
         ivPedometer = (ImageView) findViewById(R.id.pedometer_img);
-        tvPedometerCount = (TextView) findViewById(R.id.pedometer_dtl);
+        tvPedometerCount = (TextView) findViewById(R.id.pedometer_steps);
+        tvPedometerCalorie = (TextView) findViewById(R.id.pedometer_calorie);
+        tvPedometerDistance = (TextView) findViewById(R.id.pedometer_distance);
         ibAirplaneSwitch = (ImageButton) findViewById(R.id.airplane_img);
         ibGpsSwitch = (ImageButton) findViewById(R.id.gps_img);
         tvLongitude = (TextView) findViewById(R.id.longitude);
@@ -319,6 +331,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         tvWeatherTempLoF = (TextView) findViewById(R.id.forecast_lo_f);
         tvWeatherWindKmph = (TextView) findViewById(R.id.wind_speed_km);
         tvWeatherWindMph = (TextView) findViewById(R.id.wind_speed_m);
+        tvWeatherWindDir = (TextView) findViewById(R.id.wind_dir);
         tvWeatherForecast = (TextView) findViewById(R.id.weather_dtl);
         ivWeatherForecast = (ImageView) findViewById(R.id.weather_img);
         ibBluetoothSwitch = (ImageButton) findViewById(R.id.bluetooth_img);
@@ -396,6 +409,8 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         filter.addAction(PedometerService.ACTION_DATA_UPDATED_PEDOMETER);
         filter.addAction(MyLocationListener.ACTION_DATA_UPDATED_LOCATION);
         filter.addAction(MyLocationListener.ACTION_DATA_UPDATED_GPS);
+        filter.addAction(DateChangeNotifyService.ACTION_DATA_UPDATED_DATA_USAGE);
+        filter.addAction(DateChangeNotifyService.ACTION_DATA_UPDATED_WIFI_USAGE);
         registerReceiver(broadcastReceiver, filter);
 
         setupAll();
@@ -480,9 +495,14 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             Sensor compassSensor = sensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD);
             Sensor accelerometerSensor = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+            if(compassSensor != null && accelerometerSensor != null) {
+                sensorManager.registerListener(this, compassSensor, SENSOR_DELAY, SENSOR_DELAY);
+                sensorManager.registerListener(this, accelerometerSensor, SENSOR_DELAY, SENSOR_DELAY);
+                bCompass = true;
+            }else{
+                bCompass = false;
+            }
 
-            sensorManager.registerListener(this, compassSensor, SENSOR_DELAY, SENSOR_DELAY);
-            sensorManager.registerListener(this, accelerometerSensor, SENSOR_DELAY, SENSOR_DELAY);
         }else{
             Sensor orientationSensor = sensorManager.getDefaultSensor(Sensor.TYPE_ORIENTATION);
             sensorManager.registerListener(this, orientationSensor, SENSOR_DELAY);
@@ -493,16 +513,16 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         Log.v(LOG_TAG,"setupPedometerInfo");
         bPedometerSwitch = false;
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            //testing
-            if (sensorManager.getDefaultSensor(Sensor.TYPE_STEP_COUNTER) != null) {
+
+            //testingif (sensorManager.getDefaultSensor(Sensor.TYPE_STEP_COUNTER) != null) {
                 updatePedometerInfo();
                 bPedometerSwitch = true;
                 mPedometerService = new PedometerService();
                 if (!isMyServiceRunning(mPedometerService.getClass())) {
                     startService(new Intent(context, mPedometerService.getClass()));
                 }
-                //testing
-            }
+
+            //testing}
         }
 
         if(bPedometerSwitch){
@@ -570,6 +590,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                 SeekBar callSeekBar = (SeekBar) volumeDialog.findViewById(R.id.volume_call);
                 SeekBar systemSeekBar = (SeekBar) volumeDialog.findViewById(R.id.volume_system);
                 SeekBar alarmSeekBar = (SeekBar) volumeDialog.findViewById(R.id.volume_alarm);
+                //ImageButton vibrateButton = (ImageButton) volumeDialog.findViewById(R.id.volume_vibrate);
 
                 final AudioManager audioManager = (AudioManager)getSystemService(Context.AUDIO_SERVICE);
                 musicSeekBar.setMax(audioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC));
@@ -680,6 +701,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                 updateDataInfo();
             }
         });
+        updateDataUsage();
     }
 
     public void setupGps(){
@@ -742,6 +764,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                 updateWifiInfo();
             }
         });
+        updateWifiUsage();
     }
 
     public void setupBluetooth(){
@@ -1065,6 +1088,13 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
             ivCompass.startAnimation(ra);
             mCurrentDegree = -azimuthInDegrees;
         }
+
+        if(bCompass){
+            ivCompass.setAlpha(fSwitchOn);
+        }else{
+            ivCompass.setAlpha(fSwitchOff);
+            tvCompassDirection.setText(context.getString(R.string.not_available));
+        }
     }
 
     public void updatePedometerInfo(){
@@ -1072,18 +1102,26 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         Float initial_step_count = 0F;
         Float step_count = 0F;
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
-        initial_step_count = prefs.getFloat("initial_step_count", 0F);
-        step_count = prefs.getFloat("step_count", 0F);
+        initial_step_count = prefs.getFloat(getString(R.string.pref_key_initial_step_count), 0F);
+        float height = Float.parseFloat(prefs.getString(getString(R.string.pref_key_pedometer_height), "150.0"));
+        float weight = Float.parseFloat(prefs.getString(getString(R.string.pref_key_pedometer_weight), "65.0"));
+        String units = prefs.getString(getString(R.string.pref_key_pedometer_units), "Metric");
+        step_count = prefs.getFloat(getString(R.string.pref_key_step_count), 0F);
         if (initial_step_count < step_count){
             step_count = step_count - initial_step_count;
         }
-        tvPedometerCount.setText(Formats.oneDigitIntForm(step_count));
+        tvPedometerCount.setText(Formats.oneDigitIntForm(step_count) + " steps");
+        tvPedometerCalorie.setText(Utilities.CalorieBurnedCalculator(step_count,height,weight) + " cal");
+        if(units.equals("Imperial")){
+            tvPedometerDistance.setText(Utilities.DistanceMiCalculator(step_count,height)+ " Mi");
+        }else {
+            tvPedometerDistance.setText(Utilities.DistanceKmCalculator(step_count, height) + " Km");
+        }
     }
 
     public static void updateDataInfo(){
         Log.v(LOG_TAG,"updateDataInfo");
         Utilities.getDataInfo();
-        //tvDataUsage.setText(Utilities.sDataUsage);
         bDataSwitch = Utilities.bDataSwitch;
         if(bDataSwitch){
             ibDataSwitch.setAlpha(fSwitchOn);
@@ -1092,16 +1130,27 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         }
     }
 
+    public static void updateDataUsage(){
+        Log.v(LOG_TAG,"updateDataUsage");
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+        tvDataUsage.setText(Formats.bytesFormat(prefs.getLong(context.getString(R.string.pref_key_data), 0)));
+    }
+
     public static void updateWifiInfo(){
         Log.v(LOG_TAG,"updateWifiInfo");
         Utilities.getWifiInfo();
-        //tvWifiUsage.setText(Utilities.sWifiUsage);
         bWifiSwitch = Utilities.bWifiSwitch;
         if(bWifiSwitch){
             ibWifiSwitch.setAlpha(fSwitchOn);
         }else{
             ibWifiSwitch.setAlpha(fSwitchOff);
         }
+    }
+
+    public static void updateWifiUsage(){
+        Log.v(LOG_TAG,"updateWifiUsage");
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+        tvWifiUsage.setText(Formats.bytesFormat(prefs.getLong(context.getString(R.string.pref_key_wifi), 0)));
     }
 
     public static void updateAirplaneInfo(){
@@ -1199,6 +1248,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
             tvWeatherWindMph.setText(WeatherInfo.sWeatherWindMph + context.getString(R.string.unit_mph));
         }
         tvWeatherForecast.setText(WeatherInfo.sWeatherForecast);
+        tvWeatherWindDir.setText(WeatherInfo.sWeatherWindDir);
         tvSunRiseTime.setText(WeatherInfo.sSunRiseTime);
         tvSunSetTime.setText(WeatherInfo.sSunSetTime);
         tvCity.setText(WeatherInfo.sWeatherCity);

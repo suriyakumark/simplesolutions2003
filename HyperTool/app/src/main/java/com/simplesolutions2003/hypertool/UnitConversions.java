@@ -22,8 +22,8 @@ public class UnitConversions {
     }
 
     // Converts to mph
-    public static float convertKphToMph(float Kph) {
-        return (Kph / 1.609f);
+    public static float convertKToM(float K) {
+        return (K / 1.609f);
     }
 
     // Converts to date

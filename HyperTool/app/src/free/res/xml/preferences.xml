@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <PreferenceCategory
+        android:summary="Weather"
+        android:title="Weather" >
+        <ListPreference
+            android:key="country"
+            android:title="Country" android:summary="Select your Country"
+            android:defaultValue="US" />
+        <EditTextPreference android:title="Zip"
+            android:key="zip"
+            android:defaultValue="27606"
+            android:summary="Enter your Zip Code" />
+        <ListPreference android:title="Weather Sync Interval"
+            android:summary="Select the Sync Interval"
+            android:key="weather_sync_interval"
+            android:defaultValue="60"
+            android:entries="@array/syncArray"
+            android:entryValues="@array/syncValues" />
+    </PreferenceCategory>
+    <PreferenceCategory
+        android:summary="Data/Wifi"
+        android:title="Data/Wifi" >
+        <ListPreference android:title="Data Cycle"
+            android:summary="Select start day of the month"
+            android:key="@string/pref_key_data_cycle"
+            android:defaultValue="1"
+            android:entries="@array/datacycleArrayValues"
+            android:entryValues="@array/datacycleArrayValues" />
+        <Preference android:title="Reset Usage" android:key="reset_data_wifi_usage"/>
+    </PreferenceCategory>
+    <PreferenceCategory
+        android:summary="Pedometer"
+        android:title="Pedometer" >
+        <ListPreference android:title="Units"
+            android:summary="Metric or Imperial"
+            android:key="@string/pref_key_pedometer_units"
+            android:defaultValue="Metric"
+            android:entries="@array/pedometerArray"
+            android:entryValues="@array/pedometerValues" />
+        <EditTextPreference android:title="Height"
+            android:key="@string/pref_key_pedometer_height"
+            android:defaultValue="150"
+            android:numeric="integer"
+            android:summary="Enter your height" />
+        <EditTextPreference android:title="Weight"
+            android:key="@string/pref_key_pedometer_weight"
+            android:defaultValue="65"
+            android:numeric="integer"
+            android:summary="Enter your weight" />
+    </PreferenceCategory>
+    <PreferenceCategory
+        android:summary="Other Settings"
+        android:title="Other Settings" >
+
+        <Preference android:title="Share Location" android:key="share_loc"/>
+        <Preference android:title="Share App" android:key="share_app"/>
+        <Preference android:title="Rate App" android:key="rate_us"/>
+    </PreferenceCategory>
+</PreferenceScreen>

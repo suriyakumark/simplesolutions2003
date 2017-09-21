@@ -14,9 +14,19 @@
         <ListPreference android:title="Weather Sync Interval"
             android:summary="Select the Sync Interval"
             android:key="weather_sync_interval"
-            android:defaultValue="10"
+            android:defaultValue="5"
             android:entries="@array/syncArray"
             android:entryValues="@array/syncValues" />
+    </PreferenceCategory>
+    <PreferenceCategory
+        android:summary="Data/Wifi"
+        android:title="Data/Wifi" >
+        <ListPreference android:title="Data Cycle"
+            android:summary="Select start day of the month"
+            android:key="@string/pref_key_data_cycle"
+            android:defaultValue="1"
+            android:entries="@array/datacycleArrayValues"
+            android:entryValues="@array/datacycleArrayValues" />
     </PreferenceCategory>
     <PreferenceCategory
         android:summary="Other Settings"

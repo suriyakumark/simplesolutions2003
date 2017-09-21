@@ -14,7 +14,7 @@ public class WifiReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
 
-        Log.v(LOG_TAG,"Send Broadcast for battery changes");
+        Log.v(LOG_TAG,"Send Broadcast for wifi changes");
         Intent i = new Intent(ACTION_DATA_UPDATED_WIFI);
         context.sendBroadcast(i);
 

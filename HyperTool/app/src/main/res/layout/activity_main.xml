@@ -17,7 +17,7 @@
         style="@style/GridLinearLayout2">
         <ImageButton android:id="@+id/device_img"
             style="@style/ButtonImage"
-            android:src="@drawable/phone" />
+            android:src="@drawable/device" />
         <LinearLayout android:id="@+id/device_info" android:orientation="vertical"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content">
@@ -50,7 +50,7 @@
                 style="@style/ButtonImage"
                 android:src="@drawable/storage" />
             <TextView android:id="@+id/internal_memory_percentage"
-                style="@style/TextViewSmall" />
+                style="@style/TextViewMid" />
         </LinearLayout>
         <LinearLayout android:id="@+id/internal_memory_info2" android:orientation="vertical"
             android:layout_width="wrap_content"
@@ -110,10 +110,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content">
                 <TextView android:id="@+id/cpu_percentage"
-                    style="@style/TextViewSmall" />
+                    style="@style/TextViewMid" />
                 <TextView android:id="@+id/cpu_speed"
                     android:paddingStart="4dp"
-                    style="@style/TextViewSmall" />
+                    style="@style/TextViewMid" />
             </LinearLayout>
             <TextView android:id="@+id/cpu_type"
                 style="@style/TextViewSmall" />
@@ -130,7 +130,7 @@
                 style="@style/ButtonImage"
                 android:src="@drawable/ram" />
             <TextView android:id="@+id/ram_percentage"
-                style="@style/TextViewSmall" />
+                style="@style/TextViewMid" />
         </LinearLayout>
         <LinearLayout android:id="@+id/ram_info2" android:orientation="vertical"
             android:layout_width="wrap_content"
@@ -152,7 +152,7 @@
                 style="@style/ButtonImage"
                 android:src="@drawable/memorycard" />
             <TextView android:id="@+id/external_memory_percentage"
-                style="@style/TextViewSmall" />
+                style="@style/TextViewMid" />
         </LinearLayout>
         <LinearLayout android:id="@+id/external_memory_info2" android:orientation="vertical"
             android:layout_width="wrap_content"
@@ -170,32 +170,32 @@
         <LinearLayout android:id="@+id/data_wifi_inner" android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
-            <!--LinearLayout android:id="@+id/data" android:orientation="vertical"
+            <LinearLayout android:id="@+id/data" android:orientation="vertical"
                 android:layout_width="wrap_content"
                 android:layout_gravity="center"
                 android:layout_height="0dp"
-                android:layout_weight="1"-->
+                android:layout_weight="1">
                 <ImageButton android:id="@+id/data_img"
-                    style="@style/ButtonImageSwitch"
+                    style="@style/ButtonImage"
                     android:layout_gravity="center"
                     android:src="@drawable/data" />
-                <!--TextView android:id="@+id/data_usage"
+                <TextView android:id="@+id/data_usage"
                     style="@style/TextViewSmall"
-                    android:layout_gravity="center" /-->
-            <!--/LinearLayout-->
-            <!--LinearLayout android:id="@+id/wifi" android:orientation="vertical"
+                    android:layout_gravity="center" />
+            </LinearLayout>
+            <LinearLayout android:id="@+id/wifi" android:orientation="vertical"
                 android:layout_width="wrap_content"
                 android:layout_gravity="center"
                 android:layout_height="0dp"
-                android:layout_weight="1"-->
+                android:layout_weight="1">
                 <ImageButton android:id="@+id/wifi_img"
-                    style="@style/ButtonImageSwitch"
+                    style="@style/ButtonImage"
                     android:layout_gravity="center"
                     android:src="@drawable/wifi" />
-                <!--TextView android:id="@+id/wifi_usage"
+                <TextView android:id="@+id/wifi_usage"
                     style="@style/TextViewSmall"
-                    android:layout_gravity="center" /-->
-            <!--/LinearLayout-->
+                    android:layout_gravity="center" />
+            </LinearLayout>
         </LinearLayout>
     </LinearLayout>
 
@@ -204,7 +204,7 @@
         style="@style/GridLinearLayout2">
         <ImageButton android:id="@+id/date_img"
             style="@style/ButtonImage"
-            android:src="@drawable/calendar" />
+            android:src="@drawable/date" />
         <LinearLayout android:id="@+id/date_info" android:orientation="vertical"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content">
@@ -269,7 +269,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content">
                 <TextView android:id="@+id/battery_level"
-                    style="@style/TextViewSmall"
+                    style="@style/TextViewMid"
                     android:paddingStart="2dp" />
                 <TextView android:id="@+id/battery_volt"
                     style="@style/TextViewSmall"
@@ -347,7 +347,11 @@
         <ImageButton android:id="@+id/pedometer_img"
             style="@style/ButtonImageBig"
             android:src="@drawable/walk" />
-        <TextView android:id="@+id/pedometer_dtl"
+        <TextView android:id="@+id/pedometer_steps"
+            style="@style/TextViewSmall" />
+        <TextView android:id="@+id/pedometer_calorie"
+            style="@style/TextViewSmall" />
+        <TextView android:id="@+id/pedometer_distance"
             style="@style/TextViewSmall" />
     </LinearLayout>
     <LinearLayout android:id="@+id/compass" android:orientation="vertical"
@@ -428,6 +432,8 @@
         <TextView android:id="@+id/wind_speed_km"
             style="@style/TextViewSmall" />
         <TextView android:id="@+id/wind_speed_m"
+            style="@style/TextViewSmall" />
+        <TextView android:id="@+id/wind_dir"
             style="@style/TextViewSmall" />
     </LinearLayout>
     <LinearLayout android:id="@+id/weather" android:orientation="vertical"
