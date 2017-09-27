@@ -6,11 +6,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
-import android.hardware.Sensor;
-import android.hardware.SensorManager;
-import android.location.LocationManager;
-import android.net.TrafficStats;
-import android.os.Build;
 import android.os.IBinder;
 import android.preference.PreferenceManager;
 import android.util.Log;
@@ -68,6 +63,7 @@ public class DateChangeNotifyService  extends Service {
 
                 String previous_date = prefs.getString(context.getString(R.string.pref_key_previous_date), "");
                 int data_cycle = Integer.parseInt(prefs.getString(context.getString(R.string.pref_key_data_cycle), "1"));
+                String pedometer_cycle = prefs.getString(context.getString(R.string.pref_key_pedometer_cycle), "Daily");
                 Float step_count = prefs.getFloat(context.getString(R.string.pref_key_step_count), 0F);
                 Float initial_step_count = prefs.getFloat(context.getString(R.string.pref_key_initial_step_count), 0F);
                 SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
@@ -91,8 +87,9 @@ public class DateChangeNotifyService  extends Service {
 
                 Calendar calendar = Calendar.getInstance();
                 int dayOfMonth = calendar.get(Calendar.DAY_OF_MONTH);
-                int minute = calendar.get(Calendar.MINUTE);
-                int frequency = 5;
+                //int minute = calendar.get(Calendar.MINUTE);
+                //int frequency = 1;
+                DataWifiUsage.setContext(context);
 
                 if(newDay) {
 
@@ -105,75 +102,36 @@ public class DateChangeNotifyService  extends Service {
                     if (data_cycle == dayOfMonth || (dayOfMonthPlus1 < dayOfMonth && data_cycle > 27)) {
                         Log.v(LOG_TAG,"Data Cycle Reset");
                         //reset data
-                        editor = PreferenceManager.getDefaultSharedPreferences(context).edit();
-                        editor.putLong(context.getString(R.string.pref_key_data), 0);
-                        editor.putLong(context.getString(R.string.pref_key_wifi), 0);
-                        editor.commit();
+                        DataWifiUsage.resetData();
+                        DataWifiUsage.resetWifi();
                     }
 
                     //save previous day step count
-                    Log.v(LOG_TAG,"Step Count Reset");
-                    editor = PreferenceManager.getDefaultSharedPreferences(context).edit();
-                    editor.putFloat(context.getString(R.string.pref_key_initial_step_count), step_count);
-                    editor.commit();
-
+                    if(pedometer_cycle.equals("Daily")) {
+                        Log.v(LOG_TAG, "Step Count Reset");
+                        editor = PreferenceManager.getDefaultSharedPreferences(context).edit();
+                        editor.putFloat(context.getString(R.string.pref_key_initial_step_count), step_count);
+                        editor.commit();
+                    }
                     Log.v(LOG_TAG,"Send Broadcast for date changes");
                     Intent i = new Intent(ACTION_DATA_UPDATED_DATE);
                     context.sendBroadcast(i);
                 }
 
-                if(minute % frequency == 0){
-                    prefs = PreferenceManager.getDefaultSharedPreferences(context);
-
-                    long cummDataUsage = prefs.getLong(context.getString(R.string.pref_key_data), 0);
-                    long cummWifiUsage = prefs.getLong(context.getString(R.string.pref_key_wifi), 0);
-                    long prevDataUsage = prefs.getLong(context.getString(R.string.pref_key_prev_data), 0);
-                    long prevWifiUsage = prefs.getLong(context.getString(R.string.pref_key_prev_wifi), 0);
-
-                    long mobileTx = TrafficStats.getMobileTxBytes();
-                    long mobileRx = TrafficStats.getMobileRxBytes();
-                    long wifiTx = TrafficStats.getTotalTxBytes() - mobileTx;
-                    long wifiRx = TrafficStats.getTotalRxBytes() - mobileRx;
-                    long currWifiUsage = wifiTx + wifiRx;
-                    long currDataUsage = mobileTx + mobileRx;
-
-                    long newDataUsage = cummDataUsage;
-                    long newWifiUsage = cummWifiUsage;
-
-                    if(prevDataUsage < currDataUsage || prevDataUsage == 0) {
-                        newDataUsage += currDataUsage - prevDataUsage;
-                    }else if(prevDataUsage > cummDataUsage){
-                        newDataUsage += currDataUsage;
-                    }
-                    if(newDataUsage > cummDataUsage){
-                        editor = PreferenceManager.getDefaultSharedPreferences(context).edit();
-                        editor.putLong(context.getString(R.string.pref_key_data), newDataUsage);
-                        editor.putLong(context.getString(R.string.pref_key_prev_data), currDataUsage);
-                        editor.commit();
-
+                //if(minute % frequency == 0){
+                    if(DataWifiUsage.getDataUsage()){
                         Log.v(LOG_TAG,"Send Broadcast for data changes");
                         Intent i = new Intent(ACTION_DATA_UPDATED_DATA_USAGE);
                         context.sendBroadcast(i);
                     }
 
-                    if(prevWifiUsage < cummWifiUsage || prevWifiUsage == 0){
-                        newWifiUsage += currWifiUsage - prevWifiUsage;
-                    }else if(prevWifiUsage > cummWifiUsage){
-                        newWifiUsage += currWifiUsage;
-                    }
-                    if(newWifiUsage > cummWifiUsage){
-                        editor = PreferenceManager.getDefaultSharedPreferences(context).edit();
-                        editor.putLong(context.getString(R.string.pref_key_wifi), newWifiUsage);
-                        editor.putLong(context.getString(R.string.pref_key_prev_wifi), currWifiUsage);
-                        editor.commit();
-
+                    if(DataWifiUsage.getWifiUsage()){
                         Log.v(LOG_TAG,"Send Broadcast for wifi changes");
                         Intent i = new Intent(ACTION_DATA_UPDATED_WIFI_USAGE);
                         context.sendBroadcast(i);
-
                     }
 
-                }
+                //}
             }
         }
     };

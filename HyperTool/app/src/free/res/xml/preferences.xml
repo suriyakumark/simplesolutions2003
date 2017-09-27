@@ -48,6 +48,13 @@
             android:defaultValue="65"
             android:numeric="integer"
             android:summary="Enter your weight" />
+        <ListPreference android:title="Automatic Reset"
+            android:summary="Daily or Manual"
+            android:key="@string/pref_key_pedometer_cycle"
+            android:defaultValue="Daily"
+            android:entries="@array/pedometerCycleArrayValues"
+            android:entryValues="@array/pedometerCycleArrayValues" />
+        <Preference android:title="Reset Pedometer" android:key="reset_pedometer"/>
     </PreferenceCategory>
     <PreferenceCategory
         android:summary="Other Settings"

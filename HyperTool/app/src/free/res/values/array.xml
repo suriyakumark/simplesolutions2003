@@ -55,7 +55,12 @@
 
     <string-array name="pedometerArray">
         <item>Metric(cms, kgs, kms)</item>
-        <item>Imperial(ft, lbs, miles)</item>
+        <item>Imperial(inches, lbs, miles)</item>
+    </string-array>
+
+    <string-array name="pedometerCycleArrayValues">
+        <item>Daily</item>
+        <item>Manual</item>
     </string-array>
 
 </resources>

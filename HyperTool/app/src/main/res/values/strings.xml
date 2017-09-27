@@ -81,7 +81,7 @@
     <string name="unit_northwest">° NW</string>
 
     <!-- Messages -->
-    <string name="msg_pref_press">Long press to change preferences</string>
+    <string name="msg_pref_press">Long press anywhere in the black background to modify settings</string>
     <string name="msg_share_app">Hey check out this cool app at: </string>
 
 
@@ -103,6 +103,8 @@
     <string name="pref_key_weatherSunset">weatherSunset</string>
     <string name="pref_key_initial_step_count">initial_step_count</string>
     <string name="pref_key_step_count">step_count</string>
+    <string name="pref_key_prev_step_count">prev_step_count</string>
+    <string name="pref_key_pedometer_cycle">pedometer_cycle</string>
     <string name="pref_key_previous_date">previous_date</string>
     <string name="pref_key_current_date">current_date</string>
     <string name="pref_key_data_cycle">date_cycle</string>

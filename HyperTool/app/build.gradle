@@ -19,7 +19,7 @@ android {
     }
     productFlavors{
         free {
-            applicationId "com.simplesolutions2003.hypertool.free"
+            applicationId "com.simplesolutions2003.hypertool"
         }
         paid {
             applicationId "com.simplesolutions2003.hypertool.paid"

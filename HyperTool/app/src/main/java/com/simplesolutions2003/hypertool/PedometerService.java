@@ -32,8 +32,8 @@ public class PedometerService extends Service implements SensorEventListener{
         sensorManager = (SensorManager) this.getSystemService(Context.SENSOR_SERVICE);
         Sensor countSensor = null;
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            //#Testing#countSensor = sensorManager.getDefaultSensor(Sensor.TYPE_STEP_COUNTER);
-            countSensor = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+            countSensor = sensorManager.getDefaultSensor(Sensor.TYPE_STEP_COUNTER);
+            //#Testing#countSensor = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
             if (countSensor != null) {
                 sensorManager.registerListener(this, countSensor, SensorManager.SENSOR_DELAY_NORMAL, SensorManager.SENSOR_DELAY_NORMAL );
             }
@@ -55,19 +55,26 @@ public class PedometerService extends Service implements SensorEventListener{
     @Override
     public void onSensorChanged(SensorEvent event) {
         switch(event.sensor.getType()){
-            //#Testing#case Sensor.TYPE_STEP_COUNTER:
-            case Sensor.TYPE_ACCELEROMETER:
+            case Sensor.TYPE_STEP_COUNTER:
+                //#Testing#case Sensor.TYPE_ACCELEROMETER:
 
                 SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
                 Float initial_step_count = prefs.getFloat(this.getString(R.string.pref_key_initial_step_count), 0F);
                 Float step_count = prefs.getFloat(this.getString(R.string.pref_key_step_count), 0F);
+                Float prev_step_count = prefs.getFloat(this.getString(R.string.pref_key_prev_step_count), 0F);
                 Float eventValue = event.values[0];
 
-                //#Testing#
-                eventValue = step_count + 0.5F;
+
+                //#Testing#eventValue = step_count + 0.5F;
+
+                Float new_step_count = step_count + eventValue;
+                if(eventValue > prev_step_count) {
+                    new_step_count -= prev_step_count;
+                }
 
                 SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(this).edit();
-                editor.putFloat(this.getString(R.string.pref_key_step_count), eventValue);
+                editor.putFloat(this.getString(R.string.pref_key_step_count), new_step_count);
+                editor.putFloat(this.getString(R.string.pref_key_prev_step_count), eventValue);
                 if(initial_step_count > eventValue){
                     editor.putFloat(this.getString(R.string.pref_key_initial_step_count), 0F);
                     Log.v(LOG_TAG,"initial_step_count reset");

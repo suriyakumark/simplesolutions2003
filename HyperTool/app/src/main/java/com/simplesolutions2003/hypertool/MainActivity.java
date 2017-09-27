@@ -513,16 +513,16 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         Log.v(LOG_TAG,"setupPedometerInfo");
         bPedometerSwitch = false;
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-
-            //testingif (sensorManager.getDefaultSensor(Sensor.TYPE_STEP_COUNTER) != null) {
+//testing
+            if (sensorManager.getDefaultSensor(Sensor.TYPE_STEP_COUNTER) != null) {
                 updatePedometerInfo();
                 bPedometerSwitch = true;
                 mPedometerService = new PedometerService();
                 if (!isMyServiceRunning(mPedometerService.getClass())) {
                     startService(new Intent(context, mPedometerService.getClass()));
                 }
-
-            //testing}
+            }
+//testing
         }
 
         if(bPedometerSwitch){
@@ -549,7 +549,6 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
             }
         });
     }
-
 
     public void setupStopwatch(){
         Log.v(LOG_TAG,"setupStopwatch");
@@ -701,6 +700,8 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                 updateDataInfo();
             }
         });
+        DataWifiUsage.setContext(context);
+        DataWifiUsage.getDataUsage();
         updateDataUsage();
     }
 
@@ -764,6 +765,8 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                 updateWifiInfo();
             }
         });
+        DataWifiUsage.setContext(context);
+        DataWifiUsage.getWifiUsage();
         updateWifiUsage();
     }
 
@@ -1083,7 +1086,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                     0.5f);
 
             ra.setInterpolator(new DecelerateInterpolator());
-            ra.setDuration(400);
+            ra.setDuration(1000);
             ra.setFillAfter(true);
             ivCompass.startAnimation(ra);
             mCurrentDegree = -azimuthInDegrees;
@@ -1110,8 +1113,14 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         if (initial_step_count < step_count){
             step_count = step_count - initial_step_count;
         }
-        tvPedometerCount.setText(Formats.oneDigitIntForm(step_count) + " steps");
-        tvPedometerCalorie.setText(Utilities.CalorieBurnedCalculator(step_count,height,weight) + " cal");
+        tvPedometerCount.setText(Formats.oneDigitIntForm(step_count));
+        if(units.equals("Imperial")) {
+            height = height * 2.54F;
+            weight = weight * 0.453592F;
+        }
+
+        tvPedometerCalorie.setText(Utilities.CalorieBurnedCalculator(step_count, height, weight) + " cal");
+
         if(units.equals("Imperial")){
             tvPedometerDistance.setText(Utilities.DistanceMiCalculator(step_count,height)+ " Mi");
         }else {
@@ -1132,6 +1141,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
     public static void updateDataUsage(){
         Log.v(LOG_TAG,"updateDataUsage");
+
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
         tvDataUsage.setText(Formats.bytesFormat(prefs.getLong(context.getString(R.string.pref_key_data), 0)));
     }

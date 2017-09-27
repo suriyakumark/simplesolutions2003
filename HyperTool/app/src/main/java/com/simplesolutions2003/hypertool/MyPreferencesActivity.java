@@ -6,7 +6,6 @@ package com.simplesolutions2003.hypertool;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.net.TrafficStats;
 import android.net.Uri;
 import android.os.Bundle;
 import android.preference.EditTextPreference;
@@ -103,18 +102,21 @@ public class MyPreferencesActivity extends PreferenceActivity implements
         Preference prefResetData = (Preference) findPreference("reset_data_wifi_usage");
         prefResetData.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             public boolean onPreferenceClick(Preference preference) {
-                long mobileTx = TrafficStats.getMobileTxBytes();
-                long mobileRx = TrafficStats.getMobileRxBytes();
-                long wifiTx = TrafficStats.getTotalTxBytes() - mobileTx;
-                long wifiRx = TrafficStats.getTotalRxBytes() - mobileRx;
-                long currWifiUsage = wifiTx + wifiRx;
-                long currDataUsage = mobileTx + mobileRx;
+                DataWifiUsage.setContext(MyPreferencesActivity.this);
+                DataWifiUsage.resetData();
+                DataWifiUsage.resetWifi();
+                return false;
+            }
+        });
+
+        Preference prefResetPedometer = (Preference) findPreference("reset_pedometer");
+        prefResetPedometer.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+            public boolean onPreferenceClick(Preference preference) {
+                SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(MyPreferencesActivity.this);
+                Float step_count = prefs.getFloat(MyPreferencesActivity.this.getString(R.string.pref_key_step_count), 0F);
 
                 SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(MyPreferencesActivity.this).edit();
-                editor.putLong(MyPreferencesActivity.this.getString(R.string.pref_key_data), 0);
-                editor.putLong(MyPreferencesActivity.this.getString(R.string.pref_key_wifi), 0);
-                editor.putLong(MyPreferencesActivity.this.getString(R.string.pref_key_prev_data), currDataUsage);
-                editor.putLong(MyPreferencesActivity.this.getString(R.string.pref_key_prev_wifi), currWifiUsage);
+                editor.putFloat(MyPreferencesActivity.this.getString(R.string.pref_key_initial_step_count), step_count);
                 editor.commit();
                 return false;
             }
