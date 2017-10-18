@@ -1,0 +1,37 @@
+<resources>
+    <string name="app_name">Sleepify Baby</string>
+    <string name="msg">Touch any icon to play or pause sound</string>
+
+    <string name="text_rattle_01">Rattle 1</string>
+    <string name="text_rattle_02">Rattle 2</string>
+    <string name="text_white_noise_01">White Noise</string>
+    <string name="text_bells">Bells</string>
+    <string name="text_birds_01">Birds 1</string>
+    <string name="text_birds_02">Birds 2</string>
+    <string name="text_blender">Blender</string>
+    <string name="text_clock">Clock</string>
+    <string name="text_guitar">Guitar</string>
+    <string name="text_forest">Forest</string>
+    <string name="text_frog">Frog</string>
+    <string name="text_shhh">Shhh</string>
+
+    <string name="cd_sounds">Select a sound to play for your baby</string>
+    <string name="cd_sounds_rattle_1">Rattle sound</string>
+    <string name="cd_sounds_rattle_2">Another rattle sound</string>
+    <string name="cd_sounds_white_noise">White Noise</string>
+    <string name="cd_sounds_bells">Bells</string>
+    <string name="cd_sounds_birds_01">Birds sound</string>
+    <string name="cd_sounds_birds_02">Another Birds sound</string>
+    <string name="cd_sounds_blender">Blender</string>
+    <string name="cd_sounds_clock">Clock</string>
+    <string name="cd_sounds_guitar">Guitar</string>
+    <string name="cd_sounds_forest">Forest</string>
+    <string name="cd_sounds_frog">Frog</string>
+    <string name="cd_sounds_shhh">Shhh</string>
+
+    <string name="dialog_volume">Current volume seems high, do you want to adjust?</string>
+    <string name="dialog_volume_music">Music</string>
+
+</resources>
+
+

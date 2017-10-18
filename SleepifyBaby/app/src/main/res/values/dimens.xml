@@ -1,0 +1,5 @@
+<resources>
+    <dimen name="margin_more">16dp</dimen>
+    <dimen name="sound_icon_width">100dp</dimen>
+    <dimen name="sound_icon_height">100dp</dimen>
+</resources>

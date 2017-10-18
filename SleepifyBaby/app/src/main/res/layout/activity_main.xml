@@ -1,0 +1,203 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:background="@color/colorAccentLight"
+    tools:context="com.simplesolutions2003.sleepifybaby.MainActivity">
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:orientation="vertical" android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:contentDescription="@string/cd_sounds"
+        android:background="@color/colorAccentLight">
+        <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            android:orientation="horizontal" android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <View android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_weight="1" />
+            <ImageButton
+                android:id="@+id/sound_rattle_01"
+                android:layout_width="@dimen/sound_icon_width"
+                android:layout_height="@dimen/sound_icon_height"
+                android:layout_marginTop="@dimen/margin_more"
+                android:src="@drawable/rattle_01"
+                android:contentDescription="@string/cd_sounds_rattle_1"
+                android:background="@android:color/transparent"
+                android:scaleType="fitCenter"
+                android:adjustViewBounds="true" />
+            <View android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_weight="1" />
+            <ImageButton
+                android:id="@+id/sound_rattle_02"
+                android:layout_width="@dimen/sound_icon_width"
+                android:layout_height="@dimen/sound_icon_height"
+                android:layout_marginTop="@dimen/margin_more"
+                android:src="@drawable/rattle_02"
+                android:contentDescription="@string/cd_sounds_rattle_2"
+                android:background="@android:color/transparent"
+                android:scaleType="fitCenter"
+                android:adjustViewBounds="true" />
+            <View android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_weight="1" />
+            <ImageButton
+                android:id="@+id/sound_bells"
+                android:layout_width="@dimen/sound_icon_width"
+                android:layout_height="@dimen/sound_icon_height"
+                android:layout_marginTop="@dimen/margin_more"
+                android:src="@drawable/bells"
+                android:background="@android:color/transparent"
+                android:scaleType="fitCenter"
+                android:contentDescription="@string/cd_sounds_bells"
+                android:adjustViewBounds="true" />
+            <View android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_weight="1" />
+        </LinearLayout>
+        <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            android:orientation="horizontal" android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <View android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_weight="1" />
+            <ImageButton
+                android:id="@+id/sound_frog"
+                android:layout_width="@dimen/sound_icon_width"
+                android:layout_height="@dimen/sound_icon_height"
+                android:layout_marginTop="@dimen/margin_more"
+                android:src="@drawable/frog"
+                android:contentDescription="@string/cd_sounds_frog"
+                android:background="@android:color/transparent"
+                android:scaleType="fitCenter"
+                android:adjustViewBounds="true" />
+            <View android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_weight="1" />
+            <ImageButton
+                android:id="@+id/sound_birds_01"
+                android:layout_width="@dimen/sound_icon_width"
+                android:layout_height="@dimen/sound_icon_height"
+                android:layout_marginTop="@dimen/margin_more"
+                android:src="@drawable/birds_01"
+                android:contentDescription="@string/cd_sounds_birds_01"
+                android:background="@android:color/transparent"
+                android:scaleType="fitCenter"
+                android:adjustViewBounds="true" />
+            <View android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_weight="1" />
+            <ImageButton
+                android:id="@+id/sound_birds_02"
+                android:layout_width="@dimen/sound_icon_width"
+                android:layout_height="@dimen/sound_icon_height"
+                android:layout_marginTop="@dimen/margin_more"
+                android:src="@drawable/birds_02"
+                android:background="@android:color/transparent"
+                android:scaleType="fitCenter"
+                android:contentDescription="@string/cd_sounds_birds_02"
+                android:adjustViewBounds="true" />
+            <View android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_weight="1" />
+        </LinearLayout>
+        <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            android:orientation="horizontal" android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <View android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_weight="1" />
+            <ImageButton
+                android:id="@+id/sound_forest"
+                android:layout_width="@dimen/sound_icon_width"
+                android:layout_height="@dimen/sound_icon_height"
+                android:layout_marginTop="@dimen/margin_more"
+                android:src="@drawable/forest"
+                android:contentDescription="@string/cd_sounds_forest"
+                android:background="@android:color/transparent"
+                android:scaleType="fitCenter"
+                android:adjustViewBounds="true" />
+            <View android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_weight="1" />
+            <ImageButton
+                android:id="@+id/sound_clock"
+                android:layout_width="@dimen/sound_icon_width"
+                android:layout_height="@dimen/sound_icon_height"
+                android:layout_marginTop="@dimen/margin_more"
+                android:src="@drawable/clock"
+                android:contentDescription="@string/cd_sounds_clock"
+                android:background="@android:color/transparent"
+                android:scaleType="fitCenter"
+                android:adjustViewBounds="true" />
+            <View android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_weight="1" />
+            <ImageButton
+                android:id="@+id/sound_guitar"
+                android:layout_width="@dimen/sound_icon_width"
+                android:layout_height="@dimen/sound_icon_height"
+                android:layout_marginTop="@dimen/margin_more"
+                android:src="@drawable/guitar"
+                android:background="@android:color/transparent"
+                android:scaleType="fitCenter"
+                android:contentDescription="@string/cd_sounds_guitar"
+                android:adjustViewBounds="true" />
+            <View android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_weight="1" />
+        </LinearLayout>
+        <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            android:orientation="horizontal" android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <View android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_weight="1" />
+
+            <ImageButton
+                android:id="@+id/sound_blender"
+                android:layout_width="@dimen/sound_icon_width"
+                android:layout_height="@dimen/sound_icon_height"
+                android:layout_marginTop="@dimen/margin_more"
+                android:src="@drawable/blender"
+                android:contentDescription="@string/cd_sounds_blender"
+                android:background="@android:color/transparent"
+                android:scaleType="fitCenter"
+                android:adjustViewBounds="true" />
+
+            <View android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_weight="1" />
+
+            <ImageButton
+                android:id="@+id/sound_shhh"
+                android:layout_width="@dimen/sound_icon_width"
+                android:layout_height="@dimen/sound_icon_height"
+                android:layout_marginTop="@dimen/margin_more"
+                android:src="@drawable/shhh"
+                android:contentDescription="@string/cd_sounds_shhh"
+                android:background="@android:color/transparent"
+                android:scaleType="fitCenter"
+                android:adjustViewBounds="true" />
+
+            <View android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_weight="1" />
+            <ImageButton
+                android:id="@+id/sound_white_noise_01"
+                android:layout_width="@dimen/sound_icon_width"
+                android:layout_height="@dimen/sound_icon_height"
+                android:layout_marginTop="@dimen/margin_more"
+                android:src="@drawable/white_noise_01"
+                android:background="@android:color/transparent"
+                android:scaleType="fitCenter"
+                android:contentDescription="@string/cd_sounds_white_noise"
+                android:adjustViewBounds="true" />
+            <View android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_weight="1" />
+        </LinearLayout>
+    </LinearLayout>
+</ScrollView>
+
