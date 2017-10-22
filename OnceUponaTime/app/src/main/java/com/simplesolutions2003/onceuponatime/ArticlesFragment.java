@@ -110,7 +110,7 @@ public class ArticlesFragment extends Fragment implements LoaderManager.LoaderCa
     public Loader<Cursor> onCreateLoader(int i, Bundle bundle) {
         Log.v(TAG, "onCreateLoader - " + i + " loader");
         new Utilities(getActivity()).updateEmptyLoadingGone(Utilities.LIST_LOADING,tvEmptyLoading,"");
-        Uri buildArticle = AppContract.ArticleEntry.buildArticleByTypeUri(ARTICLE_TYPE);
+        Uri buildArticle = AppContract.ArticleEntry.buildArticleByTypeSearchUri(ARTICLE_TYPE,MainActivity.search_text);
 
         return new CursorLoader(getActivity(),
                 buildArticle,

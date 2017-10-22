@@ -8,6 +8,13 @@
     <string name="content_authority">com.simplesolutions2003.onceuponatime</string>
     <string name="provider_content_authority">com.simplesolutions2003.onceuponatime</string>
 
+
+    <string name="action_search">Search</string>
+    <string name="action_rate">Rate App</string>
+    <string name="action_share">Share App</string>
+
+    <string name="msg_share_app">Hey check out this cool app at: </string>
+
     <string name="text_list_loading">refreshing...</string>
     <string name="text_articles_sync_progress">Sync in progress...</string>
     <string name="text_articles_no_data">Need internet connection to get latest stories from server. Once fetched, you can access them offline. </string>

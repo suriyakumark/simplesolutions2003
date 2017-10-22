@@ -1,18 +1,25 @@
 package com.simplesolutions2003.onceuponatime;
 
 import android.app.Activity;
+import android.net.Uri;
 import android.support.v4.app.Fragment;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.ActionBar;
 import android.util.Log;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
@@ -24,6 +31,10 @@ public class MainActivity extends AppCompatActivity {
     private final static String LOG_TAG = MainActivity.class.getSimpleName();
     Toolbar toolbar;
     FragmentManager fragmentManager = getSupportFragmentManager();
+    private MenuItem mSearchAction;
+    private boolean isSearchOpened = false;
+    private EditText etSearch;
+    public static String search_text = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,17 +59,142 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.main_menu, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        mSearchAction = menu.findItem(R.id.action_search);
+        return super.onPrepareOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+
+        switch (id) {
+            case R.id.action_rate:
+                try {
+                    startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + getPackageName())));
+                } catch (android.content.ActivityNotFoundException anfe) {
+                    startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=" + getPackageName())));
+                }
+                return true;
+            case R.id.action_share:
+                Intent sendIntent = new Intent();
+                sendIntent.setAction(Intent.ACTION_SEND);
+                sendIntent.putExtra(Intent.EXTRA_TEXT,
+                        this.getString(R.string.msg_share_app) +
+                                "https://play.google.com/store/apps/details?id=" + getPackageName());
+                sendIntent.setType("text/plain");
+                startActivity(sendIntent);
+
+            case R.id.action_search:
+                if(isSearchOpened) {
+                    handleMenuSearchInitialize();
+                }else {
+                    handleMenuSearchOpen();
+                }
+                return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
     public void onResume(){
         super.onResume();
         getSupportActionBar().setTitle(getString(R.string.app_name));
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         getSupportActionBar().setIcon(R.mipmap.ic_launcher);
+        search_text = "";
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.setCustomAnimations( R.anim.slide_in_left, 0, 0, R.anim.slide_out_left);
         fragmentTransaction.replace(R.id.frame_container, new ArticlesFragment(), ArticlesFragment.TAG);
         //fragmentTransaction.addToBackStack(ArticlesFragment.TAG);
         fragmentTransaction.commit();
+    }
 
+    protected void handleMenuSearchInitialize() {
+        Log.v(LOG_TAG,"handleMenuSearchInitialize - " + isSearchOpened);
+        search_text = "";
+        doSearch();
+    }
+
+    protected void handleMenuSearchClose(){
+
+        Log.v(LOG_TAG,"handleMenuSearchClose - " + isSearchOpened);
+        ActionBar action = getSupportActionBar(); //get the actionbar
+        action.setDisplayShowCustomEnabled(false); //disable a custom view inside the actionbar
+        action.setDisplayShowTitleEnabled(true); //show the title in the action bar
+
+        //hides the keyboard
+        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(etSearch.getWindowToken(), 0);
+        imm.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0);
+
+        //add the search icon in the action bar
+        mSearchAction.setIcon(getResources().getDrawable(R.drawable.search));
+
+        isSearchOpened = false;
+
+    }
+
+    protected void handleMenuSearchOpen(){
+        Log.v(LOG_TAG,"handleMenuSearchOpen - " + isSearchOpened);
+        if(!isSearchOpened){ //test if the search is open
+            ActionBar action = getSupportActionBar(); //get the actionbar
+            action.setDisplayShowCustomEnabled(true); //enable it to display a
+            // custom view in the action bar.
+            action.setCustomView(R.layout.search_bar);//add the custom view
+            action.setDisplayShowTitleEnabled(false); //hide the title
+
+            etSearch = (EditText)action.getCustomView().findViewById(R.id.search_text); //the text editor
+            etSearch.setText(search_text);
+            //this is a listener to do a search when the user clicks on search button
+            etSearch.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+                @Override
+                public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                    if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+                        search_text = etSearch.getText().toString();
+                        doSearch();
+                        return true;
+                    }
+                    return false;
+                }
+            });
+
+
+            etSearch.requestFocus();
+
+            //open the keyboard focused in the edtSearch
+            InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.showSoftInput(etSearch, InputMethodManager.SHOW_IMPLICIT);
+
+            //add the close icon
+            mSearchAction.setIcon(getResources().getDrawable(R.drawable.search_close));
+            isSearchOpened = true;
+        }
+    }
+
+    @Override
+    public void onBackPressed() {
+        if(isSearchOpened) {
+            handleMenuSearchInitialize();
+            return;
+        }
+        super.onBackPressed();
+    }
+
+    private void doSearch() {
+        handleMenuSearchClose();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.setCustomAnimations( R.anim.slide_in_left, 0, 0, R.anim.slide_out_left);
+        fragmentTransaction.replace(R.id.frame_container, new ArticlesFragment(), ArticlesFragment.TAG);
+        fragmentTransaction.addToBackStack(ArticlesFragment.TAG);
+        fragmentTransaction.commit();
     }
 
 }

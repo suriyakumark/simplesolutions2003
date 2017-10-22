@@ -43,6 +43,9 @@ public class AppContract {
         }
 
         public static Uri buildArticleByTypeSearchUri(String articleType, String articleSearch) {
+            if(articleSearch.isEmpty() || articleSearch.equals("")){
+                articleSearch = "%";
+            }
             return CONTENT_URI.buildUpon().appendPath("TYPE").appendPath(articleType).appendPath("SEARCH").appendPath(articleSearch).build();
         }
 
