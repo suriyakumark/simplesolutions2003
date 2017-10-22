@@ -58,7 +58,7 @@ public class SyncAdapter {
         Log.v(TAG, "onAccountCreated");
 
         ArticleSyncAdapter.configurePeriodicSync(context, ArticleSyncAdapter.SYNC_INTERVAL, ArticleSyncAdapter.SYNC_FLEXTIME);
-        ContentResolver.setSyncAutomatically(newAccount, context.getString(R.string.content_authority_article), true);
+        ContentResolver.setSyncAutomatically(newAccount, context.getString(R.string.content_authority), true);
         ArticleSyncAdapter.syncImmediately(context);
     }
 

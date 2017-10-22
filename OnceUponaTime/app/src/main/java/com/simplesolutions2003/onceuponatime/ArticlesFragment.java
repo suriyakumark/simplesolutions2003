@@ -45,12 +45,13 @@ public class ArticlesFragment extends Fragment implements LoaderManager.LoaderCa
     private ContentObserver mObserver;
 
 
-    private static final String[] ARTICLE_COLUMNS = {
+    public static final String[] ARTICLE_COLUMNS = {
             AppContract.ArticleEntry.TABLE_NAME + "." + AppContract.ArticleEntry._ID,
             AppContract.ArticleEntry.TABLE_NAME + "." + AppContract.ArticleEntry.COLUMN_TYPE,
             AppContract.ArticleEntry.TABLE_NAME + "." + AppContract.ArticleEntry.COLUMN_CATEGORY,
             AppContract.ArticleEntry.TABLE_NAME + "." + AppContract.ArticleEntry.COLUMN_TITLE,
-            AppContract.ArticleEntry.TABLE_NAME + "." + AppContract.ArticleEntry.COLUMN_COVER_PIC
+            AppContract.ArticleEntry.TABLE_NAME + "." + AppContract.ArticleEntry.COLUMN_COVER_PIC,
+            AppContract.ArticleEntry.TABLE_NAME + "." + AppContract.ArticleEntry.COLUMN_LAST_UPDATED_TS
     };
 
 
@@ -59,6 +60,7 @@ public class ArticlesFragment extends Fragment implements LoaderManager.LoaderCa
     static final int COL_ARTICLE_CATEGORY = 2;
     static final int COL_ARTICLE_TITLE = 3;
     static final int COL_ARTICLE_COVER_PIC = 4;
+    public static final int COL_ARTICLE_LAST_UPD_TS = 5;
 
 
     public interface Callback {

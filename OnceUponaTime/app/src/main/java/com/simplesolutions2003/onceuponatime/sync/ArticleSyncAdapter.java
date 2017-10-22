@@ -28,8 +28,10 @@ import android.support.v4.app.TaskStackBuilder;
 import android.text.format.Time;
 import android.util.Log;
 
+import com.simplesolutions2003.onceuponatime.ArticlesFragment;
 import com.simplesolutions2003.onceuponatime.MainActivity;
 import com.simplesolutions2003.onceuponatime.R;
+import com.simplesolutions2003.onceuponatime.Utilities;
 import com.simplesolutions2003.onceuponatime.data.AppContract;
 
 import org.json.JSONArray;
@@ -85,11 +87,11 @@ public class ArticleSyncAdapter extends AbstractThreadedSyncAdapter {
         String articleJsonStr = null;
 
         try {
+
             final String FORECAST_BASE_URL =
                     "http://suriyakumar.com/api/articles/v1/getArticles";
 
-            Uri builtUri = Uri.parse(FORECAST_BASE_URL).buildUpon()
-                    .build();
+            Uri builtUri = Uri.parse(FORECAST_BASE_URL).buildUpon().build();
 
             URL url = new URL(builtUri.toString());
 
@@ -141,26 +143,6 @@ public class ArticleSyncAdapter extends AbstractThreadedSyncAdapter {
         return;
     }
 
-
-    public void sendNotification() {
-        NotificationManager mNotificationManager = (NotificationManager)
-                context.getSystemService(NOTIFICATION_SERVICE);
-
-
-        Intent intent = new Intent(context.getApplicationContext(), MainActivity.class);
-        PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, 0);
-
-        NotificationCompat.Builder mBuilder =
-                new NotificationCompat.Builder(context)
-                        .setSmallIcon(R.mipmap.ic_launcher)
-                        .setContentIntent(pendingIntent)
-                        .setContentTitle("New stories!!!")
-                        .setContentText("Check out the new stories retrieved")
-                        .setAutoCancel(true);
-
-        mNotificationManager.notify(1, mBuilder.build());
-
-    }
         /**
          * Take the String representing the complete forecast in JSON Format and
          * pull out the data we need to construct the Strings needed for the wireframes.
@@ -235,47 +217,63 @@ public class ArticleSyncAdapter extends AbstractThreadedSyncAdapter {
                 articleCoverPic = article.getString(OWM_ARTICLE_COVER_PIC);
                 articleLastUpdatedTs = article.getString(OWM_ARTICLE_LAST_UPD_TS);
 
-                ContentValues articleValues = new ContentValues();
-                articleValues.put(AppContract.ArticleEntry._ID, articleId);
-                articleValues.put(AppContract.ArticleEntry.COLUMN_TYPE, articleType);
-                articleValues.put(AppContract.ArticleEntry.COLUMN_CATEGORY, articleCategory);
-                articleValues.put(AppContract.ArticleEntry.COLUMN_TITLE, articleTitle);
-                articleValues.put(AppContract.ArticleEntry.COLUMN_COVER_PIC, articleCoverPic);
-                articleValues.put(AppContract.ArticleEntry.COLUMN_LAST_UPDATED_TS, articleLastUpdatedTs);
-                getContext().getContentResolver().insert(AppContract.ArticleEntry.CONTENT_URI, articleValues);
-                insertedArticles++;
+                Uri articleUri = AppContract.ArticleEntry.buildArticleUri(articleId);
+                Cursor articleCursor = getContext().getContentResolver().query(articleUri, ArticlesFragment.ARTICLE_COLUMNS,null,null,null);
+                String articleLastUpdatedTsPrev = "";
+                if(articleCursor != null) {
+                    if (articleCursor.getCount() > 0) {
+                        articleCursor.moveToNext();
+                        articleLastUpdatedTsPrev = articleCursor.getString(ArticlesFragment.COL_ARTICLE_LAST_UPD_TS);
+                        Log.v(TAG, "articleLastUpdatedTsPrev " + articleLastUpdatedTsPrev);
+                    }
+                }
+                Log.v(TAG, "articleLastUpdatedTs " + articleLastUpdatedTs);
 
-                JSONArray articleDetailArray =
-                        article.getJSONArray(OWM_ARTICLE_DTL);
-                for(int j = 0; j < articleDetailArray.length(); j++){
+                if(articleLastUpdatedTs.compareTo(articleLastUpdatedTsPrev) > 0) {
+                    ContentValues articleValues = new ContentValues();
+                    articleValues.put(AppContract.ArticleEntry._ID, articleId);
+                    articleValues.put(AppContract.ArticleEntry.COLUMN_TYPE, articleType);
+                    articleValues.put(AppContract.ArticleEntry.COLUMN_CATEGORY, articleCategory);
+                    articleValues.put(AppContract.ArticleEntry.COLUMN_TITLE, articleTitle);
+                    articleValues.put(AppContract.ArticleEntry.COLUMN_COVER_PIC, articleCoverPic);
+                    articleValues.put(AppContract.ArticleEntry.COLUMN_LAST_UPDATED_TS, articleLastUpdatedTs);
+                    getContext().getContentResolver().insert(AppContract.ArticleEntry.CONTENT_URI, articleValues);
+                    insertedArticles++;
 
-                    long articleDetailId;
-                    long articleDetailSequenceId;
-                    String articleDetailType;
-                    String articleDetailContent;
+                    JSONArray articleDetailArray =
+                            article.getJSONArray(OWM_ARTICLE_DTL);
+                    for (int j = 0; j < articleDetailArray.length(); j++) {
 
-                    JSONObject articleDetail = articleDetailArray.getJSONObject(j);
+                        long articleDetailId;
+                        long articleDetailSequenceId;
+                        String articleDetailType;
+                        String articleDetailContent;
 
-                    articleDetailId = articleDetail.getLong(OWM_ARTICLE_DTL_ID);
-                    articleDetailSequenceId = articleDetail.getLong(OWM_ARTICLE_DTL_SEQUENCE);
-                    articleDetailType = articleDetail.getString(OWM_ARTICLE_DTL_TYPE);
-                    articleDetailContent = articleDetail.getString(OWM_ARTICLE_DTL_CONTENT);
+                        JSONObject articleDetail = articleDetailArray.getJSONObject(j);
 
-                    ContentValues articleDetailValues = new ContentValues();
+                        articleDetailId = articleDetail.getLong(OWM_ARTICLE_DTL_ID);
+                        articleDetailSequenceId = articleDetail.getLong(OWM_ARTICLE_DTL_SEQUENCE);
+                        articleDetailType = articleDetail.getString(OWM_ARTICLE_DTL_TYPE);
+                        articleDetailContent = articleDetail.getString(OWM_ARTICLE_DTL_CONTENT);
 
-                    articleDetailValues.put(AppContract.ArticleDetailEntry._ID, articleDetailId);
-                    articleDetailValues.put(AppContract.ArticleDetailEntry.COLUMN_ARTICLE_ID, articleId);
-                    articleDetailValues.put(AppContract.ArticleDetailEntry.COLUMN_SEQUENCE, articleDetailSequenceId);
-                    articleDetailValues.put(AppContract.ArticleDetailEntry.COLUMN_TYPE, articleDetailType);
-                    articleDetailValues.put(AppContract.ArticleDetailEntry.COLUMN_CONTENT, articleDetailContent);
+                        ContentValues articleDetailValues = new ContentValues();
 
-                    getContext().getContentResolver().insert(AppContract.ArticleDetailEntry.CONTENT_URI, articleDetailValues);
-                    insertedArticlesDetail++;
+                        articleDetailValues.put(AppContract.ArticleDetailEntry._ID, articleDetailId);
+                        articleDetailValues.put(AppContract.ArticleDetailEntry.COLUMN_ARTICLE_ID, articleId);
+                        articleDetailValues.put(AppContract.ArticleDetailEntry.COLUMN_SEQUENCE, articleDetailSequenceId);
+                        articleDetailValues.put(AppContract.ArticleDetailEntry.COLUMN_TYPE, articleDetailType);
+                        articleDetailValues.put(AppContract.ArticleDetailEntry.COLUMN_CONTENT, articleDetailContent);
+
+                        getContext().getContentResolver().insert(AppContract.ArticleDetailEntry.CONTENT_URI, articleDetailValues);
+                        insertedArticlesDetail++;
+                    }
+
                 }
 
             }
 
             Log.d(TAG, "Sync Complete. " + "articles inserted - " + insertedArticles + "; detail inserted - " + insertedArticlesDetail);
+
             if(insertedArticles > 0){
                 sendNotification();
             }
@@ -286,12 +284,31 @@ public class ArticleSyncAdapter extends AbstractThreadedSyncAdapter {
         }
     }
 
+    public void sendNotification() {
+        NotificationManager mNotificationManager = (NotificationManager)
+                context.getSystemService(NOTIFICATION_SERVICE);
+
+        Intent intent = new Intent(context.getApplicationContext(), MainActivity.class);
+        PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, 0);
+
+        NotificationCompat.Builder mBuilder =
+                new NotificationCompat.Builder(context)
+                        .setSmallIcon(R.drawable.logo_white)
+                        .setContentIntent(pendingIntent)
+                        .setContentTitle(context.getString(R.string.notify_title))
+                        .setContentText(context.getString(R.string.notify_msg))
+                        .setAutoCancel(true);
+
+        mNotificationManager.notify(1, mBuilder.build());
+
+    }
+
     /**
      * Helper method to schedule the sync adapter periodic execution
      */
     public static void configurePeriodicSync(Context context, int syncInterval, int flexTime) {
         Account account = getSyncAccount(context);
-        String authority = context.getString(R.string.content_authority_article);
+        String authority = context.getString(R.string.content_authority);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             // we can enable inexact timers in our periodic sync
             SyncRequest request = new SyncRequest.Builder().
@@ -314,7 +331,7 @@ public class ArticleSyncAdapter extends AbstractThreadedSyncAdapter {
         bundle.putBoolean(ContentResolver.SYNC_EXTRAS_EXPEDITED, true);
         bundle.putBoolean(ContentResolver.SYNC_EXTRAS_MANUAL, true);
         ContentResolver.requestSync(getSyncAccount(context),
-                context.getString(R.string.content_authority_article), bundle);
+                context.getString(R.string.content_authority), bundle);
     }
 
     /**
@@ -368,7 +385,7 @@ public class ArticleSyncAdapter extends AbstractThreadedSyncAdapter {
         /*
          * Without calling setSyncAutomatically, our periodic sync will not be enabled.
          */
-        ContentResolver.setSyncAutomatically(newAccount, context.getString(R.string.content_authority_article), true);
+        ContentResolver.setSyncAutomatically(newAccount, context.getString(R.string.content_authority), true);
 
         /*
          * Finally, let's do a sync to get things started

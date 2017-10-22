@@ -29,6 +29,8 @@ public class AppProvider extends ContentProvider {
     static final int ARTICLE = 1000;
     static final int ARTICLE_BY_TYPE = 1001;
     static final int ARTICLE_BY_CATEGORY = 1002;
+    static final int ARTICLE_BY_TYPE_SEARCH = 1003;
+    static final int ARTICLE_BY_ID = 1004;
     static final int ARTICLE_DETAIL = 1100;
     static final int ARTICLE_DETAIL_BY_ARTICLEID = 1101;
     static final int ARTICLE_DETAIL_WITH_DETAIL_BY_ARTICLEID = 1102;
@@ -59,13 +61,20 @@ public class AppProvider extends ContentProvider {
                         "." + AppContract.ArticleDetailEntry.COLUMN_ARTICLE_ID);
     }
 
-    private static final String sArticleSelection =
+    private static final String sArticleByIdSelection =
             AppContract.ArticleEntry.TABLE_NAME +
                     "." + AppContract.ArticleEntry._ID + " = ? ";
 
     private static final String sArticleByTypeSelection =
             AppContract.ArticleEntry.TABLE_NAME +
                     "." + AppContract.ArticleEntry.COLUMN_TYPE + " = ? ";
+
+    private static final String sArticleByTypeSearchSelection =
+            AppContract.ArticleEntry.TABLE_NAME +
+                    "." + AppContract.ArticleEntry.COLUMN_TYPE + " = ? " +
+                    " AND " +
+            AppContract.ArticleEntry.TABLE_NAME +
+                    "." + AppContract.ArticleEntry.COLUMN_TITLE + " LIKE ? ";
 
     private static final String sArticleByCategorySelection =
             AppContract.ArticleEntry.TABLE_NAME +
@@ -83,6 +92,22 @@ public class AppProvider extends ContentProvider {
             AppContract.ArticleDetailEntry.TABLE_NAME +
                     "." + AppContract.ArticleDetailEntry.COLUMN_ARTICLE_ID + " = ? ";
 
+    private Cursor getArticleById(Uri uri, String[] projection, String sortOrder) {
+
+        Log.v(LOG_TAG, "getArticleById uri - " + uri);
+        Long articleId = AppContract.ArticleEntry.getIdFromUri(uri);
+        Log.v(LOG_TAG, "getArticleById articleId - " + articleId);
+
+        return sArticleQueryBuilder.query(mOpenHelper.getReadableDatabase(),
+                projection,
+                sArticleByIdSelection,
+                new String[]{Long.toString(articleId)},
+                null,
+                null,
+                sortOrder
+        );
+    }
+
     private Cursor getArticleByType(Uri uri, String[] projection, String sortOrder) {
 
         Log.v(LOG_TAG, "getArticleByType uri - " + uri);
@@ -93,6 +118,24 @@ public class AppProvider extends ContentProvider {
                 projection,
                 sArticleByTypeSelection,
                 new String[]{articleType},
+                null,
+                null,
+                sortOrder
+        );
+    }
+
+    private Cursor getArticleByTypeSearch(Uri uri, String[] projection, String sortOrder) {
+
+        Log.v(LOG_TAG, "getArticleByTypeSearch uri - " + uri);
+        String articleType = AppContract.ArticleEntry.getArticleTypeFromUri(uri);
+        String articleSearch = '%' + AppContract.ArticleEntry.getArticleSearchFromUri(uri) + '%';
+        Log.v(LOG_TAG, "getArticleByTypeSearch articleType - " + articleType);
+        Log.v(LOG_TAG, "getArticleByTypeSearch articleSearch - " + articleSearch);
+
+        return sArticleQueryBuilder.query(mOpenHelper.getReadableDatabase(),
+                projection,
+                sArticleByTypeSearchSelection,
+                new String[]{articleType,articleSearch},
                 null,
                 null,
                 sortOrder
@@ -150,15 +193,15 @@ public class AppProvider extends ContentProvider {
     static UriMatcher buildUriMatcher() {
         final UriMatcher matcher = new UriMatcher(UriMatcher.NO_MATCH);
         final String authority = AppContract.CONTENT_AUTHORITY;
-        final String authority_article = AppContract.CONTENT_AUTHORITY_ARTICLE;
 
-        matcher.addURI(authority_article, AppContract.PATH_ARTICLE, ARTICLE);
-        matcher.addURI(authority_article, AppContract.PATH_ARTICLE + "/TYPE/*", ARTICLE_BY_TYPE);
-        matcher.addURI(authority_article, AppContract.PATH_ARTICLE + "/CATEGORY/*", ARTICLE_BY_CATEGORY);
-        matcher.addURI(authority_article, AppContract.PATH_ARTICLE_DETAIL, ARTICLE_DETAIL);
-        matcher.addURI(authority_article, AppContract.PATH_ARTICLE_DETAIL + "/ARTICLE/DETAIL/*", ARTICLE_DETAIL_WITH_DETAIL_BY_ARTICLEID);
-        matcher.addURI(authority_article, AppContract.PATH_ARTICLE_DETAIL + "/ARTICLE/*", ARTICLE_DETAIL_BY_ARTICLEID);
-
+        matcher.addURI(authority, AppContract.PATH_ARTICLE, ARTICLE);
+        matcher.addURI(authority, AppContract.PATH_ARTICLE + "/TYPE/*/SEARCH/*", ARTICLE_BY_TYPE_SEARCH);
+        matcher.addURI(authority, AppContract.PATH_ARTICLE + "/TYPE/*", ARTICLE_BY_TYPE);
+        matcher.addURI(authority, AppContract.PATH_ARTICLE + "/CATEGORY/*", ARTICLE_BY_CATEGORY);
+        matcher.addURI(authority, AppContract.PATH_ARTICLE_DETAIL, ARTICLE_DETAIL);
+        matcher.addURI(authority, AppContract.PATH_ARTICLE_DETAIL + "/ARTICLE/DETAIL/*", ARTICLE_DETAIL_WITH_DETAIL_BY_ARTICLEID);
+        matcher.addURI(authority, AppContract.PATH_ARTICLE_DETAIL + "/ARTICLE/*", ARTICLE_DETAIL_BY_ARTICLEID);
+        matcher.addURI(authority, AppContract.PATH_ARTICLE + "/*", ARTICLE_BY_ID);
         return matcher;
     }
 
@@ -174,7 +217,11 @@ public class AppProvider extends ContentProvider {
         switch (match) {
             case ARTICLE:
                 return AppContract.ArticleEntry.CONTENT_TYPE;
+            case ARTICLE_BY_ID:
+                return AppContract.ArticleEntry.CONTENT_ITEM_TYPE;
             case ARTICLE_BY_TYPE:
+                return AppContract.ArticleEntry.CONTENT_ITEM_TYPE;
+            case ARTICLE_BY_TYPE_SEARCH:
                 return AppContract.ArticleEntry.CONTENT_ITEM_TYPE;
             case ARTICLE_BY_CATEGORY:
                 return AppContract.ArticleEntry.CONTENT_ITEM_TYPE;
@@ -207,8 +254,18 @@ public class AppProvider extends ContentProvider {
         }else {
             switch (sUriMatcher.match(uri)) {
 
+                case ARTICLE_BY_ID: {
+                    retCursor = getArticleById(uri, projection, sortOrder);
+                    break;
+                }
+
                 case ARTICLE_BY_TYPE: {
                     retCursor = getArticleByType(uri, projection, sortOrder);
+                    break;
+                }
+
+                case ARTICLE_BY_TYPE_SEARCH: {
+                    retCursor = getArticleByTypeSearch(uri, projection, sortOrder);
                     break;
                 }
 
