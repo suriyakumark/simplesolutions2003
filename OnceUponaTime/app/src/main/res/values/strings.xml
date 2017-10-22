@@ -1,3 +1,15 @@
 <resources>
     <string name="app_name">Once Upon a Time</string>
+    <string name="banner_ad_unit_id">ca-app-pub-1979618719371623/6491972002</string>
+    <string name="ad_device_id">B2326D174CA4865A2848DC62EC04ADAB</string>
+
+    <!-- SyncAdapter related -->
+    <string name="sync_account_type">onceuponatime.simplesolutions2003.com</string>
+    <string name="content_authority">com.simplesolutions2003.onceuponatime</string>
+    <string name="content_authority_article">com.simplesolutions2003.onceuponatime.article</string>
+    <string name="provider_content_authority">com.simplesolutions2003.onceuponatime;com.simplesolutions2003.onceuponatime.article;</string>
+
+    <string name="text_list_loading">refreshing...</string>
+    <string name="text_articles_sync_progress">Sync in progress...</string>
+    <string name="text_articles_no_data">Need internet connection to get latest stories from server. Once fetched, you can access them offline. </string>
 </resources>
