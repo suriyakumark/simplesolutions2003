@@ -64,8 +64,6 @@ public class DateChangeNotifyService  extends Service {
                 String previous_date = prefs.getString(context.getString(R.string.pref_key_previous_date), "");
                 int data_cycle = Integer.parseInt(prefs.getString(context.getString(R.string.pref_key_data_cycle), "1"));
                 String pedometer_cycle = prefs.getString(context.getString(R.string.pref_key_pedometer_cycle), "Daily");
-                Float step_count = prefs.getFloat(context.getString(R.string.pref_key_step_count), 0F);
-                Float initial_step_count = prefs.getFloat(context.getString(R.string.pref_key_initial_step_count), 0F);
                 SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
                 String current_date = sdf.format(new Date());
 
@@ -87,8 +85,6 @@ public class DateChangeNotifyService  extends Service {
 
                 Calendar calendar = Calendar.getInstance();
                 int dayOfMonth = calendar.get(Calendar.DAY_OF_MONTH);
-                //int minute = calendar.get(Calendar.MINUTE);
-                //int frequency = 1;
                 DataWifiUsage.setContext(context);
 
                 if(newDay) {
@@ -109,29 +105,27 @@ public class DateChangeNotifyService  extends Service {
                     //save previous day step count
                     if(pedometer_cycle.equals("Daily")) {
                         Log.v(LOG_TAG, "Step Count Reset");
-                        editor = PreferenceManager.getDefaultSharedPreferences(context).edit();
-                        editor.putFloat(context.getString(R.string.pref_key_initial_step_count), step_count);
-                        editor.commit();
+                        PedometerInfo.setContext(context);
+                        PedometerInfo.resetStepCount();
                     }
+
                     Log.v(LOG_TAG,"Send Broadcast for date changes");
                     Intent i = new Intent(ACTION_DATA_UPDATED_DATE);
                     context.sendBroadcast(i);
                 }
 
-                //if(minute % frequency == 0){
-                    if(DataWifiUsage.getDataUsage()){
-                        Log.v(LOG_TAG,"Send Broadcast for data changes");
-                        Intent i = new Intent(ACTION_DATA_UPDATED_DATA_USAGE);
-                        context.sendBroadcast(i);
-                    }
+                if(DataWifiUsage.getDataUsage()){
+                    Log.v(LOG_TAG,"Send Broadcast for data changes");
+                    Intent i = new Intent(ACTION_DATA_UPDATED_DATA_USAGE);
+                    context.sendBroadcast(i);
+                }
 
-                    if(DataWifiUsage.getWifiUsage()){
-                        Log.v(LOG_TAG,"Send Broadcast for wifi changes");
-                        Intent i = new Intent(ACTION_DATA_UPDATED_WIFI_USAGE);
-                        context.sendBroadcast(i);
-                    }
+                if(DataWifiUsage.getWifiUsage()){
+                    Log.v(LOG_TAG,"Send Broadcast for wifi changes");
+                    Intent i = new Intent(ACTION_DATA_UPDATED_WIFI_USAGE);
+                    context.sendBroadcast(i);
+                }
 
-                //}
             }
         }
     };

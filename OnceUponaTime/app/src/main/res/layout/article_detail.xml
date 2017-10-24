@@ -12,7 +12,7 @@
         android:background="@color/colorPrimaryLight"
         android:gravity="center_horizontal"
         android:padding="@dimen/padding_text"
-        android:maxLines="2"
+        android:maxLines="3"
         android:textSize="@dimen/size_title"/>
     <ListView
         android:id="@+id/article_detail_listview"

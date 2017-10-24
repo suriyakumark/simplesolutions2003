@@ -513,7 +513,6 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         Log.v(LOG_TAG,"setupPedometerInfo");
         bPedometerSwitch = false;
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-//testing
             if (sensorManager.getDefaultSensor(Sensor.TYPE_STEP_COUNTER) != null) {
                 updatePedometerInfo();
                 bPedometerSwitch = true;
@@ -522,7 +521,6 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                     startService(new Intent(context, mPedometerService.getClass()));
                 }
             }
-//testing
         }
 
         if(bPedometerSwitch){
@@ -1102,30 +1100,11 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
     public void updatePedometerInfo(){
         //Log.v(LOG_TAG,"updatePedometerInfo");
-        Float initial_step_count = 0F;
-        Float step_count = 0F;
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
-        initial_step_count = prefs.getFloat(getString(R.string.pref_key_initial_step_count), 0F);
-        float height = Float.parseFloat(prefs.getString(getString(R.string.pref_key_pedometer_height), "150.0"));
-        float weight = Float.parseFloat(prefs.getString(getString(R.string.pref_key_pedometer_weight), "65.0"));
-        String units = prefs.getString(getString(R.string.pref_key_pedometer_units), "Metric");
-        step_count = prefs.getFloat(getString(R.string.pref_key_step_count), 0F);
-        if (initial_step_count < step_count){
-            step_count = step_count - initial_step_count;
-        }
-        tvPedometerCount.setText(Formats.oneDigitIntForm(step_count));
-        if(units.equals("Imperial")) {
-            height = height * 2.54F;
-            weight = weight * 0.453592F;
-        }
-
-        tvPedometerCalorie.setText(Utilities.CalorieBurnedCalculator(step_count, height, weight) + " cal");
-
-        if(units.equals("Imperial")){
-            tvPedometerDistance.setText(Utilities.DistanceMiCalculator(step_count,height)+ " Mi");
-        }else {
-            tvPedometerDistance.setText(Utilities.DistanceKmCalculator(step_count, height) + " Km");
-        }
+        PedometerInfo.setContext(this);
+        PedometerInfo.getStepCount();
+        tvPedometerCount.setText(PedometerInfo.sPedometerSteps);
+        tvPedometerCalorie.setText(PedometerInfo.sPedometerCalories);
+        tvPedometerDistance.setText(PedometerInfo.sPedometerDistance);
     }
 
     public static void updateDataInfo(){

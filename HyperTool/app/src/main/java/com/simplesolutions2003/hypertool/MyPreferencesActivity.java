@@ -99,6 +99,26 @@ public class MyPreferencesActivity extends PreferenceActivity implements
             }
         });
 
+        final Preference prefHeight = (Preference) findPreference("pedometer_height");
+        prefHeight.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+            public boolean onPreferenceClick(Preference preference) {
+                EditTextPreference editPref = (EditTextPreference)preference;
+                editPref.getEditText().setSelection( editPref.getText().length() );
+                return true;
+
+            }
+        });
+
+        final Preference prefWeight = (Preference) findPreference("pedometer_weight");
+        prefWeight.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+            public boolean onPreferenceClick(Preference preference) {
+                EditTextPreference editPref = (EditTextPreference)preference;
+                editPref.getEditText().setSelection( editPref.getText().length() );
+                return true;
+
+            }
+        });
+
         Preference prefResetData = (Preference) findPreference("reset_data_wifi_usage");
         prefResetData.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             public boolean onPreferenceClick(Preference preference) {
@@ -112,12 +132,8 @@ public class MyPreferencesActivity extends PreferenceActivity implements
         Preference prefResetPedometer = (Preference) findPreference("reset_pedometer");
         prefResetPedometer.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             public boolean onPreferenceClick(Preference preference) {
-                SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(MyPreferencesActivity.this);
-                Float step_count = prefs.getFloat(MyPreferencesActivity.this.getString(R.string.pref_key_step_count), 0F);
-
-                SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(MyPreferencesActivity.this).edit();
-                editor.putFloat(MyPreferencesActivity.this.getString(R.string.pref_key_initial_step_count), step_count);
-                editor.commit();
+                PedometerInfo.setContext(MyPreferencesActivity.this);
+                PedometerInfo.resetStepCount();
                 return false;
             }
         });

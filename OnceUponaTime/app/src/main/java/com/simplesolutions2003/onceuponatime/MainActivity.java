@@ -16,6 +16,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
@@ -31,10 +32,11 @@ public class MainActivity extends AppCompatActivity {
     private final static String LOG_TAG = MainActivity.class.getSimpleName();
     Toolbar toolbar;
     FragmentManager fragmentManager = getSupportFragmentManager();
-    private MenuItem mSearchAction;
-    private boolean isSearchOpened = false;
-    private EditText etSearch;
+    private static MenuItem mSearchAction;
+    private static boolean isSearchOpened = false;
+    private static EditText etSearch;
     public static String search_text = "";
+    public static boolean bSearchEnabled = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,6 +69,11 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
         mSearchAction = menu.findItem(R.id.action_search);
+        if(bSearchEnabled) {
+            new Utilities().enableMenu(mSearchAction, true);
+        }else{
+            mSearchAction.setVisible(false);
+        }
         return super.onPrepareOptionsMenu(menu);
     }
 
@@ -118,22 +125,20 @@ public class MainActivity extends AppCompatActivity {
     }
 
     protected void handleMenuSearchInitialize() {
-        Log.v(LOG_TAG,"handleMenuSearchInitialize - " + isSearchOpened);
+        Log.v(LOG_TAG,"handleMenuSearchInitialize");
         search_text = "";
         doSearch();
     }
 
     protected void handleMenuSearchClose(){
 
-        Log.v(LOG_TAG,"handleMenuSearchClose - " + isSearchOpened);
+        Log.v(LOG_TAG,"handleMenuSearchClose");
         ActionBar action = getSupportActionBar(); //get the actionbar
         action.setDisplayShowCustomEnabled(false); //disable a custom view inside the actionbar
         action.setDisplayShowTitleEnabled(true); //show the title in the action bar
 
         //hides the keyboard
-        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-        imm.hideSoftInputFromWindow(etSearch.getWindowToken(), 0);
-        imm.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0);
+        hideKeyboard();
 
         //add the search icon in the action bar
         mSearchAction.setIcon(getResources().getDrawable(R.drawable.search));
@@ -143,8 +148,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     protected void handleMenuSearchOpen(){
-        Log.v(LOG_TAG,"handleMenuSearchOpen - " + isSearchOpened);
         if(!isSearchOpened){ //test if the search is open
+            Log.v(LOG_TAG,"handleMenuSearchOpen");
             ActionBar action = getSupportActionBar(); //get the actionbar
             action.setDisplayShowCustomEnabled(true); //enable it to display a
             // custom view in the action bar.
@@ -181,6 +186,7 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
+        hideKeyboard();
         if(isSearchOpened) {
             handleMenuSearchInitialize();
             return;
@@ -193,8 +199,14 @@ public class MainActivity extends AppCompatActivity {
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.setCustomAnimations( R.anim.slide_in_left, 0, 0, R.anim.slide_out_left);
         fragmentTransaction.replace(R.id.frame_container, new ArticlesFragment(), ArticlesFragment.TAG);
-        fragmentTransaction.addToBackStack(ArticlesFragment.TAG);
+        if(!search_text.isEmpty() || !search_text.equals("")) {
+            fragmentTransaction.addToBackStack(ArticlesFragment.TAG);
+        }
         fragmentTransaction.commit();
+    }
+
+    public void hideKeyboard(){
+        Utilities.hideKeyboard(this);
     }
 
 }

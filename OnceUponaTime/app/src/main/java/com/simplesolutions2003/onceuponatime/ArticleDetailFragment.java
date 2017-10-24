@@ -1,5 +1,6 @@
 package com.simplesolutions2003.onceuponatime;
 
+import android.content.Context;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
@@ -7,12 +8,16 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -81,6 +86,7 @@ public class ArticleDetailFragment extends Fragment implements LoaderManager.Loa
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         Log.v(TAG, "onCreateOptionsMenu");
         super.onCreateOptionsMenu(menu,inflater);
+        MainActivity.bSearchEnabled = false;
     }
 
     @Override
@@ -92,6 +98,11 @@ public class ArticleDetailFragment extends Fragment implements LoaderManager.Loa
     public void onResume()
     {
         super.onResume();
+        ActionBar action = ((AppCompatActivity) getActivity()).getSupportActionBar(); //get the actionbar
+        action.setDisplayShowCustomEnabled(false); //disable a custom view inside the actionbar
+        action.setDisplayShowTitleEnabled(true); //show the title in the action bar
+        hideKeyboard();
+
         getLoaderManager().initLoader(ARTICLE_DETAIL_LOADER, null, this);
     }
 
@@ -135,6 +146,10 @@ public class ArticleDetailFragment extends Fragment implements LoaderManager.Loa
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
         articleDetailListAdapter.swapCursor(null);
+    }
+
+    public void hideKeyboard(){
+        Utilities.hideKeyboardFrom(this.getContext(),this.getView().getRootView());
     }
 
 }

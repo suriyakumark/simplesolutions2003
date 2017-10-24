@@ -101,7 +101,6 @@
     <string name="pref_key_weatherWindDir">weatherWindDir</string>
     <string name="pref_key_weatherSunrise">weatherSunrise</string>
     <string name="pref_key_weatherSunset">weatherSunset</string>
-    <string name="pref_key_initial_step_count">initial_step_count</string>
     <string name="pref_key_step_count">step_count</string>
     <string name="pref_key_prev_step_count">prev_step_count</string>
     <string name="pref_key_pedometer_cycle">pedometer_cycle</string>

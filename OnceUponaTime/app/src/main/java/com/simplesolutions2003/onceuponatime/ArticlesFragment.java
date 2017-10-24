@@ -1,5 +1,6 @@
 package com.simplesolutions2003.onceuponatime;
 
+import android.content.Context;
 import android.database.ContentObserver;
 import android.os.Handler;
 import android.os.Looper;
@@ -18,6 +19,8 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -91,6 +94,7 @@ public class ArticlesFragment extends Fragment implements LoaderManager.LoaderCa
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         Log.v(TAG, "onCreateOptionsMenu");
         super.onCreateOptionsMenu(menu,inflater);
+        MainActivity.bSearchEnabled = true;
     }
 
     @Override
@@ -102,6 +106,7 @@ public class ArticlesFragment extends Fragment implements LoaderManager.LoaderCa
     public void onResume()
     {
         super.onResume();
+        hideKeyboard();
         getLoaderManager().initLoader(ARTICLES_LOADER, null, this);
     }
 
@@ -138,20 +143,11 @@ public class ArticlesFragment extends Fragment implements LoaderManager.LoaderCa
 
                 new Utilities(getActivity()).updateEmptyLoadingGone(Utilities.LIST_OK,tvEmptyLoading,"");
             }else{
-                if(new Utilities(getActivity()).isInternetOn()) {
-                    new Utilities(getActivity()).updateEmptyLoadingGone(Utilities.LIST_EMPTY, tvEmptyLoading, getString(R.string.text_articles_sync_progress));
-                }else{
-                    new Utilities(getActivity()).updateEmptyLoadingGone(Utilities.LIST_EMPTY, tvEmptyLoading, getString(R.string.text_articles_no_data));
-                }
+                handleEmptyMessage();
             }
         }else{
-            if(new Utilities(getActivity()).isInternetOn()) {
-                new Utilities(getActivity()).updateEmptyLoadingGone(Utilities.LIST_EMPTY, tvEmptyLoading, getString(R.string.text_articles_sync_progress));
-            }else{
-                new Utilities(getActivity()).updateEmptyLoadingGone(Utilities.LIST_EMPTY, tvEmptyLoading, getString(R.string.text_articles_no_data));
-            }
+            handleEmptyMessage();
         }
-
 
     }
 
@@ -160,5 +156,19 @@ public class ArticlesFragment extends Fragment implements LoaderManager.LoaderCa
         articlesRecyclerView.setAdapter(null);
     }
 
+    public void handleEmptyMessage(){
+        if(new Utilities(getActivity()).isInternetOn()) {
+            if(MainActivity.search_text.isEmpty() || MainActivity.search_text == "") {
+                new Utilities(getActivity()).updateEmptyLoadingGone(Utilities.LIST_EMPTY, tvEmptyLoading, getString(R.string.text_articles_sync_progress));
+            }else {
+                new Utilities(getActivity()).updateEmptyLoadingGone(Utilities.LIST_EMPTY, tvEmptyLoading, getString(R.string.text_articles_search_empty));
+            }
+        }else{
+            new Utilities(getActivity()).updateEmptyLoadingGone(Utilities.LIST_EMPTY, tvEmptyLoading, getString(R.string.text_articles_no_data));
+        }
+    }
 
+    public void hideKeyboard(){
+        Utilities.hideKeyboardFrom(this.getContext(),this.getView().getRootView());
+    }
 }

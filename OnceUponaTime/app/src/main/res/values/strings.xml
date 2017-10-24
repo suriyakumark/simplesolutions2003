@@ -17,6 +17,7 @@
 
     <string name="text_list_loading">refreshing...</string>
     <string name="text_articles_sync_progress">Sync in progress...</string>
+    <string name="text_articles_search_empty">No results found</string>
     <string name="text_articles_no_data">Need internet connection to get latest stories from server. Once fetched, you can access them offline. </string>
 
     <string name="pref_key_last_sync">last_sync</string>
