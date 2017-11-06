@@ -89,7 +89,7 @@ public class ArticleSyncAdapter extends AbstractThreadedSyncAdapter {
         try {
 
             final String FORECAST_BASE_URL =
-                    "http://suriyakumar.com/api/articles/v1/getArticles";
+                    "http://suriyakumar.com/api/articles/t1/getArticles";
 
             Uri builtUri = Uri.parse(FORECAST_BASE_URL).buildUpon().build();
 
@@ -165,6 +165,7 @@ public class ArticleSyncAdapter extends AbstractThreadedSyncAdapter {
         final String OWM_ARTICLE_CATEGORY = "articleCategory";
         final String OWM_ARTICLE_TITLE = "articleTitle";
         final String OWM_ARTICLE_COVER_PIC = "articleCoverPic";
+        final String OWM_ARTICLE_AUTHOR = "articleAuthor";
         final String OWM_ARTICLE_LAST_UPD_TS = "last_updated_timestamp";
 
         final String OWM_ARTICLE_DTL_ID = "articleDetailId";
@@ -205,6 +206,7 @@ public class ArticleSyncAdapter extends AbstractThreadedSyncAdapter {
                 String articleCategory;
                 String articleTitle;
                 String articleCoverPic;
+                String articleAuthor;
                 String articleLastUpdatedTs;
 
                 // Get the JSON object representing the day
@@ -215,6 +217,7 @@ public class ArticleSyncAdapter extends AbstractThreadedSyncAdapter {
                 articleCategory = article.getString(OWM_ARTICLE_CATEGORY);
                 articleTitle = article.getString(OWM_ARTICLE_TITLE);
                 articleCoverPic = article.getString(OWM_ARTICLE_COVER_PIC);
+                articleAuthor = article.getString(OWM_ARTICLE_AUTHOR);
                 articleLastUpdatedTs = article.getString(OWM_ARTICLE_LAST_UPD_TS);
 
                 Uri articleUri = AppContract.ArticleEntry.buildArticleUri(articleId);
@@ -229,13 +232,16 @@ public class ArticleSyncAdapter extends AbstractThreadedSyncAdapter {
                 }
                 Log.v(TAG, "articleLastUpdatedTs " + articleLastUpdatedTs);
 
-                if(articleLastUpdatedTs.compareTo(articleLastUpdatedTsPrev) > 0) {
+                if(articleLastUpdatedTs.compareTo(articleLastUpdatedTsPrev) > 0 ||
+                        articleLastUpdatedTsPrev.equals("")) {
                     ContentValues articleValues = new ContentValues();
                     articleValues.put(AppContract.ArticleEntry._ID, articleId);
                     articleValues.put(AppContract.ArticleEntry.COLUMN_TYPE, articleType);
                     articleValues.put(AppContract.ArticleEntry.COLUMN_CATEGORY, articleCategory);
                     articleValues.put(AppContract.ArticleEntry.COLUMN_TITLE, articleTitle);
                     articleValues.put(AppContract.ArticleEntry.COLUMN_COVER_PIC, articleCoverPic);
+                    articleValues.put(AppContract.ArticleEntry.COLUMN_AUTHOR, articleAuthor);
+                    articleValues.put(AppContract.ArticleEntry.COLUMN_NEW, "1");
                     articleValues.put(AppContract.ArticleEntry.COLUMN_LAST_UPDATED_TS, articleLastUpdatedTs);
                     getContext().getContentResolver().insert(AppContract.ArticleEntry.CONTENT_URI, articleValues);
                     insertedArticles++;

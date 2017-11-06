@@ -1,10 +1,12 @@
 package com.simplesolutions2003.onceuponatime.data;
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.media.audiofx.BassBoost;
 import android.util.Log;
 
+import com.simplesolutions2003.onceuponatime.data.AppContract.MenuEntry;
 import com.simplesolutions2003.onceuponatime.data.AppContract.ArticleEntry;
 import com.simplesolutions2003.onceuponatime.data.AppContract.ArticleDetailEntry;
 
@@ -27,12 +29,21 @@ public class AppDBHelper extends SQLiteOpenHelper  {
     @Override
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
 
+        final String SQL_CREATE_MENU_TABLE = "CREATE TABLE " + MenuEntry.TABLE_NAME + " (" +
+                MenuEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
+                MenuEntry.COLUMN_MENU + " TEXT NOT NULL, " +
+                MenuEntry.COLUMN_DESC + " TEXT NOT NULL, " +
+                MenuEntry.COLUMN_COVER_PIC + " TEXT, " +
+                " UNIQUE (" + MenuEntry._ID + ") ON CONFLICT REPLACE);";
+
         final String SQL_CREATE_ARTICLE_TABLE = "CREATE TABLE " + ArticleEntry.TABLE_NAME + " (" +
                 ArticleEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
                 ArticleEntry.COLUMN_TYPE + " TEXT NOT NULL, " +
                 ArticleEntry.COLUMN_CATEGORY + " TEXT NOT NULL, " +
                 ArticleEntry.COLUMN_TITLE + " TEXT NOT NULL, " +
                 ArticleEntry.COLUMN_COVER_PIC + " TEXT, " +
+                ArticleEntry.COLUMN_AUTHOR + " TEXT, " +
+                ArticleEntry.COLUMN_NEW + " TEXT, " +
                 ArticleEntry.COLUMN_LAST_UPDATED_TS + " TIMESTAMP DEFAULT CURRENT_TIMESTAMP," +
 
                 " UNIQUE (" + ArticleEntry._ID + ") ON CONFLICT REPLACE);";
@@ -52,10 +63,33 @@ public class AppDBHelper extends SQLiteOpenHelper  {
                 " FOREIGN KEY (" + ArticleDetailEntry.COLUMN_ARTICLE_ID + ") REFERENCES " +
                 ArticleEntry.TABLE_NAME + " (" + ArticleEntry._ID + "));";
 
+        Log.v(LOG_TAG, "SQL_CREATE_MENU_TABLE" + SQL_CREATE_MENU_TABLE);
         Log.v(LOG_TAG, "SQL_CREATE_ARTICLE_TABLE" + SQL_CREATE_ARTICLE_TABLE);
         Log.v(LOG_TAG, "SQL_CREATE_ARTICLE_DETAIL_TABLE" + SQL_CREATE_ARTICLE_DETAIL_TABLE);
+
+        sqLiteDatabase.execSQL(SQL_CREATE_MENU_TABLE);
         sqLiteDatabase.execSQL(SQL_CREATE_ARTICLE_TABLE);
         sqLiteDatabase.execSQL(SQL_CREATE_ARTICLE_DETAIL_TABLE);
+
+
+        ContentValues menuCV = new ContentValues();
+        menuCV.put(MenuEntry._ID, 1);
+        menuCV.put(MenuEntry.COLUMN_MENU, "Stories");
+        menuCV.put(MenuEntry.COLUMN_DESC, "Every story has a moral for the children to learn. ");
+        menuCV.put(MenuEntry.COLUMN_COVER_PIC, "menu_01");
+        sqLiteDatabase.insert(MenuEntry.TABLE_NAME, null, menuCV);
+
+        menuCV.put(MenuEntry._ID, 2);
+        menuCV.put(MenuEntry.COLUMN_MENU, "Rhymes");
+        menuCV.put(MenuEntry.COLUMN_DESC, "Nursery Rhymes help children learn with fun and joy! ");
+        menuCV.put(MenuEntry.COLUMN_COVER_PIC, "menu_02");
+        sqLiteDatabase.insert(MenuEntry.TABLE_NAME, null, menuCV);
+
+        menuCV.put(MenuEntry._ID, 3);
+        menuCV.put(MenuEntry.COLUMN_MENU, "Poems");
+        menuCV.put(MenuEntry.COLUMN_DESC, "Collection of the most popular poems written by famous poets.");
+        menuCV.put(MenuEntry.COLUMN_COVER_PIC, "menu_03");
+        sqLiteDatabase.insert(MenuEntry.TABLE_NAME, null, menuCV);
 
     }
 

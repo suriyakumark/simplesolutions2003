@@ -26,6 +26,7 @@ public class AppProvider extends ContentProvider {
     private static final SQLiteQueryBuilder sArticleDetailQueryBuilder;
     private static final SQLiteQueryBuilder sArticleDetailWithDetailQueryBuilder;
 
+    static final int MENU = 2000;
     static final int ARTICLE = 1000;
     static final int ARTICLE_BY_TYPE = 1001;
     static final int ARTICLE_BY_CATEGORY = 1002;
@@ -194,6 +195,7 @@ public class AppProvider extends ContentProvider {
         final UriMatcher matcher = new UriMatcher(UriMatcher.NO_MATCH);
         final String authority = AppContract.CONTENT_AUTHORITY;
 
+        matcher.addURI(authority, AppContract.PATH_MENU, MENU);
         matcher.addURI(authority, AppContract.PATH_ARTICLE, ARTICLE);
         matcher.addURI(authority, AppContract.PATH_ARTICLE + "/TYPE/*/SEARCH/*", ARTICLE_BY_TYPE_SEARCH);
         matcher.addURI(authority, AppContract.PATH_ARTICLE + "/TYPE/*", ARTICLE_BY_TYPE);
@@ -215,6 +217,8 @@ public class AppProvider extends ContentProvider {
         final int match = sUriMatcher.match(uri);
         Log.v(LOG_TAG,"UriMatcher - " + uri);
         switch (match) {
+            case MENU:
+                return AppContract.MenuEntry.CONTENT_TYPE;
             case ARTICLE:
                 return AppContract.ArticleEntry.CONTENT_TYPE;
             case ARTICLE_BY_ID:
@@ -382,6 +386,8 @@ public class AppProvider extends ContentProvider {
 
     private String getTableById(int tableId){
         switch (tableId){
+            case MENU:
+                return AppContract.MenuEntry.TABLE_NAME;
             case ARTICLE:
                 return AppContract.ArticleEntry.TABLE_NAME;
             case ARTICLE_DETAIL:
@@ -393,6 +399,8 @@ public class AppProvider extends ContentProvider {
 
     private Uri getUriByTableId(int tableId, long _id){
         switch (tableId){
+            case MENU:
+                return AppContract.MenuEntry.buildMenuUri(_id);
             case ARTICLE:
                 return AppContract.ArticleEntry.buildArticleUri(_id);
             case ARTICLE_DETAIL:

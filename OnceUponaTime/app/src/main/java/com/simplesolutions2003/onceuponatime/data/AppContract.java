@@ -14,8 +14,34 @@ public class AppContract {
 
     public static final Uri BASE_CONTENT_URI = Uri.parse("content://" + CONTENT_AUTHORITY);
 
+    public static final String PATH_MENU = "menu";
     public static final String PATH_ARTICLE = "article";
     public static final String PATH_ARTICLE_DETAIL = "article_detail";
+
+    public static final class MenuEntry implements BaseColumns {
+        public static final Uri CONTENT_URI =
+                BASE_CONTENT_URI.buildUpon().appendPath(PATH_MENU).build();
+
+        public static final String CONTENT_TYPE =
+                ContentResolver.CURSOR_DIR_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + PATH_MENU;
+        public static final String CONTENT_ITEM_TYPE =
+                ContentResolver.CURSOR_ITEM_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + PATH_MENU;
+
+        public static final String TABLE_NAME = "menu";
+        public static final String _ID = "_id";
+        public static final String COLUMN_MENU = "name";
+        public static final String COLUMN_DESC = "desc";
+        public static final String COLUMN_COVER_PIC = "cover_pic";
+
+        public static Uri buildMenuUri(long _id) {
+            return ContentUris.withAppendedId(CONTENT_URI, _id);
+        }
+
+        public static long getIdFromUri(Uri uri) {
+            return Long.parseLong(uri.getPathSegments().get(1));
+        }
+
+    }
 
     public static final class ArticleEntry implements BaseColumns {
         public static final Uri CONTENT_URI =
@@ -32,6 +58,8 @@ public class AppContract {
         public static final String COLUMN_CATEGORY = "category";
         public static final String COLUMN_TITLE = "title";
         public static final String COLUMN_COVER_PIC = "cover_pic";
+        public static final String COLUMN_AUTHOR = "author";
+        public static final String COLUMN_NEW = "new";
         public static final String COLUMN_LAST_UPDATED_TS = "last_updated_timestamp";
 
         public static Uri buildArticleUri(long _id) {

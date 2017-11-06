@@ -22,12 +22,17 @@
 
     <color name="photo_placeholder">#ccc</color>
     <dimen name="card_margin">4dp</dimen>
-    <dimen name="card_title_padding">16dp</dimen>
-    <dimen name="card_title_padding_bottom">4dp</dimen>
-    <dimen name="card_subtitle_padding">16dp</dimen>
+
+    <dimen name="card_new_padding">4dp</dimen>
+    <dimen name="card_title_padding">4dp</dimen>
+    <dimen name="card_subtitle_padding">4dp</dimen>
+
 
     <dimen name="size_title">20sp</dimen>
     <dimen name="size_normal">18sp</dimen>
+
+    <dimen name="menu_icon_width">60dp</dimen>
+    <dimen name="menu_icon_height">60dp</dimen>
 
     <dimen name="activity_icon_width">60dp</dimen>
     <dimen name="activity_icon_height">60dp</dimen>

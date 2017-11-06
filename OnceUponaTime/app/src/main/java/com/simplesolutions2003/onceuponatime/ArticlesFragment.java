@@ -33,16 +33,10 @@ public class ArticlesFragment extends Fragment implements LoaderManager.LoaderCa
     public final static boolean KEEP_IN_STACK = true;
     public final static String TAG = ArticlesFragment.class.getSimpleName();
 
-    public final static String ARTICLE_TYPE_STORIES = "stories";
-    public final static String ARTICLE_TYPE_RHYMES = "rhymes";
-
-    public final static String TITLE_STORIES = "Stories";
-    public final static String TITLE_RHYMES = "Rhymes";
-
     private final static int ARTICLES_LOADER = 0;
-    private int dPosition;
+    public static int dPosition;
     private ArticlesAdapter articlesAdapter;
-    public static String ARTICLE_TYPE = ARTICLE_TYPE_STORIES;
+    public static String ARTICLE_TYPE = "";
     RecyclerView articlesRecyclerView;
     TextView tvEmptyLoading;
     private ContentObserver mObserver;
@@ -54,6 +48,8 @@ public class ArticlesFragment extends Fragment implements LoaderManager.LoaderCa
             AppContract.ArticleEntry.TABLE_NAME + "." + AppContract.ArticleEntry.COLUMN_CATEGORY,
             AppContract.ArticleEntry.TABLE_NAME + "." + AppContract.ArticleEntry.COLUMN_TITLE,
             AppContract.ArticleEntry.TABLE_NAME + "." + AppContract.ArticleEntry.COLUMN_COVER_PIC,
+            AppContract.ArticleEntry.TABLE_NAME + "." + AppContract.ArticleEntry.COLUMN_AUTHOR,
+            AppContract.ArticleEntry.TABLE_NAME + "." + AppContract.ArticleEntry.COLUMN_NEW,
             AppContract.ArticleEntry.TABLE_NAME + "." + AppContract.ArticleEntry.COLUMN_LAST_UPDATED_TS
     };
 
@@ -63,7 +59,9 @@ public class ArticlesFragment extends Fragment implements LoaderManager.LoaderCa
     static final int COL_ARTICLE_CATEGORY = 2;
     static final int COL_ARTICLE_TITLE = 3;
     static final int COL_ARTICLE_COVER_PIC = 4;
-    public static final int COL_ARTICLE_LAST_UPD_TS = 5;
+    static final int COL_ARTICLE_AUTHOR = 5;
+    static final int COL_ARTICLE_NEW = 6;
+    public static final int COL_ARTICLE_LAST_UPD_TS = 7;
 
 
     public interface Callback {
@@ -140,7 +138,9 @@ public class ArticlesFragment extends Fragment implements LoaderManager.LoaderCa
                 StaggeredGridLayoutManager sglm =
                         new StaggeredGridLayoutManager(columnCount, StaggeredGridLayoutManager.VERTICAL);
                 articlesRecyclerView.setLayoutManager(sglm);
-
+                if(dPosition > 0 ){
+                    articlesRecyclerView.smoothScrollToPosition(dPosition);
+                }
                 new Utilities(getActivity()).updateEmptyLoadingGone(Utilities.LIST_OK,tvEmptyLoading,"");
             }else{
                 handleEmptyMessage();

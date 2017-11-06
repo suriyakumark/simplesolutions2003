@@ -11,5 +11,6 @@
     <color name="color_text_title_big">#fff</color>
     <color name="color_text_subtitle">#8fff</color>
     <color name="color_text_card_subtitle">#6000</color>
+    <color name="color_text_card_new">#FF6D00</color>
     <color name="color_text_body">#000000</color>
 </resources>

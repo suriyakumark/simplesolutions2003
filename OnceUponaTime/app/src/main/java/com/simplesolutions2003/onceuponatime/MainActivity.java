@@ -97,6 +97,7 @@ public class MainActivity extends AppCompatActivity {
                                 "https://play.google.com/store/apps/details?id=" + getPackageName());
                 sendIntent.setType("text/plain");
                 startActivity(sendIntent);
+                return true;
 
             case R.id.action_search:
                 if(isSearchOpened) {
@@ -104,6 +105,13 @@ public class MainActivity extends AppCompatActivity {
                 }else {
                     handleMenuSearchOpen();
                 }
+                return true;
+
+            case R.id.action_submit:
+                String url = getString(R.string.action_submit_url);
+                Intent i = new Intent(Intent.ACTION_VIEW);
+                i.setData(Uri.parse(url));
+                startActivity(i);
                 return true;
         }
 
@@ -117,11 +125,17 @@ public class MainActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         getSupportActionBar().setIcon(R.mipmap.ic_launcher);
         search_text = "";
+    }
+
+    @Override
+    public void onResumeFragments (){
+        super.onResumeFragments();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.setCustomAnimations( R.anim.slide_in_left, 0, 0, R.anim.slide_out_left);
-        fragmentTransaction.replace(R.id.frame_container, new ArticlesFragment(), ArticlesFragment.TAG);
+        fragmentTransaction.replace(R.id.frame_container, new AppMenuFragment(), AppMenuFragment.TAG);
         //fragmentTransaction.addToBackStack(ArticlesFragment.TAG);
         fragmentTransaction.commit();
+
     }
 
     protected void handleMenuSearchInitialize() {

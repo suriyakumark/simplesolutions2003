@@ -1,0 +1,64 @@
+<android.support.v7.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginStart="@dimen/card_margin"
+    android:layout_marginEnd="@dimen/card_margin"
+    android:layout_marginTop="@dimen/card_margin"
+    android:layout_marginBottom="@dimen/card_margin"
+    android:stateListAnimator="@anim/lift_on_touch"
+    android:clickable="true"
+    android:focusable="true"
+    android:foreground="?selectableItemBackground">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <ImageView
+            android:id="@+id/app_menu_image"
+            android:layout_width="@dimen/menu_icon_width"
+            android:layout_height="@dimen/menu_icon_width"
+            android:scaleType="centerCrop"
+            android:adjustViewBounds="true"
+            android:layout_gravity="center_vertical"
+            android:gravity="center_vertical"
+            android:paddingStart="4dp"
+            android:paddingLeft="4dp"
+            android:transitionName="activity_image_trans"
+            android:background="@color/colorAccentLight" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="4dp">
+
+            <TextView
+                android:id="@+id/app_menu_title"
+                style="@style/TextAppearance.AppCompat.Headline"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingStart="@dimen/card_title_padding"
+                android:paddingEnd="@dimen/card_title_padding"
+                android:paddingBottom="@dimen/card_title_padding"
+                android:textColor="@color/colorAccentDark"
+                android:ellipsize="end"
+                android:maxLines="4" />
+
+            <TextView
+                android:id="@+id/app_menu_subtitle"
+                style="@style/TextAppearance.AppCompat.Body1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingStart="@dimen/card_subtitle_padding"
+                android:paddingEnd="@dimen/card_subtitle_padding"
+                android:paddingBottom="@dimen/card_subtitle_padding"
+                android:textColor="@color/color_text_card_subtitle"
+                android:ellipsize="end" />
+        </LinearLayout>
+    </LinearLayout>
+
+</android.support.v7.widget.CardView>
+

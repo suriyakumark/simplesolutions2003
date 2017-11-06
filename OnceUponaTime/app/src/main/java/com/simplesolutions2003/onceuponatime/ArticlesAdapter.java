@@ -1,5 +1,6 @@
 package com.simplesolutions2003.onceuponatime;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
@@ -10,6 +11,7 @@ import android.support.v7.widget.RecyclerView;
 import android.text.format.DateUtils;
 import android.transition.Explode;
 import android.transition.TransitionManager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,6 +25,7 @@ import com.squareup.picasso.Picasso;
  * Created by SuriyaKumar on 9/5/2016.
  */
 public class ArticlesAdapter extends RecyclerView.Adapter<ArticlesAdapter.ViewHolder> {
+    private final static String LOG_TAG = ArticlesAdapter.class.getSimpleName();
 
     private Cursor mCursor;
     private Context context;
@@ -31,12 +34,14 @@ public class ArticlesAdapter extends RecyclerView.Adapter<ArticlesAdapter.ViewHo
         public ImageView thumbnailView;
         public TextView titleView;
         public TextView subtitleView;
+        public TextView newView;
 
         public ViewHolder(View view) {
             super(view);
             thumbnailView = (ImageView) view.findViewById(R.id.article_thumbnail);
             titleView = (TextView) view.findViewById(R.id.article_title);
             subtitleView = (TextView) view.findViewById(R.id.article_subtitle);
+            newView = (TextView) view.findViewById(R.id.article_new);
         }
     }
 
@@ -61,6 +66,15 @@ public class ArticlesAdapter extends RecyclerView.Adapter<ArticlesAdapter.ViewHo
             public void onClick(View view) {
                 ArticleDetailFragment.ARTICLE_ID = getItemId(viewHolder.getAdapterPosition());
 
+                ContentValues articleValues = new ContentValues();
+                articleValues.put(AppContract.ArticleEntry.COLUMN_NEW, "0");
+
+                ((MainActivity) context).getContentResolver().update(AppContract.ArticleEntry.CONTENT_URI, articleValues,
+                        AppContract.ArticleEntry._ID + " = ?",new String[]{Long.toString(getItemId(viewHolder.getAdapterPosition()))});
+
+                ArticlesFragment.dPosition = viewHolder.getAdapterPosition();
+
+                Log.v(LOG_TAG,"replacing fragment");
                 FragmentManager fragmentManager = ((MainActivity) context).getSupportFragmentManager();
                 FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
                 fragmentTransaction.setCustomAnimations( R.anim.slide_in_left, 0, 0, R.anim.slide_out_left);
@@ -78,6 +92,16 @@ public class ArticlesAdapter extends RecyclerView.Adapter<ArticlesAdapter.ViewHo
         holder.titleView.setText(mCursor.getString(ArticlesFragment.COL_ARTICLE_TITLE));
         holder.subtitleView.setText(mCursor.getString(ArticlesFragment.COL_ARTICLE_CATEGORY));
 
+        Log.v(LOG_TAG, "New - " + mCursor.getString(ArticlesFragment.COL_ARTICLE_NEW));
+        if(mCursor.getString(ArticlesFragment.COL_ARTICLE_NEW).equals("1")) {
+            holder.newView.setText("*New");
+            holder.newView.setVisibility(View.VISIBLE);
+        }else{
+            holder.newView.setText("");
+            holder.newView.setVisibility(View.GONE);
+            int padding =(int) context.getResources().getDimensionPixelOffset(R.dimen.card_title_padding);
+            holder.titleView.setPadding(padding,padding,padding,padding);
+        }
         /*Picasso.with(context)
                 .load(mCursor.getString(ArticlesFragment.COL_ARTICLE_COVER_PIC))
                 .noFade()

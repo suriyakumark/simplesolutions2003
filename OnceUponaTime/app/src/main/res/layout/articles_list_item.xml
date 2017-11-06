@@ -15,7 +15,8 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:padding="4dp">
 
         <ImageView
             android:id="@+id/article_thumbnail"
@@ -27,14 +28,26 @@
             android:background="@color/photo_placeholder" />
 
         <TextView
+            android:id="@+id/article_new"
+            style="@style/TextAppearance.AppCompat.Body1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingBottom="@dimen/card_new_padding"
+            android:paddingStart="@dimen/card_new_padding"
+            android:paddingEnd="@dimen/card_new_padding"
+            android:textColor="@color/color_text_card_new"
+            android:maxLines="1"
+            android:singleLine="true"
+            android:ellipsize="end" />
+
+        <TextView
             android:id="@+id/article_title"
             style="@style/TextAppearance.AppCompat.Subhead"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:paddingStart="@dimen/card_title_padding"
-            android:paddingTop="@dimen/card_title_padding"
             android:paddingEnd="@dimen/card_title_padding"
-            android:paddingBottom="@dimen/card_title_padding_bottom"
+            android:paddingBottom="@dimen/card_title_padding"
             android:textColor="@color/color_text_title_small"
             android:ellipsize="end"
             android:maxLines="4" />
