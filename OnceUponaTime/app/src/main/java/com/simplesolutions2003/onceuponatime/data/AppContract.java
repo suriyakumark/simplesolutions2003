@@ -17,6 +17,7 @@ public class AppContract {
     public static final String PATH_MENU = "menu";
     public static final String PATH_ARTICLE = "article";
     public static final String PATH_ARTICLE_DETAIL = "article_detail";
+    public static final String PATH_FAVORITE = "favorite";
 
     public static final class MenuEntry implements BaseColumns {
         public static final Uri CONTENT_URI =
@@ -149,6 +150,34 @@ public class AppContract {
             }else{
                 return -1;
             }
+        }
+
+    }
+
+    public static final class FavoriteEntry implements BaseColumns {
+        public static final Uri CONTENT_URI =
+                BASE_CONTENT_URI.buildUpon().appendPath(PATH_FAVORITE).build();
+
+        public static final String CONTENT_TYPE =
+                ContentResolver.CURSOR_DIR_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + PATH_FAVORITE;
+        public static final String CONTENT_ITEM_TYPE =
+                ContentResolver.CURSOR_ITEM_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + PATH_FAVORITE;
+
+        public static final String TABLE_NAME = "favorite";
+        public static final String _ID = "_id";
+        public static final String COLUMN_ARTICLE_ID = "article_id";
+
+        public static Uri buildFavoriteUri(long _id) {
+            return ContentUris.withAppendedId(CONTENT_URI, _id);
+        }
+
+        public static Uri buildArticleByFavoriteUri() {
+            return CONTENT_URI.buildUpon().appendPath("ARTICLE").build();
+        }
+
+
+        public static long getIdFromUri(Uri uri) {
+            return Long.parseLong(uri.getPathSegments().get(1));
         }
 
     }

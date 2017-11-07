@@ -9,6 +9,7 @@ import android.util.Log;
 import com.simplesolutions2003.onceuponatime.data.AppContract.MenuEntry;
 import com.simplesolutions2003.onceuponatime.data.AppContract.ArticleEntry;
 import com.simplesolutions2003.onceuponatime.data.AppContract.ArticleDetailEntry;
+import com.simplesolutions2003.onceuponatime.data.AppContract.FavoriteEntry;
 
 /**
  * Created by SuriyaKumar on 8/16/2016.
@@ -63,32 +64,56 @@ public class AppDBHelper extends SQLiteOpenHelper  {
                 " FOREIGN KEY (" + ArticleDetailEntry.COLUMN_ARTICLE_ID + ") REFERENCES " +
                 ArticleEntry.TABLE_NAME + " (" + ArticleEntry._ID + "));";
 
+        final String SQL_CREATE_FAVORITE_TABLE = "CREATE TABLE " + FavoriteEntry.TABLE_NAME + " (" +
+                FavoriteEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
+                FavoriteEntry.COLUMN_ARTICLE_ID + " INTEGER, " +
+
+                " UNIQUE (" + FavoriteEntry._ID + ") ON CONFLICT REPLACE, " +
+
+                " UNIQUE (" + FavoriteEntry.COLUMN_ARTICLE_ID + ") ON CONFLICT REPLACE," +
+
+                " FOREIGN KEY (" + FavoriteEntry.COLUMN_ARTICLE_ID + ") REFERENCES " +
+                        ArticleEntry.TABLE_NAME + " (" + ArticleEntry._ID + "));";
+
         Log.v(LOG_TAG, "SQL_CREATE_MENU_TABLE" + SQL_CREATE_MENU_TABLE);
         Log.v(LOG_TAG, "SQL_CREATE_ARTICLE_TABLE" + SQL_CREATE_ARTICLE_TABLE);
         Log.v(LOG_TAG, "SQL_CREATE_ARTICLE_DETAIL_TABLE" + SQL_CREATE_ARTICLE_DETAIL_TABLE);
+        Log.v(LOG_TAG, "SQL_CREATE_FAVORITE_TABLE" + SQL_CREATE_FAVORITE_TABLE);
 
         sqLiteDatabase.execSQL(SQL_CREATE_MENU_TABLE);
         sqLiteDatabase.execSQL(SQL_CREATE_ARTICLE_TABLE);
         sqLiteDatabase.execSQL(SQL_CREATE_ARTICLE_DETAIL_TABLE);
-
+        sqLiteDatabase.execSQL(SQL_CREATE_FAVORITE_TABLE);
 
         ContentValues menuCV = new ContentValues();
         menuCV.put(MenuEntry._ID, 1);
-        menuCV.put(MenuEntry.COLUMN_MENU, "Stories");
-        menuCV.put(MenuEntry.COLUMN_DESC, "Every story has a moral for the children to learn. ");
+        menuCV.put(MenuEntry.COLUMN_MENU, "Short Stories");
+        menuCV.put(MenuEntry.COLUMN_DESC, "Every short story has a moral for the children to learn. ");
         menuCV.put(MenuEntry.COLUMN_COVER_PIC, "menu_01");
         sqLiteDatabase.insert(MenuEntry.TABLE_NAME, null, menuCV);
 
         menuCV.put(MenuEntry._ID, 2);
-        menuCV.put(MenuEntry.COLUMN_MENU, "Rhymes");
-        menuCV.put(MenuEntry.COLUMN_DESC, "Nursery Rhymes help children learn with fun and joy! ");
+        menuCV.put(MenuEntry.COLUMN_MENU, "Stories");
+        menuCV.put(MenuEntry.COLUMN_DESC, "Interesting and adventurous stories for children. ");
         menuCV.put(MenuEntry.COLUMN_COVER_PIC, "menu_02");
         sqLiteDatabase.insert(MenuEntry.TABLE_NAME, null, menuCV);
 
         menuCV.put(MenuEntry._ID, 3);
+        menuCV.put(MenuEntry.COLUMN_MENU, "Rhymes");
+        menuCV.put(MenuEntry.COLUMN_DESC, "Nursery Rhymes help children learn with fun and joy! ");
+        menuCV.put(MenuEntry.COLUMN_COVER_PIC, "menu_03");
+        sqLiteDatabase.insert(MenuEntry.TABLE_NAME, null, menuCV);
+
+        menuCV.put(MenuEntry._ID, 4);
         menuCV.put(MenuEntry.COLUMN_MENU, "Poems");
         menuCV.put(MenuEntry.COLUMN_DESC, "Collection of the most popular poems written by famous poets.");
-        menuCV.put(MenuEntry.COLUMN_COVER_PIC, "menu_03");
+        menuCV.put(MenuEntry.COLUMN_COVER_PIC, "menu_04");
+        sqLiteDatabase.insert(MenuEntry.TABLE_NAME, null, menuCV);
+
+        menuCV.put(MenuEntry._ID, 5);
+        menuCV.put(MenuEntry.COLUMN_MENU, "Favorites");
+        menuCV.put(MenuEntry.COLUMN_DESC, "Quickly access your favorite stories, rhymes, poems.");
+        menuCV.put(MenuEntry.COLUMN_COVER_PIC, "menu_05");
         sqLiteDatabase.insert(MenuEntry.TABLE_NAME, null, menuCV);
 
     }

@@ -25,16 +25,19 @@ public class AppProvider extends ContentProvider {
     private static final SQLiteQueryBuilder sArticleQueryBuilder;
     private static final SQLiteQueryBuilder sArticleDetailQueryBuilder;
     private static final SQLiteQueryBuilder sArticleDetailWithDetailQueryBuilder;
+    private static final SQLiteQueryBuilder sArticleFavoriteQueryBuilder;
 
-    static final int MENU = 2000;
-    static final int ARTICLE = 1000;
-    static final int ARTICLE_BY_TYPE = 1001;
-    static final int ARTICLE_BY_CATEGORY = 1002;
-    static final int ARTICLE_BY_TYPE_SEARCH = 1003;
-    static final int ARTICLE_BY_ID = 1004;
-    static final int ARTICLE_DETAIL = 1100;
-    static final int ARTICLE_DETAIL_BY_ARTICLEID = 1101;
-    static final int ARTICLE_DETAIL_WITH_DETAIL_BY_ARTICLEID = 1102;
+    static final int MENU = 1000;
+    static final int ARTICLE = 2000;
+    static final int ARTICLE_BY_TYPE = 2001;
+    static final int ARTICLE_BY_CATEGORY = 2002;
+    static final int ARTICLE_BY_TYPE_SEARCH = 2003;
+    static final int ARTICLE_BY_ID = 2004;
+    static final int ARTICLE_DETAIL = 3000;
+    static final int ARTICLE_DETAIL_BY_ARTICLEID = 3001;
+    static final int ARTICLE_DETAIL_WITH_DETAIL_BY_ARTICLEID = 3002;
+    static final int FAVORITE = 4000;
+    static final int ARTICLE_BY_FAVORITE = 4001;
 
     static{
         sArticleQueryBuilder = new SQLiteQueryBuilder();
@@ -60,6 +63,18 @@ public class AppProvider extends ContentProvider {
                         "." + AppContract.ArticleEntry._ID +
                         " = " + AppContract.ArticleDetailEntry.TABLE_NAME +
                         "." + AppContract.ArticleDetailEntry.COLUMN_ARTICLE_ID);
+    }
+
+    static{
+        sArticleFavoriteQueryBuilder = new SQLiteQueryBuilder();
+
+        sArticleFavoriteQueryBuilder.setTables(
+                AppContract.ArticleEntry.TABLE_NAME +
+                        " INNER JOIN " + AppContract.FavoriteEntry.TABLE_NAME +
+                        " ON " + AppContract.ArticleEntry.TABLE_NAME +
+                        "." + AppContract.ArticleEntry._ID +
+                        " = " + AppContract.FavoriteEntry.TABLE_NAME +
+                        "." + AppContract.FavoriteEntry.COLUMN_ARTICLE_ID);
     }
 
     private static final String sArticleByIdSelection =
@@ -191,6 +206,20 @@ public class AppProvider extends ContentProvider {
         );
     }
 
+    private Cursor getArticleByFavorite(Uri uri, String[] projection, String sortOrder) {
+
+        Log.v(LOG_TAG, "getArticleByFavorite uri - " + uri);
+
+        return sArticleFavoriteQueryBuilder.query(mOpenHelper.getReadableDatabase(),
+                projection,
+                null,
+                null,
+                null,
+                null,
+                sortOrder
+        );
+    }
+
     static UriMatcher buildUriMatcher() {
         final UriMatcher matcher = new UriMatcher(UriMatcher.NO_MATCH);
         final String authority = AppContract.CONTENT_AUTHORITY;
@@ -204,6 +233,8 @@ public class AppProvider extends ContentProvider {
         matcher.addURI(authority, AppContract.PATH_ARTICLE_DETAIL + "/ARTICLE/DETAIL/*", ARTICLE_DETAIL_WITH_DETAIL_BY_ARTICLEID);
         matcher.addURI(authority, AppContract.PATH_ARTICLE_DETAIL + "/ARTICLE/*", ARTICLE_DETAIL_BY_ARTICLEID);
         matcher.addURI(authority, AppContract.PATH_ARTICLE + "/*", ARTICLE_BY_ID);
+        matcher.addURI(authority, AppContract.PATH_FAVORITE, FAVORITE);
+        matcher.addURI(authority, AppContract.PATH_FAVORITE + "/ARTICLE", ARTICLE_BY_FAVORITE);
         return matcher;
     }
 
@@ -235,6 +266,10 @@ public class AppProvider extends ContentProvider {
                 return AppContract.ArticleDetailEntry.CONTENT_ITEM_TYPE;
             case ARTICLE_DETAIL_WITH_DETAIL_BY_ARTICLEID:
                 return AppContract.ArticleDetailEntry.CONTENT_ITEM_TYPE;
+            case FAVORITE:
+                return AppContract.FavoriteEntry.CONTENT_TYPE;
+            case ARTICLE_BY_FAVORITE:
+                return AppContract.ArticleEntry.CONTENT_ITEM_TYPE;
             default:
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
         }
@@ -285,6 +320,11 @@ public class AppProvider extends ContentProvider {
 
                 case ARTICLE_DETAIL_WITH_DETAIL_BY_ARTICLEID: {
                     retCursor = getArticleDetailWithDetailByArticleId(uri, projection, sortOrder);
+                    break;
+                }
+
+                case ARTICLE_BY_FAVORITE: {
+                    retCursor = getArticleByFavorite(uri, projection, sortOrder);
                     break;
                 }
 
@@ -392,6 +432,8 @@ public class AppProvider extends ContentProvider {
                 return AppContract.ArticleEntry.TABLE_NAME;
             case ARTICLE_DETAIL:
                 return AppContract.ArticleDetailEntry.TABLE_NAME;
+            case FAVORITE:
+                return AppContract.FavoriteEntry.TABLE_NAME;
             default:
                 return (new String("Others"));
         }
@@ -405,6 +447,8 @@ public class AppProvider extends ContentProvider {
                 return AppContract.ArticleEntry.buildArticleUri(_id);
             case ARTICLE_DETAIL:
                 return AppContract.ArticleDetailEntry.buildArticleDetailUri(_id);
+            case FAVORITE:
+                return AppContract.FavoriteEntry.buildFavoriteUri(_id);
             default:
                 return null;
         }

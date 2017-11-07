@@ -63,10 +63,6 @@ public class ArticleDetailAdapter extends CursorAdapter {
         Log.v(TAG, "bindView");
         final ViewHolder viewHolder = (ViewHolder) view.getTag();
         if(cursor != null){
-            if(cursor.getPosition() == 0){
-                ArticleDetailFragment.articleDetailTitle.setText(cursor.getString(ArticleDetailFragment.COL_ARTICLE_TITLE));
-                ArticleDetailFragment.articleDetailTitle.setContentDescription(ArticleDetailFragment.articleDetailTitle.getText().toString());
-            }
             if(cursor.getString(ArticleDetailFragment.COL_ARTICLE_DETAIL_TYPE).equals(ARTICLE_DETAIL_TYPE_IMAGE)) {
                 new Utilities(context).loadImageView(viewHolder.imageView,
                         cursor.getString(ArticleDetailFragment.COL_ARTICLE_DETAIL_CONTENT));
@@ -79,9 +75,6 @@ public class ArticleDetailAdapter extends CursorAdapter {
                 viewHolder.textView.setContentDescription(viewHolder.textView.getText().toString());
                 if(spanString.toString().contains("MORAL:")){
                     spanString.setSpan(new StyleSpan(Typeface.BOLD), 0, spanString.length(), 0);
-                    viewHolder.textView.setBackgroundColor(context.getResources().getColor(R.color.colorPrimaryLight));
-                }else{
-                    viewHolder.textView.setBackgroundColor(Color.TRANSPARENT);
                 }
                 viewHolder.textView.setText(spanString);
                 viewHolder.textView.setVisibility(View.VISIBLE);

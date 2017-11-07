@@ -52,8 +52,11 @@ public class ArticlesAdapter extends RecyclerView.Adapter<ArticlesAdapter.ViewHo
 
     @Override
     public long getItemId(int position) {
-        mCursor.moveToPosition(position);
-        return mCursor.getLong(ArticlesFragment.COL_ARTICLE_ID);
+        if(mCursor != null && !mCursor.isClosed()){
+            mCursor.moveToPosition(position);
+            return mCursor.getLong(ArticlesFragment.COL_ARTICLE_ID);
+        }
+        return -1;
     }
 
     @Override
@@ -90,11 +93,14 @@ public class ArticlesAdapter extends RecyclerView.Adapter<ArticlesAdapter.ViewHo
     public void onBindViewHolder(ViewHolder holder, int position) {
         mCursor.moveToPosition(position);
         holder.titleView.setText(mCursor.getString(ArticlesFragment.COL_ARTICLE_TITLE));
-        holder.subtitleView.setText(mCursor.getString(ArticlesFragment.COL_ARTICLE_CATEGORY));
+        holder.subtitleView.setText(mCursor.getString(ArticlesFragment.COL_ARTICLE_AUTHOR));
 
         Log.v(LOG_TAG, "New - " + mCursor.getString(ArticlesFragment.COL_ARTICLE_NEW));
         if(mCursor.getString(ArticlesFragment.COL_ARTICLE_NEW).equals("1")) {
             holder.newView.setText("*New");
+            holder.newView.setVisibility(View.VISIBLE);
+        }else if(ArticlesFragment.ARTICLE_TYPE.equals("favorites")){
+            holder.newView.setText(mCursor.getString(ArticlesFragment.COL_ARTICLE_TYPE).toUpperCase());
             holder.newView.setVisibility(View.VISIBLE);
         }else{
             holder.newView.setText("");
@@ -108,6 +114,15 @@ public class ArticlesAdapter extends RecyclerView.Adapter<ArticlesAdapter.ViewHo
                 .into(holder.thumbnailView);*/
         new Utilities(context).loadImageView(holder.thumbnailView,
                 mCursor.getString(ArticlesFragment.COL_ARTICLE_COVER_PIC));
+
+        if(ArticlesFragment.ARTICLE_TYPE.equals("short stories")){
+            holder.thumbnailView.setVisibility(View.VISIBLE);
+        }else if(ArticlesFragment.ARTICLE_TYPE.equals("stories")){
+            holder.thumbnailView.setVisibility(View.VISIBLE);
+        }else{
+            holder.thumbnailView.setVisibility(View.GONE);
+        }
+
 
         //add logic for accessibility
         holder.titleView.setContentDescription(holder.titleView.getText());

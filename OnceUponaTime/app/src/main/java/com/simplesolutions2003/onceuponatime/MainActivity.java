@@ -58,6 +58,12 @@ public class MainActivity extends AppCompatActivity {
         Log.v(LOG_TAG, "initializeSyncAdapter");
         SyncAdapter.initializeSyncAdapter(this);
 
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.setCustomAnimations( R.anim.slide_in_left, 0, 0, R.anim.slide_out_left);
+        fragmentTransaction.replace(R.id.frame_container, new AppMenuFragment(), AppMenuFragment.TAG);
+        //fragmentTransaction.addToBackStack(ArticlesFragment.TAG);
+        fragmentTransaction.commit();
+
     }
 
     @Override
@@ -130,12 +136,6 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onResumeFragments (){
         super.onResumeFragments();
-        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.setCustomAnimations( R.anim.slide_in_left, 0, 0, R.anim.slide_out_left);
-        fragmentTransaction.replace(R.id.frame_container, new AppMenuFragment(), AppMenuFragment.TAG);
-        //fragmentTransaction.addToBackStack(ArticlesFragment.TAG);
-        fragmentTransaction.commit();
-
     }
 
     protected void handleMenuSearchInitialize() {

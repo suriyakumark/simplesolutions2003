@@ -71,6 +71,7 @@ public class ArticlesFragment extends Fragment implements LoaderManager.LoaderCa
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
+        Log.v(TAG, "onCreate");
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
         dPosition = 0;
@@ -79,7 +80,7 @@ public class ArticlesFragment extends Fragment implements LoaderManager.LoaderCa
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-
+        Log.v(TAG, "onCreateView");
         View rootView = inflater.inflate(R.layout.articles, container, false);
         tvEmptyLoading = (TextView) rootView.findViewById(R.id.text_empty_loading);
         articlesRecyclerView = (RecyclerView) rootView.findViewById(R.id.recycler_view);
@@ -87,12 +88,15 @@ public class ArticlesFragment extends Fragment implements LoaderManager.LoaderCa
         return rootView;
     }
 
-
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         Log.v(TAG, "onCreateOptionsMenu");
         super.onCreateOptionsMenu(menu,inflater);
-        MainActivity.bSearchEnabled = true;
+        if(ARTICLE_TYPE.equals("favorites")){
+            MainActivity.bSearchEnabled = false;
+        }else {
+            MainActivity.bSearchEnabled = true;
+        }
     }
 
     @Override
@@ -101,11 +105,11 @@ public class ArticlesFragment extends Fragment implements LoaderManager.LoaderCa
         super.onPrepareOptionsMenu(menu);
     }
 
-    public void onResume()
-    {
+    public void onResume() {
+        Log.v(TAG, "onResume");
         super.onResume();
         hideKeyboard();
-        getLoaderManager().initLoader(ARTICLES_LOADER, null, this);
+        getLoaderManager().restartLoader(ARTICLES_LOADER, null, this);
     }
 
     //check which loader is initiated and get appropriate cursor using content provider
@@ -113,7 +117,12 @@ public class ArticlesFragment extends Fragment implements LoaderManager.LoaderCa
     public Loader<Cursor> onCreateLoader(int i, Bundle bundle) {
         Log.v(TAG, "onCreateLoader - " + i + " loader");
         new Utilities(getActivity()).updateEmptyLoadingGone(Utilities.LIST_LOADING,tvEmptyLoading,"");
-        Uri buildArticle = AppContract.ArticleEntry.buildArticleByTypeSearchUri(ARTICLE_TYPE,MainActivity.search_text);
+
+        Uri buildArticle = AppContract.ArticleEntry.buildArticleByTypeSearchUri(ARTICLE_TYPE, MainActivity.search_text);
+
+        if(ARTICLE_TYPE.equals("favorites")) {
+            buildArticle = AppContract.FavoriteEntry.buildArticleByFavoriteUri();
+        }
 
         return new CursorLoader(getActivity(),
                 buildArticle,
@@ -134,7 +143,13 @@ public class ArticlesFragment extends Fragment implements LoaderManager.LoaderCa
                 articlesAdapter = new ArticlesAdapter(getActivity(),cursor,0);
                 articlesAdapter.setHasStableIds(true);
                 articlesRecyclerView.setAdapter(articlesAdapter);
-                int columnCount = 2;
+                int columnCount = 1;
+                if(ARTICLE_TYPE.equals("short stories")){
+                    columnCount = 2;
+                }else if(ARTICLE_TYPE.equals("stories")){
+                    columnCount = 2;
+                }
+
                 StaggeredGridLayoutManager sglm =
                         new StaggeredGridLayoutManager(columnCount, StaggeredGridLayoutManager.VERTICAL);
                 articlesRecyclerView.setLayoutManager(sglm);
@@ -157,7 +172,10 @@ public class ArticlesFragment extends Fragment implements LoaderManager.LoaderCa
     }
 
     public void handleEmptyMessage(){
-        if(new Utilities(getActivity()).isInternetOn()) {
+        articlesRecyclerView.setAdapter(null);
+        if(ARTICLE_TYPE.equals("favorites")){
+            new Utilities(getActivity()).updateEmptyLoadingGone(Utilities.LIST_EMPTY, tvEmptyLoading, getString(R.string.text_articles_search_empty));
+        }else if(new Utilities(getActivity()).isInternetOn()) {
             if(MainActivity.search_text.isEmpty() || MainActivity.search_text == "") {
                 new Utilities(getActivity()).updateEmptyLoadingGone(Utilities.LIST_EMPTY, tvEmptyLoading, getString(R.string.text_articles_sync_progress));
             }else {
@@ -171,4 +189,5 @@ public class ArticlesFragment extends Fragment implements LoaderManager.LoaderCa
     public void hideKeyboard(){
         Utilities.hideKeyboardFrom(this.getContext(),this.getView().getRootView());
     }
+
 }

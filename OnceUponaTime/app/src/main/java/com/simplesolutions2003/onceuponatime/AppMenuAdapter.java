@@ -96,6 +96,10 @@ public class AppMenuAdapter extends RecyclerView.Adapter<AppMenuAdapter.ViewHold
                 return R.drawable.menu_02;
             case "menu_03":
                 return R.drawable.menu_03;
+            case "menu_04":
+                return R.drawable.menu_04;
+            case "menu_05":
+                return R.drawable.menu_05;
         }
         return -1;
     }
