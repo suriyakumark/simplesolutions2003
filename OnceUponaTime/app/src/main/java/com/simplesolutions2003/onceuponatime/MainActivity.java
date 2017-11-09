@@ -1,7 +1,11 @@
 package com.simplesolutions2003.onceuponatime;
 
 import android.app.Activity;
+import android.app.Application;
+import android.content.SharedPreferences;
 import android.net.Uri;
+import android.os.Handler;
+import android.os.Looper;
 import android.support.v4.app.Fragment;
 import android.content.Context;
 import android.content.Intent;
@@ -22,46 +26,91 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.InterstitialAd;
 import com.simplesolutions2003.onceuponatime.sync.ArticleSyncAdapter;
 import com.simplesolutions2003.onceuponatime.sync.SyncAdapter;
+import com.squareup.picasso.OkHttpDownloader;
+import com.squareup.picasso.Picasso;
 
 public class MainActivity extends AppCompatActivity {
 
     private final static String LOG_TAG = MainActivity.class.getSimpleName();
-    Toolbar toolbar;
+
+    public final static String ARTICLE_TYPE_SHORT_STORIES = "short stories";
+    public final static String ARTICLE_TYPE_STORIES = "stories";
+    public final static String ARTICLE_TYPE_RHYMES = "rhymes";
+    public final static String ARTICLE_TYPE_POEMS = "poems";
+    public final static String ARTICLE_TYPE_FAVORITES = "favorites";
+
+    public final static long APP_UNLOCK_INTERSTITIAL_VISITS = 50;
+    public static boolean AD_ENABLED = true;
+
     FragmentManager fragmentManager = getSupportFragmentManager();
+
+    Toolbar toolbar;
     private static MenuItem mSearchAction;
+
     private static boolean isSearchOpened = false;
+    public static boolean bSearchEnabled = true;
     private static EditText etSearch;
     public static String search_text = "";
-    public static boolean bSearchEnabled = true;
+
+    public static InterstitialAd mInterstitialAd;  // The ad
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_main);
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        AdView mAdView = (AdView) findViewById(R.id.adView);
+        AdView mBannerAd = (AdView) findViewById(R.id.adView);
         // Create an ad request. Check logcat output for the hashed device ID to
         // get test ads on a physical device. e.g.
         // "Use AdRequest.Builder.addTestDevice("ABCDEF012345") to get test ads on this device."
-        AdRequest adRequest = new AdRequest.Builder()
+        AdRequest adRequestBanner = new AdRequest.Builder()
                 //.addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
                 .addTestDevice(getString(R.string.ad_device_id))
                 .build();
-        mAdView.loadAd(adRequest);
+        mBannerAd.loadAd(adRequestBanner);
+
+
+        AdRequest adRequestInterstitial = new AdRequest.Builder()
+                //.addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
+                .addTestDevice(getString(R.string.ad_device_id))
+                .build();
+
+        mInterstitialAd = new InterstitialAd(this);
+        mInterstitialAd.setAdUnitId(getString(R.string.interstitial_ad_unit_id));
+        mInterstitialAd.loadAd(adRequestInterstitial);
+
+        mInterstitialAd.setAdListener(new AdListener() {
+            @Override
+            public void onAdClosed() {
+                // Load the next interstitial.
+                mInterstitialAd.loadAd(new AdRequest.Builder().addTestDevice(getString(R.string.ad_device_id)).build());
+            }
+        });
 
         Log.v(LOG_TAG, "initializeSyncAdapter");
         SyncAdapter.initializeSyncAdapter(this);
 
+        /*Picasso picasso = new Picasso.Builder(this)
+                .downloader(new OkHttpDownloader(this,Integer.MAX_VALUE))
+                .build();
+        picasso.setIndicatorsEnabled(true);
+        picasso.setLoggingEnabled(true);
+        Picasso.setSingletonInstance(picasso);*/
+
+        // do not add this fragment to back stack, as this is the starting transaction
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.setCustomAnimations( R.anim.slide_in_left, 0, 0, R.anim.slide_out_left);
         fragmentTransaction.replace(R.id.frame_container, new AppMenuFragment(), AppMenuFragment.TAG);
-        //fragmentTransaction.addToBackStack(ArticlesFragment.TAG);
         fragmentTransaction.commit();
 
     }
@@ -223,5 +272,13 @@ public class MainActivity extends AppCompatActivity {
         Utilities.hideKeyboard(this);
     }
 
+
+    public static void displayAd(){
+        if(AD_ENABLED) {
+            if (mInterstitialAd.isLoaded()) {
+                mInterstitialAd.show();
+            }
+        }
+    }
 }
 

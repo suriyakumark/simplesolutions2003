@@ -2,6 +2,7 @@ package com.simplesolutions2003.onceuponatime;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -12,6 +13,7 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.simplesolutions2003.onceuponatime.data.AppContract;
 import com.squareup.picasso.Callback;
@@ -26,7 +28,7 @@ import java.util.Date;
  */
 public class Utilities {
 
-    public final static String TAG = Utilities.class.getSimpleName();
+    public final static String LOG_TAG = Utilities.class.getSimpleName();
 
     Context context;
     SimpleDateFormat disp_datetime_fmt = new SimpleDateFormat("MMM dd, hh:mm a");
@@ -205,7 +207,7 @@ public class Utilities {
 
 
     public void updateEmptyLoadingGone(int EmptyLoadingGone, TextView tvEmptyLoading, String emptyMessage){
-        Log.v(TAG,"EmptyLoadingGone");
+        Log.v(LOG_TAG,"EmptyLoadingGone");
         switch(EmptyLoadingGone){
             case LIST_LOADING:
                 tvEmptyLoading.setText(context.getString(R.string.text_list_loading));
@@ -264,4 +266,26 @@ public class Utilities {
         imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
     }
 
+
+    public void checkUserAdStatus(Context context){
+        SharedPreferences pref = context.getSharedPreferences("onceuponatime_pref", 0);
+        Long visit_count = pref.getLong("visit_count", 0L);
+        visit_count++;
+
+        SharedPreferences.Editor editor = pref.edit();
+        editor.putLong("visit_count", visit_count);
+        editor.commit();
+
+        //Log.v(LOG_TAG, "visit_count - " + visit_count);
+        if(visit_count >= MainActivity.APP_UNLOCK_INTERSTITIAL_VISITS) {
+            MainActivity.AD_ENABLED = false;
+        }else{
+            MainActivity.AD_ENABLED = true;
+        }
+
+        if(visit_count >= MainActivity.APP_UNLOCK_INTERSTITIAL_VISITS &&
+                visit_count <= MainActivity.APP_UNLOCK_INTERSTITIAL_VISITS + 2){
+            Toast.makeText(context,context.getString(R.string.msg_ad_unlocked),Toast.LENGTH_LONG).show();
+        }
+    }
 }

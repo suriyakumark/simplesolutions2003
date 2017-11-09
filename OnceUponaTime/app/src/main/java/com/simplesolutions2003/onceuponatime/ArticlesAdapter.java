@@ -78,6 +78,7 @@ public class ArticlesAdapter extends RecyclerView.Adapter<ArticlesAdapter.ViewHo
                 ArticlesFragment.dPosition = viewHolder.getAdapterPosition();
 
                 Log.v(LOG_TAG,"replacing fragment");
+                MainActivity.displayAd();
                 FragmentManager fragmentManager = ((MainActivity) context).getSupportFragmentManager();
                 FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
                 fragmentTransaction.setCustomAnimations( R.anim.slide_in_left, 0, 0, R.anim.slide_out_left);
@@ -115,9 +116,7 @@ public class ArticlesAdapter extends RecyclerView.Adapter<ArticlesAdapter.ViewHo
         new Utilities(context).loadImageView(holder.thumbnailView,
                 mCursor.getString(ArticlesFragment.COL_ARTICLE_COVER_PIC));
 
-        if(ArticlesFragment.ARTICLE_TYPE.equals("short stories")){
-            holder.thumbnailView.setVisibility(View.VISIBLE);
-        }else if(ArticlesFragment.ARTICLE_TYPE.equals("stories")){
+        if(isThumbnailEnabled(ArticlesFragment.ARTICLE_TYPE)){
             holder.thumbnailView.setVisibility(View.VISIBLE);
         }else{
             holder.thumbnailView.setVisibility(View.GONE);
@@ -135,4 +134,15 @@ public class ArticlesAdapter extends RecyclerView.Adapter<ArticlesAdapter.ViewHo
         return mCursor.getCount();
     }
 
+    public boolean isThumbnailEnabled(String articleType){
+        switch (articleType){
+            case MainActivity.ARTICLE_TYPE_SHORT_STORIES:
+                return true;
+            case MainActivity.ARTICLE_TYPE_STORIES:
+                return true;
+            default:
+                return false;
+        }
+
+    }
 }

@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "9768112288",
+    "firebase_url": "https://once-upon-a-time-a9446.firebaseio.com",
+    "project_id": "once-upon-a-time-a9446",
+    "storage_bucket": "once-upon-a-time-a9446.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:9768112288:android:912202415b876cb1",
+        "android_client_info": {
+          "package_name": "com.simplesolutions2003.onceuponatime"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "9768112288-qs1kfq1vb1pdd9c1fbq0d8c5e2ps9dbr.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBBG1VyX83qis9CyEgBjA_pint2wItuT2g"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

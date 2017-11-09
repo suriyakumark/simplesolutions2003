@@ -34,13 +34,12 @@ public class ArticlesFragment extends Fragment implements LoaderManager.LoaderCa
     public final static String TAG = ArticlesFragment.class.getSimpleName();
 
     private final static int ARTICLES_LOADER = 0;
-    public static int dPosition;
+    public static int dPosition = 0;
     private ArticlesAdapter articlesAdapter;
     public static String ARTICLE_TYPE = "";
     RecyclerView articlesRecyclerView;
     TextView tvEmptyLoading;
     private ContentObserver mObserver;
-
 
     public static final String[] ARTICLE_COLUMNS = {
             AppContract.ArticleEntry.TABLE_NAME + "." + AppContract.ArticleEntry._ID,
@@ -74,7 +73,7 @@ public class ArticlesFragment extends Fragment implements LoaderManager.LoaderCa
         Log.v(TAG, "onCreate");
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
-        dPosition = 0;
+        //dPosition = 0;
     }
 
     @Override
@@ -92,11 +91,7 @@ public class ArticlesFragment extends Fragment implements LoaderManager.LoaderCa
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         Log.v(TAG, "onCreateOptionsMenu");
         super.onCreateOptionsMenu(menu,inflater);
-        if(ARTICLE_TYPE.equals("favorites")){
-            MainActivity.bSearchEnabled = false;
-        }else {
-            MainActivity.bSearchEnabled = true;
-        }
+        MainActivity.bSearchEnabled = isSearchEnabled(ARTICLE_TYPE);
     }
 
     @Override
@@ -173,7 +168,7 @@ public class ArticlesFragment extends Fragment implements LoaderManager.LoaderCa
 
     public void handleEmptyMessage(){
         articlesRecyclerView.setAdapter(null);
-        if(ARTICLE_TYPE.equals("favorites")){
+        if(ARTICLE_TYPE.equals(MainActivity.ARTICLE_TYPE_FAVORITES)){
             new Utilities(getActivity()).updateEmptyLoadingGone(Utilities.LIST_EMPTY, tvEmptyLoading, getString(R.string.text_articles_search_empty));
         }else if(new Utilities(getActivity()).isInternetOn()) {
             if(MainActivity.search_text.isEmpty() || MainActivity.search_text == "") {
@@ -188,6 +183,16 @@ public class ArticlesFragment extends Fragment implements LoaderManager.LoaderCa
 
     public void hideKeyboard(){
         Utilities.hideKeyboardFrom(this.getContext(),this.getView().getRootView());
+    }
+
+    public boolean isSearchEnabled(String articleType){
+        switch (articleType){
+            case MainActivity.ARTICLE_TYPE_FAVORITES:
+                return false;
+            default:
+                return true;
+        }
+
     }
 
 }

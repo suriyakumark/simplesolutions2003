@@ -131,9 +131,11 @@ public class ArticleDetailFragment extends Fragment implements LoaderManager.Loa
         super.onPrepareOptionsMenu(menu);
     }
 
+    @Override
     public void onResume()
     {
         super.onResume();
+        new Utilities().checkUserAdStatus(this.getContext());
         ActionBar action = ((AppCompatActivity) getActivity()).getSupportActionBar(); //get the actionbar
         action.setDisplayShowCustomEnabled(false); //disable a custom view inside the actionbar
         action.setDisplayShowTitleEnabled(true); //show the title in the action bar
