@@ -2,15 +2,10 @@ package com.simplesolutions2003.onceuponatime;
 
 import android.content.ContentValues;
 import android.content.Context;
-import android.content.Intent;
 import android.database.Cursor;
-import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.RecyclerView;
-import android.text.format.DateUtils;
-import android.transition.Explode;
-import android.transition.TransitionManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,7 +14,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.simplesolutions2003.onceuponatime.data.AppContract;
-import com.squareup.picasso.Picasso;
 
 /**
  * Created by SuriyaKumar on 9/5/2016.
@@ -81,7 +75,7 @@ public class ArticlesAdapter extends RecyclerView.Adapter<ArticlesAdapter.ViewHo
                 MainActivity.displayAd();
                 FragmentManager fragmentManager = ((MainActivity) context).getSupportFragmentManager();
                 FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                fragmentTransaction.setCustomAnimations( R.anim.slide_in_left, 0, 0, R.anim.slide_out_left);
+                fragmentTransaction.setCustomAnimations( R.anim.scale_in, 0, 0, R.anim.scale_out);
                 fragmentTransaction.replace(R.id.frame_container, new ArticleDetailFragment(), ArticleDetailFragment.TAG);
                 fragmentTransaction.addToBackStack(ArticlesFragment.TAG);
                 fragmentTransaction.commit();

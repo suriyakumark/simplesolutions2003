@@ -7,6 +7,7 @@ import android.database.Cursor;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
+import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -21,6 +22,7 @@ import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 
 /**
@@ -198,11 +200,16 @@ public class Utilities {
     public void enableMenu(MenuItem item, boolean enable){
         item.setEnabled(enable);
         item.setVisible(enable);
-        if(enable) {
+        if(enable && item.getIcon() != null) {
             item.getIcon().setAlpha(255);
         }else{
             item.getIcon().setAlpha(100);
         }
+    }
+
+    public void enableMenuOption(MenuItem item, boolean enable){
+        item.setEnabled(enable);
+        item.setVisible(enable);
     }
 
 
@@ -267,25 +274,54 @@ public class Utilities {
     }
 
 
-    public void checkUserAdStatus(Context context){
-        SharedPreferences pref = context.getSharedPreferences("onceuponatime_pref", 0);
-        Long visit_count = pref.getLong("visit_count", 0L);
-        visit_count++;
+    public void checkUserAdStatus(Context context,boolean updateCount){
+        SharedPreferences pref = context.getSharedPreferences(MainActivity.MY_PREF, 0);
+        Long visit_count = pref.getLong(context.getString(R.string.pref_visit_count), 0L);
 
-        SharedPreferences.Editor editor = pref.edit();
-        editor.putLong("visit_count", visit_count);
-        editor.commit();
+        if(updateCount) {
+            visit_count++;
+            SharedPreferences.Editor editor = pref.edit();
+            editor.putLong(context.getString(R.string.pref_visit_count), visit_count);
+            editor.commit();
+        }
 
         //Log.v(LOG_TAG, "visit_count - " + visit_count);
-        if(visit_count >= MainActivity.APP_UNLOCK_INTERSTITIAL_VISITS) {
+        if(MainActivity.PREMIUM_USER) {
+            MainActivity.AD_ENABLED = false;
+        }else if(visit_count >= MainActivity.APP_UNLOCK_INTERSTITIAL_VISITS) {
             MainActivity.AD_ENABLED = false;
         }else{
             MainActivity.AD_ENABLED = true;
         }
 
-        if(visit_count >= MainActivity.APP_UNLOCK_INTERSTITIAL_VISITS &&
-                visit_count <= MainActivity.APP_UNLOCK_INTERSTITIAL_VISITS + 2){
-            Toast.makeText(context,context.getString(R.string.msg_ad_unlocked),Toast.LENGTH_LONG).show();
+        if(!MainActivity.PREMIUM_USER) {
+            if (updateCount && visit_count >= MainActivity.APP_UNLOCK_INTERSTITIAL_VISITS &&
+                    visit_count <= MainActivity.APP_UNLOCK_INTERSTITIAL_VISITS + 2) {
+                Toast.makeText(context, context.getString(R.string.msg_ad_unlocked), Toast.LENGTH_LONG).show();
+            }
         }
     }
+
+    public boolean isItTimeToRemindRate(Context context,boolean updateCount) {
+        SharedPreferences pref = context.getSharedPreferences(MainActivity.MY_PREF, 0);
+        Long app_launch_count = pref.getLong(context.getString(R.string.pref_app_launch_count), 0L);
+        boolean rate_never = pref.getBoolean(context.getString(R.string.pref_app_rate_never), false);
+
+        if(rate_never){
+            return false;
+        }
+
+        if (updateCount) {
+            app_launch_count++;
+            SharedPreferences.Editor editor = pref.edit();
+            editor.putLong(context.getString(R.string.pref_app_launch_count), app_launch_count);
+            editor.commit();
+        }
+
+        if((app_launch_count % 10) == 0){
+            return true;
+        }
+        return false;
+    }
+
 }

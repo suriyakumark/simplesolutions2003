@@ -52,7 +52,7 @@ public class AppDBHelper extends SQLiteOpenHelper  {
         final String SQL_CREATE_ARTICLE_DETAIL_TABLE = "CREATE TABLE " + ArticleDetailEntry.TABLE_NAME + " (" +
                 ArticleEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
                 ArticleDetailEntry.COLUMN_ARTICLE_ID + " INTEGER," +
-                ArticleDetailEntry.COLUMN_SEQUENCE + " TEXT NOT NULL, " +
+                ArticleDetailEntry.COLUMN_SEQUENCE + " INTEGER, " +
                 ArticleDetailEntry.COLUMN_TYPE + " TEXT, " +
                 ArticleDetailEntry.COLUMN_CONTENT + " TEXT, " +
 

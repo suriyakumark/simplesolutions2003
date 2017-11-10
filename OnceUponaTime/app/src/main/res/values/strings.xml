@@ -3,28 +3,51 @@
     <string name="banner_ad_unit_id">ca-app-pub-1979618719371623/2225935919</string>
     <string name="interstitial_ad_unit_id">ca-app-pub-1979618719371623/6903878066</string>
     <string name="ad_device_id">1D3D2254E4F4E858E1A2552829E2063B</string>
+    <string name="app_public_key">MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEArZVokyJdEzyP9Yd47G8ry13a6sJ6YiI6LmK3ZmLYiUZa/IHTHbnLVD4t92MiMA+smP1OoxuCEicHYLvD13E+YLufUZ5hT/rNkWTGmwwUOrSQruhmFRdIq9qlU+n30ORJAw0KH8YAdKpUL77BQ1d+7P03nZ5m1qaVNakl8oDpsy7ZrSoncCIhonzzkPMGklralTvQc/KCfjNOctnkhH0YbzVGE/D4Gka7tqH+THzCOcXYNtGRL0I/1rUj63i+2b7HKn2AfBtIbyWUgO5N/Msfvlt8jaXW+nOk68f6iwFGvmFl7vKbKLZhvacyPYrecZjyTkubxVH0f2AAJBYtP7YtpQIDAQAB</string>
 
-    <!-- SyncAdapter related -->
+    <!-- SyncAdapter -->
     <string name="sync_account_type">onceuponatime.simplesolutions2003.com</string>
     <string name="content_authority">com.simplesolutions2003.onceuponatime</string>
     <string name="provider_content_authority">com.simplesolutions2003.onceuponatime</string>
 
-
+    <!-- Actions -->
     <string name="action_search">Search</string>
     <string name="action_rate">Rate App</string>
     <string name="action_share">Share App</string>
+    <string name="action_premium">Premium Upgrade</string>
     <string name="action_submit">Submit Story</string>
 
     <string name="action_submit_url">http://www.suriyakumar.com/once-upon-a-time-submit-story/</string>
 
+    <!-- Toast Messages -->
     <string name="msg_share_app">Hey check out the best short stories, rhymes, poems app at: </string>
     <string name="msg_ad_unlocked">Congratulations! You have unlocked the Interstitial Ad Free version. This is a complimentary reward for users after 50 article visits. </string>
+    <string name="msg_premium_upgraded">Congratulations! You have unlocked the Premium version. </string>
+    <string name="msg_already_premium">You are already a premium user! </string>
 
+    <!-- UI Messages -->
     <string name="text_list_loading">loading...</string>
     <string name="text_articles_sync_progress">Sync in progress...</string>
     <string name="text_articles_search_empty">No results found</string>
     <string name="text_articles_no_data">Need internet connection to get latest content from server. Once fetched, you can access them offline. </string>
 
+    <!--  Dialog -->
+    <string name="dialog_rate_title">Rate me?</string>
+    <string name="dialog_rate_message">If you enjoy using Once Upon A Time App, please take a moment to rate it. Thanks for your support!</string>
+    <string name="dialog_rate_yes">Yes, let\'s do it now</string>
+    <string name="dialog_rate_later">May be later</string>
+    <string name="dialog_rate_never">Don\'t show again</string>
+
+    <!-- Notification Messages -->
     <string name="notify_title">Once upon a time - New stories retrieved!!!</string>
     <string name="notify_msg">Touch to open App and read them now</string>
+
+    <!-- Shared Preferences -->
+    <string name="pref_visit_count">visit_count</string>
+    <string name="pref_app_launch_count">app_launch_count</string>
+    <string name="pref_app_rate_never">app_rate_never</string>
+
+    <!-- Billing -->
+    <string name="billing_premium">premium_upgrade</string>
+
 </resources>

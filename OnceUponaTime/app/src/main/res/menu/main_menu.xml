@@ -26,8 +26,14 @@
         app:showAsAction="never" />
 
     <item
-        android:id="@+id/action_submit"
+        android:id="@+id/action_premium"
         android:orderInCategory="400"
+        android:title="@string/action_premium"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/action_submit"
+        android:orderInCategory="500"
         android:title="@string/action_submit"
         app:showAsAction="never" />
 

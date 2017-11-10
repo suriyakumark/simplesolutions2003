@@ -2,6 +2,8 @@ package com.simplesolutions2003.onceuponatime;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.os.Build;
+import android.transition.TransitionInflater;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
@@ -57,6 +59,10 @@ public class ArticleDetailFragment extends Fragment implements LoaderManager.Loa
             AppContract.FavoriteEntry.TABLE_NAME + "." + AppContract.FavoriteEntry.COLUMN_ARTICLE_ID
     };
 
+    private static final String ARTICLE_DETAIL_SORT =
+            AppContract.ArticleDetailEntry.TABLE_NAME + "." + AppContract.ArticleDetailEntry.COLUMN_SEQUENCE +
+                    " ASC";
+
     static final int COL_ARTICLE_ID = 0;
     static final int COL_ARTICLE_TYPE = 1;
     static final int COL_ARTICLE_CATEGORY = 2;
@@ -78,6 +84,7 @@ public class ArticleDetailFragment extends Fragment implements LoaderManager.Loa
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
         dPosition = 0;
+
     }
 
     @Override
@@ -135,7 +142,7 @@ public class ArticleDetailFragment extends Fragment implements LoaderManager.Loa
     public void onResume()
     {
         super.onResume();
-        new Utilities().checkUserAdStatus(this.getContext());
+        new Utilities().checkUserAdStatus(this.getContext(),true);
         ActionBar action = ((AppCompatActivity) getActivity()).getSupportActionBar(); //get the actionbar
         action.setDisplayShowCustomEnabled(false); //disable a custom view inside the actionbar
         action.setDisplayShowTitleEnabled(true); //show the title in the action bar
@@ -156,7 +163,7 @@ public class ArticleDetailFragment extends Fragment implements LoaderManager.Loa
                 ARTICLE_COLUMNS,
                 null,
                 null,
-                null);
+                ARTICLE_DETAIL_SORT);
 
     }
 

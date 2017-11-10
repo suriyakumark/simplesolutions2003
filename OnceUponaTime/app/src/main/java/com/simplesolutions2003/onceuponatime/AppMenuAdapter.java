@@ -59,6 +59,7 @@ public class AppMenuAdapter extends RecyclerView.Adapter<AppMenuAdapter.ViewHold
                 ArticlesFragment.ARTICLE_TYPE = app_menu_title_tv.getText().toString().toLowerCase();
                 AppMenuFragment.dPosition = viewHolder.getAdapterPosition();
 
+                ArticlesFragment.dPosition = 0;
                 FragmentManager fragmentManager = ((MainActivity) context).getSupportFragmentManager();
                 FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
                 fragmentTransaction.setCustomAnimations( R.anim.slide_in_left, 0, 0, R.anim.slide_out_left);
