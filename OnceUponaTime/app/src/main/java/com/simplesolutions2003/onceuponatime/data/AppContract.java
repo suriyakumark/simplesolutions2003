@@ -62,6 +62,7 @@ public class AppContract {
         public static final String COLUMN_AUTHOR = "author";
         public static final String COLUMN_NEW = "new";
         public static final String COLUMN_LAST_UPDATED_TS = "last_updated_timestamp";
+        public static final String COLUMN_BOOKMARK = "bookmark";
 
         public static Uri buildArticleUri(long _id) {
             return ContentUris.withAppendedId(CONTENT_URI, _id);

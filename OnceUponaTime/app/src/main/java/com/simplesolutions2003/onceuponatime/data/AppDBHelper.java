@@ -46,6 +46,7 @@ public class AppDBHelper extends SQLiteOpenHelper  {
                 ArticleEntry.COLUMN_AUTHOR + " TEXT, " +
                 ArticleEntry.COLUMN_NEW + " TEXT, " +
                 ArticleEntry.COLUMN_LAST_UPDATED_TS + " TIMESTAMP DEFAULT CURRENT_TIMESTAMP," +
+                ArticleEntry.COLUMN_BOOKMARK + " INTEGER, " +
 
                 " UNIQUE (" + ArticleEntry._ID + ") ON CONFLICT REPLACE);";
 
@@ -120,6 +121,10 @@ public class AppDBHelper extends SQLiteOpenHelper  {
 
     @Override
     public void onUpgrade(SQLiteDatabase sqLiteDatabase, int oldVersion, int newVersion) {
+        sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + MenuEntry.TABLE_NAME);
+        sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + ArticleEntry.TABLE_NAME);
+        sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + ArticleDetailEntry.TABLE_NAME);
+        sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + FavoriteEntry.TABLE_NAME);
         onCreate(sqLiteDatabase);
     }
 

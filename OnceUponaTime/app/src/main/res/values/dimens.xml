@@ -13,6 +13,7 @@
     <dimen name="margin_ads">50dp</dimen>
 
     <dimen name="padding_image">4dp</dimen>
+    <dimen name="padding_button">16dp</dimen>
     <dimen name="padding_text">8dp</dimen>
     <dimen name="padding_text_wide">24dp</dimen>
     <dimen name="padding_text_wider">48dp</dimen>

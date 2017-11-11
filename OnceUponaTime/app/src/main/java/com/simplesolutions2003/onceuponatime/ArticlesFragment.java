@@ -49,19 +49,20 @@ public class ArticlesFragment extends Fragment implements LoaderManager.LoaderCa
             AppContract.ArticleEntry.TABLE_NAME + "." + AppContract.ArticleEntry.COLUMN_COVER_PIC,
             AppContract.ArticleEntry.TABLE_NAME + "." + AppContract.ArticleEntry.COLUMN_AUTHOR,
             AppContract.ArticleEntry.TABLE_NAME + "." + AppContract.ArticleEntry.COLUMN_NEW,
-            AppContract.ArticleEntry.TABLE_NAME + "." + AppContract.ArticleEntry.COLUMN_LAST_UPDATED_TS
+            AppContract.ArticleEntry.TABLE_NAME + "." + AppContract.ArticleEntry.COLUMN_LAST_UPDATED_TS,
+            AppContract.ArticleEntry.TABLE_NAME + "." + AppContract.ArticleEntry.COLUMN_BOOKMARK
     };
 
 
-    static final int COL_ARTICLE_ID = 0;
-    static final int COL_ARTICLE_TYPE = 1;
-    static final int COL_ARTICLE_CATEGORY = 2;
-    static final int COL_ARTICLE_TITLE = 3;
-    static final int COL_ARTICLE_COVER_PIC = 4;
-    static final int COL_ARTICLE_AUTHOR = 5;
-    static final int COL_ARTICLE_NEW = 6;
+    public static final int COL_ARTICLE_ID = 0;
+    public static final int COL_ARTICLE_TYPE = 1;
+    public static final int COL_ARTICLE_CATEGORY = 2;
+    public static final int COL_ARTICLE_TITLE = 3;
+    public static final int COL_ARTICLE_COVER_PIC = 4;
+    public static final int COL_ARTICLE_AUTHOR = 5;
+    public static final int COL_ARTICLE_NEW = 6;
     public static final int COL_ARTICLE_LAST_UPD_TS = 7;
-
+    public static final int COL_ARTICLE_BOOKMARK = 8;
 
     public interface Callback {
     }
@@ -139,9 +140,11 @@ public class ArticlesFragment extends Fragment implements LoaderManager.LoaderCa
                 articlesAdapter.setHasStableIds(true);
                 articlesRecyclerView.setAdapter(articlesAdapter);
                 int columnCount = 1;
-                if(ARTICLE_TYPE.equals("short stories")){
+                if(ARTICLE_TYPE.equals(MainActivity.ARTICLE_TYPE_SHORT_STORIES)){
                     columnCount = 2;
-                }else if(ARTICLE_TYPE.equals("stories")){
+                }else if(ARTICLE_TYPE.equals(MainActivity.ARTICLE_TYPE_STORIES)){
+                    columnCount = 2;
+                }else if(ARTICLE_TYPE.equals(MainActivity.ARTICLE_TYPE_RHYMES)){
                     columnCount = 2;
                 }
 

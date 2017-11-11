@@ -24,6 +24,7 @@ import android.util.Log;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -354,40 +355,28 @@ public class MainActivity extends AppCompatActivity {
 
     public void remindRate(){
         final Dialog dialog = new Dialog(this);
+        dialog.setContentView(R.layout.rate_dialog);
         dialog.setTitle(getString(R.string.dialog_rate_title));
 
-        LinearLayout ll = new LinearLayout(this);
-        ll.setOrientation(LinearLayout.VERTICAL);
-        ll.setPadding(8, 24, 8, 24);
+        Button b1 = (Button) dialog.findViewById(R.id.rate_yes);
+        Button b2 = (Button) dialog.findViewById(R.id.rate_later);
+        Button b3 = (Button) dialog.findViewById(R.id.rate_never);
 
-        TextView tv = new TextView(this);
-        tv.setText(getString(R.string.dialog_rate_message));
-        tv.setPadding(8, 8, 8, 8);
-        ll.addView(tv);
-
-        Button b1 = new Button(this);
-        b1.setText(getString(R.string.dialog_rate_yes));
         b1.setOnClickListener(new OnClickListener() {
             public void onClick(View v) {
                 rateMe();
                 dialog.dismiss();
             }
         });
-        b1.setPadding(16,4,16,4);
-        ll.addView(b1);
 
-        Button b2 = new Button(this);
-        b2.setText(getString(R.string.dialog_rate_later));
+
         b2.setOnClickListener(new OnClickListener() {
             public void onClick(View v) {
                 dialog.dismiss();
             }
         });
-        b2.setPadding(16,4,16,4);
-        ll.addView(b2);
 
-        Button b3 = new Button(this);
-        b3.setText(getString(R.string.dialog_rate_never));
+
         b3.setOnClickListener(new OnClickListener() {
             public void onClick(View v) {
                 SharedPreferences pref = getSharedPreferences(MY_PREF, 0);
@@ -397,10 +386,7 @@ public class MainActivity extends AppCompatActivity {
                 dialog.dismiss();
             }
         });
-        b3.setPadding(16,4,16,4);
-        ll.addView(b3);
 
-        dialog.setContentView(ll);
         dialog.show();
     }
 

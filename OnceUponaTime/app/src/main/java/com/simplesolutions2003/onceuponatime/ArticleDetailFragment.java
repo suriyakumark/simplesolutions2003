@@ -2,6 +2,7 @@ package com.simplesolutions2003.onceuponatime;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.location.LocationManager;
 import android.os.Build;
 import android.transition.TransitionInflater;
 import android.support.v4.app.LoaderManager;
@@ -21,6 +22,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.AdapterView;
 import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -38,7 +40,9 @@ public class ArticleDetailFragment extends Fragment implements LoaderManager.Loa
     private int dPosition;
     private ArticleDetailAdapter articleDetailListAdapter;
     public static long ARTICLE_ID = -1;
+    public static int ARTICLE_BOOKMARK = 0;
     public static String ARTICLE_TITLE = "";
+
     ListView articleDetailListView;
     public static TextView articleDetailTitle;
     public static ImageButton articleFavorite;
@@ -181,11 +185,13 @@ public class ArticleDetailFragment extends Fragment implements LoaderManager.Loa
         }
 
         //scroll to top, after listview are loaded it focuses on listview
+        Log.v(TAG,"ARTICLE_BOOKMARK - " + ARTICLE_BOOKMARK);
+        if(ARTICLE_BOOKMARK > 0 ){
+            dPosition = ARTICLE_BOOKMARK;
+        }
         Log.v(TAG, "onLoadFinished - dPosition " + dPosition);
         if(dPosition > 0) {
-            articleDetailListView.scrollTo(0, dPosition);
-        }else{
-            articleDetailListView.scrollTo(0, 0);
+            articleDetailListView.setSelection(dPosition);
         }
 
     }

@@ -53,6 +53,14 @@ public class ArticlesAdapter extends RecyclerView.Adapter<ArticlesAdapter.ViewHo
         return -1;
     }
 
+    public int getBookmarkId(int position) {
+        if(mCursor != null && !mCursor.isClosed()){
+            mCursor.moveToPosition(position);
+            return mCursor.getInt(ArticlesFragment.COL_ARTICLE_BOOKMARK);
+        }
+        return -1;
+    }
+
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         int layoutId = R.layout.articles_list_item;
@@ -62,6 +70,7 @@ public class ArticlesAdapter extends RecyclerView.Adapter<ArticlesAdapter.ViewHo
             @Override
             public void onClick(View view) {
                 ArticleDetailFragment.ARTICLE_ID = getItemId(viewHolder.getAdapterPosition());
+                ArticleDetailFragment.ARTICLE_BOOKMARK = getBookmarkId(viewHolder.getAdapterPosition());
 
                 ContentValues articleValues = new ContentValues();
                 articleValues.put(AppContract.ArticleEntry.COLUMN_NEW, "0");
@@ -133,6 +142,8 @@ public class ArticlesAdapter extends RecyclerView.Adapter<ArticlesAdapter.ViewHo
             case MainActivity.ARTICLE_TYPE_SHORT_STORIES:
                 return true;
             case MainActivity.ARTICLE_TYPE_STORIES:
+                return true;
+            case MainActivity.ARTICLE_TYPE_RHYMES:
                 return true;
             default:
                 return false;
