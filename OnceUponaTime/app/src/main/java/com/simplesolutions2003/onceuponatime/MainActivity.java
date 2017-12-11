@@ -8,6 +8,7 @@ import android.content.ComponentName;
 import android.content.IntentSender;
 import android.content.ServiceConnection;
 import android.content.SharedPreferences;
+import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.os.Handler;
 import android.os.IBinder;
@@ -45,6 +46,7 @@ import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.InterstitialAd;
+import com.simplesolutions2003.onceuponatime.data.AppDBHelper;
 import com.simplesolutions2003.onceuponatime.sync.ArticleSyncAdapter;
 import com.simplesolutions2003.onceuponatime.sync.SyncAdapter;
 import com.simplesolutions2003.onceuponatime.utils.IabHelper;
@@ -102,8 +104,8 @@ public class MainActivity extends AppCompatActivity {
             mService = IInAppBillingService.Stub.asInterface(service);
             PREMIUM_USER = isPaidUser();
             handleBannerAds();
-            if(mSearchAction != null) {
-                mSearchAction.setVisible(false);
+            if(mUpgradeAction != null) {
+                mUpgradeAction.setVisible(false);
             }
         }
     };
@@ -115,10 +117,12 @@ public class MainActivity extends AppCompatActivity {
 
         setContentView(R.layout.activity_main);
         toolbar = (Toolbar) findViewById(R.id.toolbar);
-//        mBannerAdLayout = (LinearLayout) findViewById(R.id.adViewLayout);
         setSupportActionBar(toolbar);
 
-        String base64EncodedPublicKey = getString(R.string.app_public_key);
+        AppDBHelper dBHelper;
+        dBHelper = new AppDBHelper(this);
+        dBHelper.getWritableDatabase();
+
 
         Intent serviceIntent =
                 new Intent("com.android.vending.billing.InAppBillingService.BIND");
@@ -126,18 +130,16 @@ public class MainActivity extends AppCompatActivity {
         bindService(serviceIntent, mServiceConn, Context.BIND_AUTO_CREATE);
 
         mBannerAd = (AdView) findViewById(R.id.adView);
-        // Create an ad request. Check logcat output for the hashed device ID to
-        // get test ads on a physical device. e.g.
-        // "Use AdRequest.Builder.addTestDevice("ABCDEF012345") to get test ads on this device."
         AdRequest adRequestBanner = new AdRequest.Builder()
                 //.addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
                 .addTestDevice(getString(R.string.ad_device_id))
+                .addTestDevice("2D08CBA4EBFA436854E4CE92F1D95900")
                 .build();
         mBannerAd.loadAd(adRequestBanner);
 
-
         AdRequest adRequestInterstitial = new AdRequest.Builder()
                 //.addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
+                .addTestDevice("2D08CBA4EBFA436854E4CE92F1D95900")
                 .addTestDevice(getString(R.string.ad_device_id))
                 .build();
 
@@ -254,7 +256,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        if (mService != null) {
+        if (mServiceConn != null) {
             unbindService(mServiceConn);
         }
     }

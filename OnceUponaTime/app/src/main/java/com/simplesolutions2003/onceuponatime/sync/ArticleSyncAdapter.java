@@ -89,7 +89,7 @@ public class ArticleSyncAdapter extends AbstractThreadedSyncAdapter {
         try {
 
             final String FORECAST_BASE_URL =
-                    "http://suriyakumar.com/api/articles/t1/getArticles";
+                    "http://suriyakumar.com/api/articles/v1/getArticles";
 
             Uri builtUri = Uri.parse(FORECAST_BASE_URL).buildUpon().build();
 

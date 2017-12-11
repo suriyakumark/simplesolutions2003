@@ -285,7 +285,7 @@ public class Utilities {
             editor.commit();
         }
 
-        //Log.v(LOG_TAG, "visit_count - " + visit_count);
+
         if(MainActivity.PREMIUM_USER) {
             MainActivity.AD_ENABLED = false;
         }else if(visit_count >= MainActivity.APP_UNLOCK_INTERSTITIAL_VISITS) {
@@ -300,6 +300,8 @@ public class Utilities {
                 Toast.makeText(context, context.getString(R.string.msg_ad_unlocked), Toast.LENGTH_LONG).show();
             }
         }
+
+        Log.v(LOG_TAG, "MainActivity.AD_ENABLED - " + MainActivity.AD_ENABLED);
     }
 
     public boolean isItTimeToRemindRate(Context context,boolean updateCount) {

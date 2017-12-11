@@ -18,17 +18,19 @@ public class AppDBHelper extends SQLiteOpenHelper  {
     private final String LOG_TAG = AppDBHelper.class.getSimpleName();
 
     // If you change the database schema, you must increment the database version.
-    private static final int DATABASE_VERSION = 1;
+    private static final int DATABASE_VERSION = 2;
 
     static final String DATABASE_NAME = "onceuponatime.db";
 
     public AppDBHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
+        Log.v(LOG_TAG,"AppDBHelper");
 
     }
 
     @Override
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
+        Log.v(LOG_TAG,"onCreate");
 
         final String SQL_CREATE_MENU_TABLE = "CREATE TABLE " + MenuEntry.TABLE_NAME + " (" +
                 MenuEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
@@ -121,6 +123,7 @@ public class AppDBHelper extends SQLiteOpenHelper  {
 
     @Override
     public void onUpgrade(SQLiteDatabase sqLiteDatabase, int oldVersion, int newVersion) {
+        Log.v(LOG_TAG,"onUpgrade");
         sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + MenuEntry.TABLE_NAME);
         sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + ArticleEntry.TABLE_NAME);
         sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + ArticleDetailEntry.TABLE_NAME);
