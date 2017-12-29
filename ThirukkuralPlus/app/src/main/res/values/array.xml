@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="englishArray">
+        <item>On</item>
+        <item>Off</item>
+    </string-array>
+    <string-array name="colorArray">
+        <item>Blue</item>
+        <item>Red</item>
+        <item>White</item>
+        <item>Black</item>
+    </string-array>
+</resources>

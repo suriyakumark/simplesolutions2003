@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/widget_view"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+
+    <TextView
+        android:id="@+id/extra_info3"
+        style="@style/TextAppearance.AppCompat.Body1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:paddingStart="@dimen/card_title_padding"
+        android:paddingEnd="@dimen/card_title_padding"
+        android:paddingBottom="@dimen/card_title_padding"
+        android:ellipsize="end" />
+
+    <TextView
+        android:id="@+id/extra_subinfo3"
+        style="@style/TextAppearance.AppCompat.Caption"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:paddingStart="@dimen/card_subtitle_padding"
+        android:paddingEnd="@dimen/card_subtitle_padding"
+        android:paddingBottom="@dimen/card_subtitle_padding"
+        android:ellipsize="end" />
+
+    <TextView
+        android:id="@+id/title_num"
+        style="@style/TextAppearance.AppCompat.Caption"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:paddingStart="@dimen/card_title_padding"
+        android:paddingEnd="@dimen/card_title_padding"
+        android:paddingBottom="@dimen/card_title_padding"
+        android:ellipsize="end" />
+
+
+    <TextView
+        android:id="@+id/app_menu_title_small"
+        style="@style/TextAppearance.AppCompat.Body2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingStart="@dimen/card_title_padding"
+        android:paddingEnd="@dimen/card_title_padding"
+        android:paddingBottom="@dimen/card_title_padding"
+        android:ellipsize="end"
+        android:maxLines="4" />
+
+    <TextView
+        android:id="@+id/app_menu_subtitle_small"
+        style="@style/TextAppearance.AppCompat.Body1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingStart="@dimen/card_subtitle_padding"
+        android:paddingEnd="@dimen/card_subtitle_padding"
+        android:paddingBottom="@dimen/card_subtitle_padding"
+        android:ellipsize="end" />
+
+</LinearLayout>
+
+

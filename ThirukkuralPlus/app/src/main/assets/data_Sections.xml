@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<data_Sections xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<record>
+		<_id>1</_id>
+		<name>அறத்துப்பால்</name>
+		<name_eng>Virtue</name_eng>
+	</record>
+	<record>
+		<_id>2</_id>
+		<name>பொருட்பால்</name>
+		<name_eng>Wealth</name_eng>
+	</record>
+	<record>
+		<_id>3</_id>
+		<name>காமத்துப்பால்</name>
+		<name_eng>Love</name_eng>
+	</record>
+</data_Sections>

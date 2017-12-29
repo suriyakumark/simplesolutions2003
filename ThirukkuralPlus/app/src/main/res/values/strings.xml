@@ -1,0 +1,123 @@
+<resources>
+
+    <!-- App -->
+
+    <string name="app_name">திருக்குறள் +</string>
+    <string name="app_subtitle">by SimpleSolz</string>
+    <string name="content_authority">com.simplesolutions2003.thirukkuralplus</string>
+    <string name="rewarded_ad_unit_id">ca-app-pub-1979618719371623/8785783794</string>
+    <string name="ad_device_id">1D3D2254E4F4E858E1A2552829E2063B</string>
+    <string name="ad_app_id">ca-app-pub-1979618719371623~1565769320</string>
+
+    <!-- Navigation -->
+
+    <string name="nav_preface">முன்னுரை</string>
+    <string name="nav_sections">பால்</string>
+    <string name="nav_groups">இயல்</string>
+    <string name="nav_chapters">அதிகாரம்</string>
+    <string name="nav_kurals">குறள்</string>
+    <string name="nav_favorites">பிடித்தவை</string>
+    <string name="nav_quiz">வினாவிடை</string>
+    <string name="nav_settings">அமைப்புகள்</string>
+    <string name="nav_rate">செயலி மதிப்பீடு</string>
+    <string name="nav_reward">வெகுமதி</string>
+
+    <string name="nav_preface_eng">முன்னுரை | Preface</string>
+    <string name="nav_sections_eng">பால் | Sections</string>
+    <string name="nav_groups_eng">இயல் | Groups</string>
+    <string name="nav_chapters_eng">அதிகாரம் | Chapters</string>
+    <string name="nav_kurals_eng">குறள் | Couplets</string>
+    <string name="nav_favorites_eng">பிடித்தவை | Favorites</string>
+    <string name="nav_quiz_eng">வினாவிடை | Quiz</string>
+    <string name="nav_settings_eng">அமைப்புகள் | Settings</string>
+    <string name="nav_rate_eng">செயலி மதிப்பீடு | Rate App</string>
+    <string name="nav_reward_eng">வெகுமதி | Reward</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <!-- Menu Action -->
+
+    <string name="action_search">Search</string>
+    <string name="action_share">Share</string>
+
+    <!-- UI Text -->
+    <string name="title_muva">மு. வரதராசனார் விளக்கம்</string>
+    <string name="title_solo">சாலமன் பாப்பையா விளக்கம்</string>
+    <string name="title_muka">கலைஞர் விளக்கம்</string>
+    <string name="title_couplet">Couplet</string>
+    <string name="title_trans">Transliteration</string>
+    <string name="text_read">Read count:\u0020</string>
+    <string name="text_score">Score:\u0020</string>
+
+    <string name="content_preface">திருக்குறள் உலகப்புகழ் பெற்ற தமிழ் இலக்கியமாகும். இதனை இயற்றியவர் திருவள்ளுவர் என்று அறியப்படுபவர். இதில் 1330 குறள்கள் பத்து பத்தாக 133 அதிகாரங்களின் கீழ் தொகுக்கப் பெற்றுள்ளன. திருக்குறள் சங்க இலக்கிய வகைப்பாட்டில் பதினெண்கீழ்க்கணக்கு எனப்படும் பதினெட்டு நூல்களின் திரட்டில் இருக்கிறது. இது அடிப்படையில் ஒரு வாழ்வியல் நூல். மாந்தர்கள் தம் அகவாழ்விலும் சுமுகமாக கூடி வாழவும், புற வாழ்விலும் இன்பமுடனும் இசைவுடனும் நலமுடனும் வாழவும் தேவையான அடிப்படைப் பண்புகளை விளக்குகிறது. இந்நூல் அறம், பொருள், இன்பம் அல்லது காமம் என்னும் முப்பெரும் பிரிவுகளாய் (முப்பால்) பிரித்தும் அழகுடன் இணைத்தும் கோர்த்தும் விளக்குகிறது.
+        வாழ்வியலின் எல்லா அங்கங்களையும் திருக்குறள் கூறுவதால், அதைச் சிறப்பித்துப் பல பெயர்களால் அழைப்பர்: திருக்குறள், முப்பால், உத்தரவேதம், தெய்வநூல், பொதுமறை, பொய்யாமொழி, வாயுறை வாழ்த்து, தமிழ் மறை, திருவள்ளுவம் என்ற பெயர்கள் அதற்குரியவை. கருத்துக்களை இன, மொழி, பாலின பேதங்களின்றி காலம் கடந்தும் பொருந்துவது போல் கூறி உள்ளதால் இந்நூல் ""உலகப் பொது மறை"" என்றும் அழைக்கப்படுகிறது</string>
+    <string name="content_preface_eng">Tirukkural is a masterpiece of Tamil literature. Thirukkural was written around 2000 years ago. Thirukkural was translated in more than 30 languages and it is the most translated book on ethics in the world next only to the Bible and the Koran.
+        The word Thirukkural is a combination of two Tamil words "Thiru" and "kural". The word Thiru means beautiful or auspicious. The word "kural" means short poem consisting of two lines, a couplet. Thirukkural consists of 1330 couplets. Therefore the title of the work given by the author is “Muppaal” meaning three parts. They are known as "Aram","Porul" and "Inbam". These 1330 couplets are divided into three parts. The first part Aram deals with the ethical code of conduct (virtues)and the second part Porul deals with political governance, wealth and other topics of social and material interest. The third part Inbam deals with romance and love. The most important features of Thirukkural are: 1) It is secular in nature, 2) it is universal and applicable to people living everywhere in any century, 3) it is everlasting and its messages transcend time. This secular, universal and immortal nature of Thirukkural combined with its conciseness and literary charm has been the pride of Tamil people for the past many centuries.
+        Some Statistics:\n
+        40 couplets on God, Rain, Virtue and Ascetics\n
+        200 couplets on Domestic Virtue\n
+        140 couplets on Higher Virtue based on Grace\n
+        100 couplets on Ministers of State\n
+        250 couplets on Royalty\n
+        220 couplets on the Essential requirements of Administration\n
+        250 couplets on Human Love and Passion\n
+        130 couples on Morality, both positive and negative\n</string>
+
+    <string name="content_reward">வணக்கம்! \nநீங்கள் எனக்கு வெகுமதி கொடுக்க விரும்பினால் இந்த 30-60 வினாடி விளம்பரத்தை பார்த்தால் போதும். இதன் மூலம் நான் மேலும் உங்களுக்கு சிறந்த செயலி-களை செய்வேன். செயலி-களில் இடையூறு ஏற்படுத்தும் வகையில் விளம்பரங்களை காம்பிக்கமாட்டேன். \n\nகீழே உள்ள பட்டன்-ஐ அழுத்தவும். \nநன்றி! </string>
+    <string name="content_reward_eng">Hello, \nIf you would like to reward me, please watch this 30-60 seconds Advertisement. With this income, I can develop more Apps for you. When using the App, you wont be interrupted with Ads. \n\nTouch the above icon. \nThank you!</string>
+
+    <!-- Toast/Snackbar Messages -->
+    <string name="msg_share_app">இந்த திருக்குறள் செயலி நன்றாக உள்ளது: </string>
+    <string name="msg_reward_thank">மிக்க நன்றி! வெகுமதி அளிக்க ஏதும் கட்டுப்பாடு இல்லை!</string>
+    <string name="msg_share_app_eng">Hey check out this nice Thirukkural Plus App at: </string>
+    <string name="msg_reward_thank_eng">Thank you very much! You can reward me unlimited times! </string>
+    <string name="msg_exit">Press back to exit! </string>
+    <string name="msg_internet">Need Internet Connection to reward! </string>
+    <string name="msg_empty_answer">காலியான பதில்</string>
+    <string name="msg_right_answer">மிக நன்று!!!  </string>
+    <string name="msg_wrong_answer">மீண்டும் முயற்சி செய்யவும்! </string>
+    <string name="msg_rotate">வினாவிடை சரியாக தெரிய கைப்பேசி-ஐ சாய்க்கவும்!</string>
+    <string name="msg_rotate_eng">For best results, use Landscape mode for Quiz!</string>
+
+    <!-- Preferences Key -->
+    <string name="pref_app_launch_count">app_launch_count</string>
+    <string name="pref_app_rate_never">app_rate_never</string>
+    <string name="pref_app_reward_never">app_reward_never</string>
+    <string name="pref_app_reward_count">app_reward_count</string>
+    <string name="pref_english">english</string>
+    <string name="pref_color">color</string>
+    <string name="pref_score">score</string>
+
+    <!--  Dialog -->
+    <string name="dialog_rate_title">செயலி மதிப்பீடு?</string>
+    <string name="dialog_rate_message">இந்த திருக்குறள்+ செயலி உங்களுக்கு பிடித்திருந்தால், மதிப்பீடு செய்யுங்கள். ஆதரவுக்கு நன்றி!</string>
+    <string name="dialog_rate_yes">சரி, செய்கிறேன்</string>
+    <string name="dialog_rate_later">பிறகு செய்கிறேன்</string>
+    <string name="dialog_rate_never">இதை மீட்டும் காட்டாதே</string>
+
+    <string name="dialog_rate_title_eng">Rate me?</string>
+    <string name="dialog_rate_message_eng">If you enjoy using Thirukkural Plus App, please take a moment to rate it. Thanks for your support!</string>
+    <string name="dialog_rate_yes_eng">Yes, let\'s do it now</string>
+    <string name="dialog_rate_later_eng">May be later</string>
+    <string name="dialog_rate_never_eng">Don\'t show again</string>
+
+    <string name="dialog_reward_title">வெகுமதி?</string>
+    <string name="dialog_reward_message">இந்த திருக்குறள்+ செயலி உங்களுக்கு பிடித்திருந்தால், இதை உருவாக்கியவருக்கு வெகுமதி அழியுங்கள். ஆதரவுக்கு நன்றி!</string>
+    <string name="dialog_reward_yes">சரி, செய்கிறேன்</string>
+    <string name="dialog_reward_later">பிறகு செய்கிறேன்</string>
+
+    <string name="dialog_reward_title_eng">Rate me?</string>
+    <string name="dialog_reward_message_eng">If you enjoy using Thirukkural Plus App, please take a moment to reward the developer. Thanks for your support!</string>
+    <string name="dialog_reward_yes_eng">Yes, let\'s do it now</string>
+    <string name="dialog_reward_later_eng">May be later</string>
+
+    <string name="dialog_quiz_title">எதில் வினாவிடை?</string>
+    <string name="dialog_quiz_title_eng">Quiz For?</string>
+    <string name="dialog_quiz_random">எல்லா அதிகாரங்களும்</string>
+    <string name="dialog_quiz_random_eng">All Chapters</string>
+    <string name="dialog_quiz_chapter">அதிகாரம் தேர்ந்தெடு</string>
+    <string name="dialog_quiz_chapter_eng">Choose Chapter</string>
+
+</resources>
+

@@ -1,0 +1,934 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<data_Chapters xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<record>
+		<_id>1</_id>
+		<section_id>1</section_id>
+		<group_id>1</group_id>
+		<name>கடவுள் வாழ்த்து</name>
+		<name_eng>The Praise of God</name_eng>
+	</record>
+	<record>
+		<_id>2</_id>
+		<section_id>1</section_id>
+		<group_id>1</group_id>
+		<name>வான்சிறப்பு</name>
+		<name_eng>The Blessing of Rain</name_eng>
+	</record>
+	<record>
+		<_id>3</_id>
+		<section_id>1</section_id>
+		<group_id>1</group_id>
+		<name>நீத்தார் பெருமை</name>
+		<name_eng>The Greatness of Ascetics</name_eng>
+	</record>
+	<record>
+		<_id>4</_id>
+		<section_id>1</section_id>
+		<group_id>1</group_id>
+		<name>அறன் வலியுறுத்தல்</name>
+		<name_eng>Assertion of the Strength of Virtue</name_eng>
+	</record>
+	<record>
+		<_id>5</_id>
+		<section_id>1</section_id>
+		<group_id>2</group_id>
+		<name>இல்வாழ்க்கை</name>
+		<name_eng>Domestic Life</name_eng>
+	</record>
+	<record>
+		<_id>6</_id>
+		<section_id>1</section_id>
+		<group_id>2</group_id>
+		<name>வாழ்க்கைத் துணைநலம்</name>
+		<name_eng>The Worth of a Wife</name_eng>
+	</record>
+	<record>
+		<_id>7</_id>
+		<section_id>1</section_id>
+		<group_id>2</group_id>
+		<name>மக்கட்பேறு</name>
+		<name_eng>The Wealth of Children</name_eng>
+	</record>
+	<record>
+		<_id>8</_id>
+		<section_id>1</section_id>
+		<group_id>2</group_id>
+		<name>அன்புடைமை</name>
+		<name_eng>The Possession of Love</name_eng>
+	</record>
+	<record>
+		<_id>9</_id>
+		<section_id>1</section_id>
+		<group_id>2</group_id>
+		<name>விருந்தோம்பல்</name>
+		<name_eng>Hospitality</name_eng>
+	</record>
+	<record>
+		<_id>10</_id>
+		<section_id>1</section_id>
+		<group_id>2</group_id>
+		<name>இனியவை கூறல்</name>
+		<name_eng>The Utterance of Pleasant Words</name_eng>
+	</record>
+	<record>
+		<_id>11</_id>
+		<section_id>1</section_id>
+		<group_id>2</group_id>
+		<name>செய்ந்நன்றியறிதல்</name>
+		<name_eng>Gratitude</name_eng>
+	</record>
+	<record>
+		<_id>12</_id>
+		<section_id>1</section_id>
+		<group_id>2</group_id>
+		<name>நடுவு நிலைமை</name>
+		<name_eng>Impartiality</name_eng>
+	</record>
+	<record>
+		<_id>13</_id>
+		<section_id>1</section_id>
+		<group_id>2</group_id>
+		<name>அடக்கம் உடைமை</name>
+		<name_eng>The Possession of Self-restraint</name_eng>
+	</record>
+	<record>
+		<_id>14</_id>
+		<section_id>1</section_id>
+		<group_id>2</group_id>
+		<name>ஒழுக்கம் உடைமை</name>
+		<name_eng>The Possession of Decorum</name_eng>
+	</record>
+	<record>
+		<_id>15</_id>
+		<section_id>1</section_id>
+		<group_id>2</group_id>
+		<name>பிறனில் விழையாமை</name>
+		<name_eng>Not coveting another's Wife</name_eng>
+	</record>
+	<record>
+		<_id>16</_id>
+		<section_id>1</section_id>
+		<group_id>2</group_id>
+		<name>பொறையுடைமை</name>
+		<name_eng>The Possession of Patience, Forbearance</name_eng>
+	</record>
+	<record>
+		<_id>17</_id>
+		<section_id>1</section_id>
+		<group_id>2</group_id>
+		<name>அழுக்காறாமை</name>
+		<name_eng>Not Envying</name_eng>
+	</record>
+	<record>
+		<_id>18</_id>
+		<section_id>1</section_id>
+		<group_id>2</group_id>
+		<name>வெஃகாமை</name>
+		<name_eng>Not Coveting</name_eng>
+	</record>
+	<record>
+		<_id>19</_id>
+		<section_id>1</section_id>
+		<group_id>2</group_id>
+		<name>புறங்கூறாமை</name>
+		<name_eng>Not Backbiting</name_eng>
+	</record>
+	<record>
+		<_id>20</_id>
+		<section_id>1</section_id>
+		<group_id>2</group_id>
+		<name>பயனில சொல்லாமை</name>
+		<name_eng>Against Vain Speaking</name_eng>
+	</record>
+	<record>
+		<_id>21</_id>
+		<section_id>1</section_id>
+		<group_id>2</group_id>
+		<name>தீவினையச்சம்</name>
+		<name_eng>Dread of Evil Deeds</name_eng>
+	</record>
+	<record>
+		<_id>22</_id>
+		<section_id>1</section_id>
+		<group_id>2</group_id>
+		<name>ஒப்புரவறிதல்</name>
+		<name_eng>Duty to Society</name_eng>
+	</record>
+	<record>
+		<_id>23</_id>
+		<section_id>1</section_id>
+		<group_id>2</group_id>
+		<name>ஈ.கை</name>
+		<name_eng>Giving</name_eng>
+	</record>
+	<record>
+		<_id>24</_id>
+		<section_id>1</section_id>
+		<group_id>2</group_id>
+		<name>புகழ்</name>
+		<name_eng>Renown</name_eng>
+	</record>
+	<record>
+		<_id>25</_id>
+		<section_id>1</section_id>
+		<group_id>3</group_id>
+		<name>அருளுடைமை</name>
+		<name_eng>Compassion</name_eng>
+	</record>
+	<record>
+		<_id>26</_id>
+		<section_id>1</section_id>
+		<group_id>3</group_id>
+		<name>புலால் மறுத்தல்</name>
+		<name_eng>Abstinence from Flesh</name_eng>
+	</record>
+	<record>
+		<_id>27</_id>
+		<section_id>1</section_id>
+		<group_id>3</group_id>
+		<name>தவம்</name>
+		<name_eng>Penance</name_eng>
+	</record>
+	<record>
+		<_id>28</_id>
+		<section_id>1</section_id>
+		<group_id>3</group_id>
+		<name>கூடா ஒழுக்கம்</name>
+		<name_eng>Imposture</name_eng>
+	</record>
+	<record>
+		<_id>29</_id>
+		<section_id>1</section_id>
+		<group_id>3</group_id>
+		<name>கள்ளாமை</name>
+		<name_eng>The Absence of Fraud</name_eng>
+	</record>
+	<record>
+		<_id>30</_id>
+		<section_id>1</section_id>
+		<group_id>3</group_id>
+		<name>வாய்மை</name>
+		<name_eng>Veracity</name_eng>
+	</record>
+	<record>
+		<_id>31</_id>
+		<section_id>1</section_id>
+		<group_id>3</group_id>
+		<name>வெகுளாமை</name>
+		<name_eng>Restraining Anger</name_eng>
+	</record>
+	<record>
+		<_id>32</_id>
+		<section_id>1</section_id>
+		<group_id>3</group_id>
+		<name>இன்னா செய்யாமை</name>
+		<name_eng>Not doing Evil</name_eng>
+	</record>
+	<record>
+		<_id>33</_id>
+		<section_id>1</section_id>
+		<group_id>3</group_id>
+		<name>கொல்லாமை</name>
+		<name_eng>Not killing</name_eng>
+	</record>
+	<record>
+		<_id>34</_id>
+		<section_id>1</section_id>
+		<group_id>3</group_id>
+		<name>நிலையாமை</name>
+		<name_eng>Instability</name_eng>
+	</record>
+	<record>
+		<_id>35</_id>
+		<section_id>1</section_id>
+		<group_id>3</group_id>
+		<name>துறவு</name>
+		<name_eng>Renunciation</name_eng>
+	</record>
+	<record>
+		<_id>36</_id>
+		<section_id>1</section_id>
+		<group_id>3</group_id>
+		<name>மெய்யுணர்தல்</name>
+		<name_eng>Truth-Conciousness</name_eng>
+	</record>
+	<record>
+		<_id>37</_id>
+		<section_id>1</section_id>
+		<group_id>3</group_id>
+		<name>அவா அறுத்தல்</name>
+		<name_eng>Curbing of Desire</name_eng>
+	</record>
+	<record>
+		<_id>38</_id>
+		<section_id>1</section_id>
+		<group_id>4</group_id>
+		<name>ஊழ்</name>
+		<name_eng>Fate</name_eng>
+	</record>
+	<record>
+		<_id>39</_id>
+		<section_id>2</section_id>
+		<group_id>5</group_id>
+		<name>இறைமாட்சி</name>
+		<name_eng>The Greatness of a King</name_eng>
+	</record>
+	<record>
+		<_id>40</_id>
+		<section_id>2</section_id>
+		<group_id>5</group_id>
+		<name>கல்வி</name>
+		<name_eng>Learning</name_eng>
+	</record>
+	<record>
+		<_id>41</_id>
+		<section_id>2</section_id>
+		<group_id>5</group_id>
+		<name>கல்லாமை</name>
+		<name_eng>Ignorance</name_eng>
+	</record>
+	<record>
+		<_id>42</_id>
+		<section_id>2</section_id>
+		<group_id>5</group_id>
+		<name>கேள்வி</name>
+		<name_eng>Hearing</name_eng>
+	</record>
+	<record>
+		<_id>43</_id>
+		<section_id>2</section_id>
+		<group_id>5</group_id>
+		<name>அறிவுடைமை</name>
+		<name_eng>The Possession of Knowledge</name_eng>
+	</record>
+	<record>
+		<_id>44</_id>
+		<section_id>2</section_id>
+		<group_id>5</group_id>
+		<name>குற்றங்கடிதல்</name>
+		<name_eng>The Correction of Faults</name_eng>
+	</record>
+	<record>
+		<_id>45</_id>
+		<section_id>2</section_id>
+		<group_id>5</group_id>
+		<name>பெரியாரைத் துணைக்கோடல்</name>
+		<name_eng>Seeking the Aid of Great Men</name_eng>
+	</record>
+	<record>
+		<_id>46</_id>
+		<section_id>2</section_id>
+		<group_id>5</group_id>
+		<name>சிற்றினம் சேராமை</name>
+		<name_eng>Avoiding mean Associations</name_eng>
+	</record>
+	<record>
+		<_id>47</_id>
+		<section_id>2</section_id>
+		<group_id>5</group_id>
+		<name>தெரிந்து செயல்வகை</name>
+		<name_eng>Acting after due Consideration</name_eng>
+	</record>
+	<record>
+		<_id>48</_id>
+		<section_id>2</section_id>
+		<group_id>5</group_id>
+		<name>வலியறிதல்</name>
+		<name_eng>The Knowledge of Power</name_eng>
+	</record>
+	<record>
+		<_id>49</_id>
+		<section_id>2</section_id>
+		<group_id>5</group_id>
+		<name>காலமறிதல்</name>
+		<name_eng>Knowing the fitting Time</name_eng>
+	</record>
+	<record>
+		<_id>50</_id>
+		<section_id>2</section_id>
+		<group_id>5</group_id>
+		<name>இடனறிதல்</name>
+		<name_eng>Knowing the Place</name_eng>
+	</record>
+	<record>
+		<_id>51</_id>
+		<section_id>2</section_id>
+		<group_id>5</group_id>
+		<name>தெரிந்து தெளிதல்</name>
+		<name_eng>Selection and Confidence</name_eng>
+	</record>
+	<record>
+		<_id>52</_id>
+		<section_id>2</section_id>
+		<group_id>5</group_id>
+		<name>தெரிந்து வினையாடல்</name>
+		<name_eng>Selection and Employment</name_eng>
+	</record>
+	<record>
+		<_id>53</_id>
+		<section_id>2</section_id>
+		<group_id>5</group_id>
+		<name>சுற்றந் தழால்</name>
+		<name_eng>Cherishing Kinsmen</name_eng>
+	</record>
+	<record>
+		<_id>54</_id>
+		<section_id>2</section_id>
+		<group_id>5</group_id>
+		<name>பொச்சாவாமை</name>
+		<name_eng>Unforgetfulness</name_eng>
+	</record>
+	<record>
+		<_id>55</_id>
+		<section_id>2</section_id>
+		<group_id>5</group_id>
+		<name>செங்கோன்மை</name>
+		<name_eng>The Right Sceptre</name_eng>
+	</record>
+	<record>
+		<_id>56</_id>
+		<section_id>2</section_id>
+		<group_id>5</group_id>
+		<name>கொடுங்கோன்மை</name>
+		<name_eng>The Cruel Sceptre</name_eng>
+	</record>
+	<record>
+		<_id>57</_id>
+		<section_id>2</section_id>
+		<group_id>5</group_id>
+		<name>வெருவந்த செய்யாமை</name>
+		<name_eng>Absence of Terrorism</name_eng>
+	</record>
+	<record>
+		<_id>58</_id>
+		<section_id>2</section_id>
+		<group_id>5</group_id>
+		<name>கண்ணோட்டம்</name>
+		<name_eng>Benignity</name_eng>
+	</record>
+	<record>
+		<_id>59</_id>
+		<section_id>2</section_id>
+		<group_id>5</group_id>
+		<name>ஒற்றாடல்</name>
+		<name_eng>Detectives</name_eng>
+	</record>
+	<record>
+		<_id>60</_id>
+		<section_id>2</section_id>
+		<group_id>5</group_id>
+		<name>ஊக்கம் உடைமை</name>
+		<name_eng>Energy</name_eng>
+	</record>
+	<record>
+		<_id>61</_id>
+		<section_id>2</section_id>
+		<group_id>5</group_id>
+		<name>மடி இன்மை</name>
+		<name_eng>Unsluggishness</name_eng>
+	</record>
+	<record>
+		<_id>62</_id>
+		<section_id>2</section_id>
+		<group_id>5</group_id>
+		<name>ஆள்வினை உடைமை</name>
+		<name_eng>Manly Effort</name_eng>
+	</record>
+	<record>
+		<_id>63</_id>
+		<section_id>2</section_id>
+		<group_id>5</group_id>
+		<name>இடுக்கண் அழியாமை</name>
+		<name_eng>Hopefulness in Trouble</name_eng>
+	</record>
+	<record>
+		<_id>64</_id>
+		<section_id>2</section_id>
+		<group_id>6</group_id>
+		<name>அமைச்சு</name>
+		<name_eng>The Office of Minister of state</name_eng>
+	</record>
+	<record>
+		<_id>65</_id>
+		<section_id>2</section_id>
+		<group_id>6</group_id>
+		<name>சொல்வன்மை</name>
+		<name_eng>Power of Speech</name_eng>
+	</record>
+	<record>
+		<_id>66</_id>
+		<section_id>2</section_id>
+		<group_id>6</group_id>
+		<name>வினைத் தூய்மை</name>
+		<name_eng>Purity in Action</name_eng>
+	</record>
+	<record>
+		<_id>67</_id>
+		<section_id>2</section_id>
+		<group_id>6</group_id>
+		<name>வினைத்திட்பம்</name>
+		<name_eng>Power in Action</name_eng>
+	</record>
+	<record>
+		<_id>68</_id>
+		<section_id>2</section_id>
+		<group_id>6</group_id>
+		<name>வினை செயல்வகை</name>
+		<name_eng>Modes of Action</name_eng>
+	</record>
+	<record>
+		<_id>69</_id>
+		<section_id>2</section_id>
+		<group_id>6</group_id>
+		<name>தூது</name>
+		<name_eng>The Envoy</name_eng>
+	</record>
+	<record>
+		<_id>70</_id>
+		<section_id>2</section_id>
+		<group_id>6</group_id>
+		<name>மன்னரைச் சேர்ந்து ஒழுகல்</name>
+		<name_eng>Conduct in the Presence of the King</name_eng>
+	</record>
+	<record>
+		<_id>71</_id>
+		<section_id>2</section_id>
+		<group_id>6</group_id>
+		<name>குறிப்பறிதல்</name>
+		<name_eng>The Knowledge of Indications</name_eng>
+	</record>
+	<record>
+		<_id>72</_id>
+		<section_id>2</section_id>
+		<group_id>6</group_id>
+		<name>அவை அறிதல்</name>
+		<name_eng>The Knowledge of the Council Chamber</name_eng>
+	</record>
+	<record>
+		<_id>73</_id>
+		<section_id>2</section_id>
+		<group_id>6</group_id>
+		<name>அவை அஞ்சாமை</name>
+		<name_eng>Not to dread the Council</name_eng>
+	</record>
+	<record>
+		<_id>74</_id>
+		<section_id>2</section_id>
+		<group_id>7</group_id>
+		<name>நாடு</name>
+		<name_eng>The Land</name_eng>
+	</record>
+	<record>
+		<_id>75</_id>
+		<section_id>2</section_id>
+		<group_id>7</group_id>
+		<name>அரண்</name>
+		<name_eng>The Fortification</name_eng>
+	</record>
+	<record>
+		<_id>76</_id>
+		<section_id>2</section_id>
+		<group_id>8</group_id>
+		<name>பொருள் செயல்வகை</name>
+		<name_eng>Way of Accumulating Wealth</name_eng>
+	</record>
+	<record>
+		<_id>77</_id>
+		<section_id>2</section_id>
+		<group_id>9</group_id>
+		<name>படை மாட்சி</name>
+		<name_eng>The Excellence of an Army</name_eng>
+	</record>
+	<record>
+		<_id>78</_id>
+		<section_id>2</section_id>
+		<group_id>9</group_id>
+		<name>படைச் செருக்கு</name>
+		<name_eng>Military Spirit</name_eng>
+	</record>
+	<record>
+		<_id>79</_id>
+		<section_id>2</section_id>
+		<group_id>10</group_id>
+		<name>நட்பு</name>
+		<name_eng>Friendship</name_eng>
+	</record>
+	<record>
+		<_id>80</_id>
+		<section_id>2</section_id>
+		<group_id>10</group_id>
+		<name>நட்பாராய்தல்</name>
+		<name_eng>Investigation in forming Friendships</name_eng>
+	</record>
+	<record>
+		<_id>81</_id>
+		<section_id>2</section_id>
+		<group_id>10</group_id>
+		<name>பழைமை</name>
+		<name_eng>Familiarity</name_eng>
+	</record>
+	<record>
+		<_id>82</_id>
+		<section_id>2</section_id>
+		<group_id>10</group_id>
+		<name>தீ நட்பு</name>
+		<name_eng>Evil Friendship</name_eng>
+	</record>
+	<record>
+		<_id>83</_id>
+		<section_id>2</section_id>
+		<group_id>10</group_id>
+		<name>கூடா நட்பு</name>
+		<name_eng>Unreal Friendship</name_eng>
+	</record>
+	<record>
+		<_id>84</_id>
+		<section_id>2</section_id>
+		<group_id>10</group_id>
+		<name>பேதைமை</name>
+		<name_eng>Folly</name_eng>
+	</record>
+	<record>
+		<_id>85</_id>
+		<section_id>2</section_id>
+		<group_id>10</group_id>
+		<name>புல்லறிவாண்மை</name>
+		<name_eng>Ignorance</name_eng>
+	</record>
+	<record>
+		<_id>86</_id>
+		<section_id>2</section_id>
+		<group_id>10</group_id>
+		<name>இகல்</name>
+		<name_eng>Hostility</name_eng>
+	</record>
+	<record>
+		<_id>87</_id>
+		<section_id>2</section_id>
+		<group_id>10</group_id>
+		<name>பகை மாட்சி</name>
+		<name_eng>The Might of Hatred</name_eng>
+	</record>
+	<record>
+		<_id>88</_id>
+		<section_id>2</section_id>
+		<group_id>10</group_id>
+		<name>பகைத்திறம் தெரிதல்</name>
+		<name_eng>Knowing the Quality of Hate</name_eng>
+	</record>
+	<record>
+		<_id>89</_id>
+		<section_id>2</section_id>
+		<group_id>10</group_id>
+		<name>உட்பகை</name>
+		<name_eng>Enmity within</name_eng>
+	</record>
+	<record>
+		<_id>90</_id>
+		<section_id>2</section_id>
+		<group_id>10</group_id>
+		<name>பெரியாரைப் பிழையாமை</name>
+		<name_eng>Not Offending the Great</name_eng>
+	</record>
+	<record>
+		<_id>91</_id>
+		<section_id>2</section_id>
+		<group_id>10</group_id>
+		<name>பெண்வழிச் சேறல்</name>
+		<name_eng>Being led by Women</name_eng>
+	</record>
+	<record>
+		<_id>92</_id>
+		<section_id>2</section_id>
+		<group_id>10</group_id>
+		<name>வரைவின் மகளிர்</name>
+		<name_eng>Wanton Women</name_eng>
+	</record>
+	<record>
+		<_id>93</_id>
+		<section_id>2</section_id>
+		<group_id>10</group_id>
+		<name>கள்ளுண்ணாமை</name>
+		<name_eng>Not Drinking Palm-Wine</name_eng>
+	</record>
+	<record>
+		<_id>94</_id>
+		<section_id>2</section_id>
+		<group_id>10</group_id>
+		<name>சூது</name>
+		<name_eng>Gambling</name_eng>
+	</record>
+	<record>
+		<_id>95</_id>
+		<section_id>2</section_id>
+		<group_id>10</group_id>
+		<name>மருந்து</name>
+		<name_eng>Medicine</name_eng>
+	</record>
+	<record>
+		<_id>96</_id>
+		<section_id>2</section_id>
+		<group_id>11</group_id>
+		<name>குடிமை</name>
+		<name_eng>Nobility</name_eng>
+	</record>
+	<record>
+		<_id>97</_id>
+		<section_id>2</section_id>
+		<group_id>11</group_id>
+		<name>மானம்</name>
+		<name_eng>Honour</name_eng>
+	</record>
+	<record>
+		<_id>98</_id>
+		<section_id>2</section_id>
+		<group_id>11</group_id>
+		<name>பெருமை</name>
+		<name_eng>Greatness</name_eng>
+	</record>
+	<record>
+		<_id>99</_id>
+		<section_id>2</section_id>
+		<group_id>11</group_id>
+		<name>சான்றாண்மை</name>
+		<name_eng>Perfectness</name_eng>
+	</record>
+	<record>
+		<_id>100</_id>
+		<section_id>2</section_id>
+		<group_id>11</group_id>
+		<name>பண்புடைமை</name>
+		<name_eng>Courtesy</name_eng>
+	</record>
+	<record>
+		<_id>101</_id>
+		<section_id>2</section_id>
+		<group_id>11</group_id>
+		<name>நன்றியில் செல்வம்</name>
+		<name_eng>Wealth without Benefaction</name_eng>
+	</record>
+	<record>
+		<_id>102</_id>
+		<section_id>2</section_id>
+		<group_id>11</group_id>
+		<name>நாணுடைமை</name>
+		<name_eng>Shame</name_eng>
+	</record>
+	<record>
+		<_id>103</_id>
+		<section_id>2</section_id>
+		<group_id>11</group_id>
+		<name>குடிசெயல் வகை</name>
+		<name_eng>The Way of Maintaining the Family</name_eng>
+	</record>
+	<record>
+		<_id>104</_id>
+		<section_id>2</section_id>
+		<group_id>11</group_id>
+		<name>உழவு</name>
+		<name_eng>Farming</name_eng>
+	</record>
+	<record>
+		<_id>105</_id>
+		<section_id>2</section_id>
+		<group_id>11</group_id>
+		<name>நல்குரவு</name>
+		<name_eng>Poverty</name_eng>
+	</record>
+	<record>
+		<_id>106</_id>
+		<section_id>2</section_id>
+		<group_id>11</group_id>
+		<name>இரவு</name>
+		<name_eng>Mendicancy</name_eng>
+	</record>
+	<record>
+		<_id>107</_id>
+		<section_id>2</section_id>
+		<group_id>11</group_id>
+		<name>இரவச்சம்</name>
+		<name_eng>The Dread of Mendicancy</name_eng>
+	</record>
+	<record>
+		<_id>108</_id>
+		<section_id>2</section_id>
+		<group_id>11</group_id>
+		<name>கயமை</name>
+		<name_eng>Baseness</name_eng>
+	</record>
+	<record>
+		<_id>109</_id>
+		<section_id>3</section_id>
+		<group_id>12</group_id>
+		<name>தகை அணங்குறுத்தல்</name>
+		<name_eng>The Pre-marital love</name_eng>
+	</record>
+	<record>
+		<_id>110</_id>
+		<section_id>3</section_id>
+		<group_id>12</group_id>
+		<name>குறிப்பறிதல்</name>
+		<name_eng>Recognition of the Signs</name_eng>
+	</record>
+	<record>
+		<_id>111</_id>
+		<section_id>3</section_id>
+		<group_id>12</group_id>
+		<name>புணர்ச்சி மகிழ்தல்</name>
+		<name_eng>Rejoicing in the Embrace</name_eng>
+	</record>
+	<record>
+		<_id>112</_id>
+		<section_id>3</section_id>
+		<group_id>12</group_id>
+		<name>நலம் புனைந்து உரைத்தல்</name>
+		<name_eng>The Praise of her Beauty</name_eng>
+	</record>
+	<record>
+		<_id>113</_id>
+		<section_id>3</section_id>
+		<group_id>12</group_id>
+		<name>காதற் சிறப்புரைத்தல்</name>
+		<name_eng>Declaration of Love's special Excellence</name_eng>
+	</record>
+	<record>
+		<_id>114</_id>
+		<section_id>3</section_id>
+		<group_id>12</group_id>
+		<name>நாணுத் துறவுரைத்தல்</name>
+		<name_eng>The Abandonment of Reserve</name_eng>
+	</record>
+	<record>
+		<_id>115</_id>
+		<section_id>3</section_id>
+		<group_id>12</group_id>
+		<name>அலர் அறிவுறுத்தல்</name>
+		<name_eng>The Announcement of the Rumour</name_eng>
+	</record>
+	<record>
+		<_id>116</_id>
+		<section_id>3</section_id>
+		<group_id>13</group_id>
+		<name>பிரிவு ஆற்றாமை</name>
+		<name_eng>Separation unendurable</name_eng>
+	</record>
+	<record>
+		<_id>117</_id>
+		<section_id>3</section_id>
+		<group_id>13</group_id>
+		<name>படர்மெலிந் திரங்கல்</name>
+		<name_eng>Complainings</name_eng>
+	</record>
+	<record>
+		<_id>118</_id>
+		<section_id>3</section_id>
+		<group_id>13</group_id>
+		<name>கண் விதுப்பழிதல்</name>
+		<name_eng>Eyes consumed with Grief</name_eng>
+	</record>
+	<record>
+		<_id>119</_id>
+		<section_id>3</section_id>
+		<group_id>13</group_id>
+		<name>பசப்புறு பருவரல்</name>
+		<name_eng>The Pallid Hue</name_eng>
+	</record>
+	<record>
+		<_id>120</_id>
+		<section_id>3</section_id>
+		<group_id>13</group_id>
+		<name>தனிப்படர் மிகுதி</name>
+		<name_eng>The Solitary Anguish</name_eng>
+	</record>
+	<record>
+		<_id>121</_id>
+		<section_id>3</section_id>
+		<group_id>13</group_id>
+		<name>நினைந்தவர் புலம்பல்</name>
+		<name_eng>Sad Memories</name_eng>
+	</record>
+	<record>
+		<_id>122</_id>
+		<section_id>3</section_id>
+		<group_id>13</group_id>
+		<name>கனவுநிலை உரைத்தல்</name>
+		<name_eng>The Visions of the Night</name_eng>
+	</record>
+	<record>
+		<_id>123</_id>
+		<section_id>3</section_id>
+		<group_id>13</group_id>
+		<name>பொழுதுகண்டு இரங்கல்</name>
+		<name_eng>Lamentations at Eventide</name_eng>
+	</record>
+	<record>
+		<_id>124</_id>
+		<section_id>3</section_id>
+		<group_id>13</group_id>
+		<name>உறுப்புநலன் அழிதல்</name>
+		<name_eng>Wasting Away</name_eng>
+	</record>
+	<record>
+		<_id>125</_id>
+		<section_id>3</section_id>
+		<group_id>13</group_id>
+		<name>நெஞ்சொடு கிளத்தல்</name>
+		<name_eng>Soliloquy</name_eng>
+	</record>
+	<record>
+		<_id>126</_id>
+		<section_id>3</section_id>
+		<group_id>13</group_id>
+		<name>நிறையழிதல்</name>
+		<name_eng>Reserve Overcome</name_eng>
+	</record>
+	<record>
+		<_id>127</_id>
+		<section_id>3</section_id>
+		<group_id>13</group_id>
+		<name>அவர்வயின் விதும்பல்</name>
+		<name_eng>Mutual Desire</name_eng>
+	</record>
+	<record>
+		<_id>128</_id>
+		<section_id>3</section_id>
+		<group_id>13</group_id>
+		<name>குறிப்பறிவுறுத்தல்</name>
+		<name_eng>The Reading of the Signs</name_eng>
+	</record>
+	<record>
+		<_id>129</_id>
+		<section_id>3</section_id>
+		<group_id>13</group_id>
+		<name>புணர்ச்சி விதும்பல்</name>
+		<name_eng>Desire for Reunion</name_eng>
+	</record>
+	<record>
+		<_id>130</_id>
+		<section_id>3</section_id>
+		<group_id>13</group_id>
+		<name>நெஞ்சொடு புலத்தல்</name>
+		<name_eng>Expostulation with Oneself</name_eng>
+	</record>
+	<record>
+		<_id>131</_id>
+		<section_id>3</section_id>
+		<group_id>13</group_id>
+		<name>புலவி</name>
+		<name_eng>Pouting</name_eng>
+	</record>
+	<record>
+		<_id>132</_id>
+		<section_id>3</section_id>
+		<group_id>13</group_id>
+		<name>புலவி நுணுக்கம்</name>
+		<name_eng>Feigned Anger</name_eng>
+	</record>
+	<record>
+		<_id>133</_id>
+		<section_id>3</section_id>
+		<group_id>13</group_id>
+		<name>ஊடலுவகை</name>
+		<name_eng>The Pleasures of Temporary Variance</name_eng>
+	</record>
+</data_Chapters>

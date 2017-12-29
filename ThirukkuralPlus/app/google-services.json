@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "108619906403",
+    "firebase_url": "https://thirukkuralplus.firebaseio.com",
+    "project_id": "thirukkuralplus",
+    "storage_bucket": "thirukkuralplus.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:108619906403:android:dee2442fe2f17a16",
+        "android_client_info": {
+          "package_name": "com.simplesolutions2003.thirukkuralplus"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "108619906403-0l54i157ujt3meame6nhsffmb3tj50oo.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.simplesolutions2003.thirukkuralplus",
+            "certificate_hash": "c5c60e86a5a8b3d5d1a227f2a753ca4ae612e132"
+          }
+        },
+        {
+          "client_id": "108619906403-trskbsiqc91k34f7uljluhj1idhnjqt7.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA3F7N3eZF8l5jDCzHQi1eFVSr9cdVannA"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "108619906403-trskbsiqc91k34f7uljluhj1idhnjqt7.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

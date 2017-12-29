@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <PreferenceCategory
+        android:summary="Settings"
+        android:title="Settings" >
+        <ListPreference
+            android:key="@string/pref_english"
+            android:title="English" android:summary="Turn On/Off English"
+            android:defaultValue="On"
+            android:entries="@array/englishArray"
+            android:entryValues="@array/englishArray" />
+        <ListPreference
+            android:key="@string/pref_color"
+            android:title="Widget Color" android:summary="Choose widget color"
+            android:defaultValue="White"
+            android:entries="@array/colorArray"
+            android:entryValues="@array/colorArray" />
+    </PreferenceCategory>
+</PreferenceScreen>

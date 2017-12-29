@@ -1,0 +1,68 @@
+﻿<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<data_Groups xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<record>
+		<_id>1</_id>
+		<name>பாயிரவியல்</name>
+		<name_eng>Prologue</name_eng>
+	</record>
+	<record>
+		<_id>2</_id>
+		<name>இல்லறவியல்</name>
+		<name_eng>Domestic Virtue</name_eng>
+	</record>
+	<record>
+		<_id>3</_id>
+		<name>துறவறவியல்</name>
+		<name_eng>Ascetic Virtue</name_eng>
+	</record>
+	<record>
+		<_id>4</_id>
+		<name>ஊழியல்</name>
+		<name_eng>Fate</name_eng>
+	</record>
+	<record>
+		<_id>5</_id>
+		<name>அரசியல்</name>
+		<name_eng>Royalty</name_eng>
+	</record>
+	<record>
+		<_id>6</_id>
+		<name>அமைச்சியல்</name>
+		<name_eng>Ministers of State</name_eng>
+	</record>
+	<record>
+		<_id>7</_id>
+		<name>அரணியல்</name>
+		<name_eng>The Essentials of a State</name_eng>
+	</record>
+	<record>
+		<_id>8</_id>
+		<name>கூழியல்</name>
+		<name_eng>Way of Making Wealth</name_eng>
+	</record>
+	<record>
+		<_id>9</_id>
+		<name>படையில்</name>
+		<name_eng>The Excellence of an Army</name_eng>
+	</record>
+	<record>
+		<_id>10</_id>
+		<name>நட்பியல்</name>
+		<name_eng>Friendship</name_eng>
+	</record>
+	<record>
+		<_id>11</_id>
+		<name>குடியியல்</name>
+		<name_eng>Miscellaneous</name_eng>
+	</record>
+	<record>
+		<_id>12</_id>
+		<name>களவியல்</name>
+		<name_eng>The Pre-marital love</name_eng>
+	</record>
+	<record>
+		<_id>13</_id>
+		<name>கற்பியல்</name>
+		<name_eng>The Post-marital love</name_eng>
+	</record>
+</data_Groups>

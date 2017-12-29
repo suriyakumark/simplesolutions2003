@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_preface"
+            android:icon="@drawable/menu_preface"
+            android:title="@string/nav_preface" />
+        <item
+            android:id="@+id/nav_sections"
+            android:icon="@drawable/menu_sections"
+            android:title="@string/nav_sections" />
+        <item
+            android:id="@+id/nav_groups"
+            android:icon="@drawable/menu_groups"
+            android:title="@string/nav_groups" />
+        <item
+            android:id="@+id/nav_chapters"
+            android:icon="@drawable/menu_chapters"
+            android:title="@string/nav_chapters" />
+        <item
+            android:id="@+id/nav_favorites"
+            android:icon="@drawable/menu_favorites"
+            android:title="@string/nav_favorites" />
+        <item
+            android:id="@+id/nav_quiz"
+            android:icon="@drawable/menu_quiz"
+            android:title="@string/nav_quiz" />
+        <item
+            android:id="@+id/nav_settings"
+            android:icon="@drawable/menu_settings"
+            android:title="@string/nav_settings" />
+    </group>
+
+    <item
+        android:id="@+id/nav_rate"
+        android:icon="@drawable/menu_rate"
+        android:title="@string/nav_rate" />
+    <item
+        android:id="@+id/nav_reward"
+        android:icon="@drawable/menu_reward"
+        android:title="@string/nav_reward" />
+
+</menu>
