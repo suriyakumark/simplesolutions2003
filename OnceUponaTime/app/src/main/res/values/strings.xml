@@ -24,8 +24,14 @@
     <string name="msg_ad_unlocked">Congratulations! You have unlocked the Interstitial Ad Free version. This is a complimentary reward for users after 50 article visits. </string>
     <string name="msg_premium_upgraded">Congratulations! You have unlocked the Premium version. </string>
     <string name="msg_already_premium">You are already a premium user! </string>
+    <string name="msg_article_submitted">Article Submitted Successfully!</string>
+    <string name="msg_article_limit">You have reached your daily limit.</string>
+    <string name="msg_article_problem">Problem submiting article. Check Internet or Try later! </string>
+    <string name="msg_email_error">Please enter valid email id</string>
+    <string name="msg_fields_error">Please enter all fields</string>
 
     <!-- UI Messages -->
+    <string name="submit_text">Submit your own creative story and enter a chance to win exciting prizes every week! Maximum limit 3 stories per day.</string>
     <string name="text_list_loading">loading...</string>
     <string name="text_articles_sync_progress">Sync in progress...</string>
     <string name="text_articles_search_empty">No results found</string>
@@ -46,6 +52,11 @@
     <string name="pref_visit_count">visit_count</string>
     <string name="pref_app_launch_count">app_launch_count</string>
     <string name="pref_app_rate_never">app_rate_never</string>
+    <string name="pref_key_email">email</string>
+    <string name="pref_key_title">title</string>
+    <string name="pref_key_content">content</string>
+    <string name="pref_story_submit_count">story_submit_count</string>
+    <string name="pref_story_submit_date">story_submit_date</string>
 
     <!-- Billing -->
     <string name="billing_premium">premium_upgrade</string>

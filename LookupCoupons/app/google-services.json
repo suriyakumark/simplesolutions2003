@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "409469229766",
+    "firebase_url": "https://lookup-coupons.firebaseio.com",
+    "project_id": "lookup-coupons",
+    "storage_bucket": "lookup-coupons.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:409469229766:android:477fbf2bab674e8f",
+        "android_client_info": {
+          "package_name": "com.simplesolutions2003.lookupcoupons"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "409469229766-oaa0g4lb788ekeiv321p917p76lp85gk.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCIvefq5jk1pep0M4e5LAFNRuiei_lH8r0"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -8,8 +8,8 @@ android {
         applicationId "com.simplesolutions2003.onceuponatime"
         minSdkVersion 15
         targetSdkVersion 26
-        versionCode 6
-        versionName "Prod 2.21"
+        versionCode 9
+        versionName "Prod 3.2"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {

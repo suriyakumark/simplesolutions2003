@@ -31,6 +31,9 @@
 
     <string name="dialog_volume">Current volume seems high, do you want to adjust?</string>
     <string name="dialog_volume_music">Music</string>
+    <string name="dialog_volume_remember">Remember</string>
+
+    <string name="action_volume">Volume</string>
 
 </resources>
 

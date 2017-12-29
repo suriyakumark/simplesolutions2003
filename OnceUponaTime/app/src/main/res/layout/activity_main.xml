@@ -39,7 +39,7 @@
             android:layout_alignParentBottom="true"
             android:layout_gravity="bottom"
             android:background="@color/colorPrimaryLight"
-            ads:adSize="FLUID"
+            ads:adSize="BANNER"
             ads:adUnitId="@string/banner_ad_unit_id" />
 
 

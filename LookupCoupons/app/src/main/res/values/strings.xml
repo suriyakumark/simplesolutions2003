@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">LookupCoupons</string>
+    <string name="banner_ad_unit_id">ca-app-pub-1979618719371623/1559317897</string>
+
+    <string name="facebook_application_id" translatable="false">1995534827382894</string>
+    <string name="facebook_login_protocol_scheme" translatable="false">fb1995534827382894</string>
+
+    <string name="title_cashback">Cashback</string>
+    <string name="title_deals">Deals</string>
+    <string name="title_coupons">Coupons</string>
+</resources>

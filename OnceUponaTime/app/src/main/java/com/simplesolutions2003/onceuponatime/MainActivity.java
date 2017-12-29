@@ -411,10 +411,16 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void submitStory(){
-        String url = getString(R.string.action_submit_url);
-        Intent i = new Intent(Intent.ACTION_VIEW);
-        i.setData(Uri.parse(url));
-        startActivity(i);
+        //String url = getString(R.string.action_submit_url);
+        //Intent i = new Intent(Intent.ACTION_VIEW);
+        //i.setData(Uri.parse(url));
+        //startActivity(i);
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.setCustomAnimations( R.anim.slide_in_left, 0, 0, R.anim.slide_out_left);
+        fragmentTransaction.replace(R.id.frame_container, new SubmitArticle(), SubmitArticle.TAG);
+        fragmentTransaction.addToBackStack(AppMenuFragment.TAG);
+        fragmentTransaction.commit();
+
     }
 
     public boolean isPaidUser(){

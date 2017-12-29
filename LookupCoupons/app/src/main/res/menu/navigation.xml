@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/navigation_cashback"
+        android:icon="@drawable/icon_cashback"
+        android:title="@string/title_cashback" />
+
+    <item
+        android:id="@+id/navigation_deals"
+        android:icon="@drawable/icon_deals"
+        android:title="@string/title_deals" />
+
+    <item
+        android:id="@+id/navigation_coupons"
+        android:icon="@drawable/icon_coupons"
+        android:title="@string/title_coupons" />
+
+</menu>
